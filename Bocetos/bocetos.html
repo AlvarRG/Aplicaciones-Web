@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bistro FDI - Bocetos de Diseño</title>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="detalles.html">Detalles</a></li>
+            <li><a href="bocetos.html">Bocetos</a></li>
+            <li><a href="miembros.html">Miembros</a></li>
+            <li><a href="planificacion.html">Planificación</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Bocetos y Diseño de Interfaz</h1>
+        <p>
+            A continuación se presentan los bocetos de baja fidelidad ("wireframes") diseñados para las vistas principales de la aplicación. 
+            El diseño es "Mobile First" para los clientes y adaptado a tablets para el personal de cocina.
+        </p>
+
+        <section>
+            <h2>1. Interfaz del Cliente (Móvil)</h2>
+            <p><strong>Flujo de navegación:</strong> El usuario accede a la Home > Selecciona una categoría > Elige un producto > Lo añade al carrito > Confirma pedido.</p>
+            
+            <figure>
+                <img src="img/boceto_cliente_movil.png" alt="Boceto de la pantalla principal del cliente en móvil" width="300">
+                <figcaption>
+                    <strong>Figura 1: Catálogo Principal.</strong> Se observa la barra de navegación superior por categorías 
+                    y el listado vertical de productos. En la parte inferior, una barra persistente muestra el resumen del carrito.
+                </figcaption>
+            </figure>
+
+            <figure>
+                <img src="img/boceto_detalle_plato.png" alt="Boceto de detalle de producto" width="300">
+                <figcaption>
+                    <strong>Figura 2: Detalle de Producto.</strong> Vista al pulsar sobre un plato. Permite ver la foto ampliada, 
+                    leer alérgenos y seleccionar la cantidad antes de añadir al pedido.
+                </figcaption>
+            </figure>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>2. Interfaz de Cocina (Tablet)</h2>
+            <p><strong>Flujo de trabajo:</strong> El cocinero ve los pedidos nuevos en la columna izquierda > Pulsa "Cocinar" (pasa al centro) > Al terminar pulsa "Listo" (pasa a la derecha).</p>
+
+            <figure>
+                <img src="img/boceto_cocina_tablet.png" alt="Boceto del dashboard de cocina" width="600">
+                <figcaption>
+                    <strong>Figura 3: Dashboard de Cocina (Formato Apaisado).</strong> Diseño tipo tablero Kanban con tres columnas de estado. 
+                    Las tarjetas incluyen el número de pedido y la lista de platos a preparar. Los colores (no visibles en el boceto) indicarán el tiempo de espera.
+                </figcaption>
+            </figure>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>3. Interfaz de Gerencia (Escritorio)</h2>
+            <p><strong>Funcionalidad:</strong> Gestión administrativa para pantallas grandes. Permite el CRUD completo de productos.</p>
+
+            <figure>
+                <img src="img/boceto_gerente_pc.png" alt="Boceto del panel de administración" width="600">
+                <figcaption>
+                    <strong>Figura 4: Panel de Administración.</strong> Vista de tabla clásica para la gestión de inventario. 
+                    Incluye menú lateral de navegación y área de trabajo central para editar, borrar o crear nuevos items.
+                </figcaption>
+            </figure>
+        </section>
+
+    </main>
+
+</body>
+</html>

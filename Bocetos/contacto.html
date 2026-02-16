@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bistro FDI - Contacto</title>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="detalles.html">Detalles</a></li>
+            <li><a href="bocetos.html">Bocetos</a></li>
+            <li><a href="miembros.html">Miembros</a></li>
+            <li><a href="planificacion.html">Planificación</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Formulario de Contacto</h1>
+        <p>Si tienes alguna duda sobre el proyecto, sugerencias para mejorar Bistro FDI o has encontrado algún error, por favor rellena el siguiente formulario.</p>
+
+        <form action="mailto:bistro_fdi@ucm.es" method="post" enctype="text/plain">
+            
+            <p>
+                <label for="nombre">Nombre:</label><br>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+            </p>
+
+            <p>
+                <label for="email">Dirección de email de contacto:</label><br>
+                <input type="email" id="email" name="email" placeholder="ejemplo@ucm.es" required>
+            </p>
+
+            <fieldset>
+                <legend>Motivo de la consulta:</legend>
+                
+                <input type="radio" id="evaluacion" name="motivo" value="Evaluacion" checked>
+                <label for="evaluacion">Evaluación</label><br>
+
+                <input type="radio" id="sugerencias" name="motivo" value="Sugerencias">
+                <label for="sugerencias">Sugerencias</label><br>
+
+                <input type="radio" id="criticas" name="motivo" value="Criticas">
+                <label for="criticas">Críticas</label>
+            </fieldset>
+
+            <p>
+                <label for="consulta">Escribe tu consulta:</label><br>
+                <textarea id="consulta" name="consulta" rows="5" cols="40" placeholder="Detalla aquí tu mensaje..." required></textarea>
+            </p>
+
+            <p>
+                <input type="checkbox" id="terminos" name="terminos" required>
+                <label for="terminos">Marque esta casilla para verificar que ha leído nuestros términos y condiciones del servicio</label>
+            </p>
+
+            <p>
+                <button type="submit">Enviar Consulta</button>
+            </p>
+
+        </form>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bistro FDI - Planificación</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="detalles.html">Detalles</a></li>
+            <li><a href="bocetos.html">Bocetos</a></li>
+            <li><a href="miembros.html">Miembros</a></li>
+            <li><a href="planificacion.html">Planificación</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <div>
+        <h1>Planificación del proyecto Bistro FDI</h1>
+        <p>
+            Este documento detalla la estrategia de desarrollo, el reparto de responsabilidades y el cronograma semanal 
+            desde el inicio de la implementación hasta la entrega final.
+        </p>
+
+        <hr>
+
+        <section id="reparto">
+            <h2>1. Reparto de responsabilidades</h2>
+            <p>
+                Para equilibrar la carga de trabajo y cumplir con los requisitos académicos, asignamos un módulo funcional principal a cada miembro. 
+                La <em>Funcionalidad 2</em> se ha dividido en dos partes debido a su extensión.
+            </p>
+
+            <article>
+                <h3>Miembro 1: Seguridad y Usuarios (Funcionalidad 0)</h3>
+                <ul>
+                    <li><strong>Objetivo:</strong> Gestión integral de usuarios y control de acceso.</li>
+                    <li><strong>Tareas:</strong> Registro, Login, Logout, Edición de Perfil, Subida de Avatar y Gestión de Roles (Cliente, Gerente, etc.).</li>
+                </ul>
+            </article>
+
+            <article>
+                <h3>Miembro 2: Gestión de Catálogo (Funcionalidad 1)</h3>
+                <ul>
+                    <li><strong>Objetivo:</strong> Administración de contenidos (Panel del Gerente).</li>
+                    <li><strong>Tareas:</strong> CRUD de Categorías y productos. Gestión de precios, IVA, disponibilidad e imágenes de productos.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h3>Miembro 3: Experiencia de Compra (Funcionalidad 2 - Parte A)</h3>
+                <ul>
+                    <li><strong>Objetivo:</strong> Ciclo de compra desde la perspectiva del Cliente.</li>
+                    <li><strong>Tareas:</strong> Visualización de la carta, lógica del Carrito de compra (sesión) y confirmación del pedido (Checkout).</li>
+                </ul>
+            </article>
+
+            <article>
+                <h3>Miembro 4: Gestión interna (Funcionalidad 2 - Parte B + Func. 3)</h3>
+                <ul>
+                    <li><strong>Objetivo:</strong> Gestión de comandas para el personal.</li>
+                    <li><strong>Tareas:</strong> Vista de Camarero (tablet) para cambios de estado y cobro. Vista de cocina (Funcionalidad 3) para preparación de platos.</li>
+                </ul>
+            </article>
+        </section>
+
+        <hr>
+
+        <section id="cronograma">
+            <h2>2. Cronograma de Trabajo Detallado</h2>
+            <p>Planificación semanal alineada con las entregas obligatorias del curso.</p>
+
+            <h3>Fase 1: Desarrollo Backend (Hacia Práctica 2)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Semana</th>
+                        <th>Fechas</th>
+                        <th>Objetivos Grupales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>16 Feb - 22 Feb</td>
+                        <td>
+                            <strong>Configuración:</strong> Creación de BD y repositorio. 
+                            Inicio de módulos base (Login, lista Productos, carrito básico).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>23 Feb - 01 Mar</td>
+                        <td>
+                            <strong>Desarrollo Core:</strong> CRUD completo, subida de imágenes, 
+                            confirmación de pedido y cambio de estados.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>02 Mar - 06 Mar</td>
+                        <td>
+                            <strong>Integración y cierre:</strong> Pruebas de flujo completo.
+                            <br><strong>Hito: Entrega Práctica 2 (Viernes 06/03)</strong>.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Fase 2: Frontend y Finalización (Hacia Entrega Final)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Semana</th>
+                        <th>Fechas</th>
+                        <th>Objetivos Grupales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>4-5</td>
+                        <td>09 Mar - 22 Mar</td>
+                        <td>
+                            <strong>Funcionalidad 3 (Cocina):</strong> Implementación de la vista de cocineros.
+                            <br><strong> Integración y test funcionalidad 3 (Cocina):</strong> Comprobar que la funcionalidad 3 cumpla
+                            con los requisitos y funcione correctamente
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>6-9</td>
+                        <td>23 Mar - 19 Abr</td>
+                        <td>
+                            <strong>Optimización:</strong> Mejora en el funcionamiento y rendimiento de las funcionalidades.
+                            <br><strong> Frontend:</strong> Mejora presentación de la página añadiendo CSS.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>10-11</td>
+                        <td>20 Abr - 03 May</td>
+                        <td>
+                            <strong>Cierre:</strong> testing final y documentación.
+                            <br><strong> Hito: Entrega final (Domingo 03/05)</strong>.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <hr>
+
+        <section id="gantt">
+            <h2>3. Diagrama de Gantt</h2>
+            <p>Representación visual de la línea temporal del proyecto:</p>
+            <div>
+                <img src="img/gantt.png" alt="Diagrama de Gantt del Proyecto Bistro FDI">
+                <p>Cronograma de tareas desde el 16 de febrero hasta el 3 de mayo.</p>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

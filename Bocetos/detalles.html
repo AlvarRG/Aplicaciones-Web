@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bistro FDI - Descripción del Proyecto</title>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="detalles.html">Detalles</a></li>
+            <li><a href="bocetos.html">Bocetos</a></li>
+            <li><a href="miembros.html">Miembros</a></li>
+            <li><a href="planificacion.html">Planificación</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Descripción Detallada del Proyecto Bistro FDI</h1>
+
+        <section>
+            <h2>1. Introducción y Visión del Proyecto</h2>
+            <p>
+                El proyecto <strong>Bistro FDI</strong> consiste en la especificación, diseño, prototipado e implementación completa de una aplicación web para la gestión integral del restaurante de la Facultad de Informática. Este desarrollo no se limita a una simple página informativa, sino que constituye un sistema de información complejo diseñado para digitalizar el flujo de trabajo de un establecimiento de hostelería moderno.
+            </p>
+            <h3>Modernización del Servicio</h3>
+            <p>
+                Tomando como referencia la experiencia de usuario de las grandes cadenas de restauración rápida, Bistro FDI busca eliminar los cuellos de botella tradicionales: las largas colas en barra y la incertidumbre sobre el tiempo de espera. La aplicación centraliza la interacción cliente-restaurante, permitiendo que cualquier usuario con un smartphone o portátil pueda consultar la carta en tiempo real, personalizar su pedido y realizar el pago sin necesidad de interacción física inmediata.
+            </p>
+            <h3>Optimización Operativa y Logística</h3>
+            <p>
+                Desde la perspectiva interna, Bistro FDI actúa como un ERP (Enterprise Resource Planning) ligero para el personal de la cafetería. El sistema coordina la comunicación entre la sala (camareros) y los fogones (cocineros), sustituyendo los tickets de papel por comandas digitales que se actualizan en tiempo real. Esto permite organizar la preparación de los platos por orden de llegada y prioridad, reduciendo los tiempos de servicio y minimizando el desperdicio de alimentos mediante una gestión precisa del stock y las categorías de productos.
+            </p>
+            <p>
+                El proyecto se desarrollará de manera incremental, empleando tecnologías web estándar y siguiendo buenas prácticas de ingeniería del software para garantizar la escalabilidad, la seguridad en la gestión de usuarios y la robustez en las transacciones de pedidos.
+            </p>
+        </section>
+
+        <section>
+            <h2>2. Tipos de Usuarios y Roles</h2>
+            <p>La aplicación gestiona cuatro roles diferenciados. Es importante destacar que los roles son <strong>jerárquicos</strong> (de menos a más prioridad): las acciones que puede hacer un usuario incluyen las de su rol y todas las de los roles con menor prioridad.</p>
+            
+            <ul>
+                <li><strong>Cliente:</strong> Consumidor final. Puede registrarse, gestionar su perfil, realizar pedidos y consultar su estado, así como beneficiarse del programa de fidelización.</li>
+                <li><strong>Camarero:</strong> Personal de sala. Se encarga de entregar los pedidos preparados (verificando que estén completos, incluyendo bebidas) y realizar el cobro presencial si no se ha pagado online.</li>
+                <li><strong>Cocinero:</strong> Personal de cocina. Se encarga de seleccionar los pedidos pagados para cocinarlos y notificar cuando los platos están listos.</li>
+                <li><strong>Gerente:</strong> Administrador del sistema. Se encarga de gestionar el catálogo (altas, bajas y modificaciones de productos y categorías), las ofertas y las recompensas.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Funcionalidades del Sistema</h2>
+            <p>A continuación se detallan las 4 funcionalidades clave que desarrollaremos en esta página web:</p>
+
+            <article>
+                <h3>Funcionalidad 0: Gestión de Usuarios</h3>
+                <p>Permite el registro, login y gestión de perfiles. Se almacena nombre de usuario (único), email, nombre completo, contraseña y rol. </p>
+                <p>Destaca la gestión de <strong>Avatares</strong>, permitiendo al usuario elegir entre imágenes predefinidas, subir una foto propia o usar uno por defecto. El sistema de roles permite al Gerente ascender o cambiar el rol de cualquier usuario.</p>
+            </article>
+
+            <article>
+                <h3>Funcionalidad 1: Gestión de Productos y Categorías</h3>
+                <p>El Gerente administra la carta. </p>
+                <ul>
+                    <li><strong>Categorías:</strong> Nombre, descripción e imagen opcional.</li>
+                    <li><strong>Productos:</strong> Incluyen nombre, categoría, imágenes, disponibilidad (stock) y estado de oferta.</li>
+                    <li><strong>Precios e IVA:</strong> El sistema gestiona el precio base y aplica el tipo de IVA correspondiente (4%, 10%, 21%) para mostrar el precio final automáticamente.</li>
+                    <li><strong>Borrado:</strong> Se implementa un borrado lógico (flag "ofertado") para no perder histórico.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h3>Funcionalidad 2: Gestión de Pedidos</h3>
+                <p>Es el núcleo de la aplicación, adaptado a dispositivos móviles y escritorio. Un pedido atraviesa los siguientes estados:</p>
+                <ol>
+                    <li><strong>Nuevo:</strong> En creación (carrito).</li>
+                    <li><strong>Recibido:</strong> Confirmado pero no pagado.</li>
+                    <li><strong>En preparación:</strong> Pagado y en cola de cocina.</li>
+                    <li><strong>Cocinando:</strong> Un cocinero ha comenzado la elaboración.</li>
+                    <li><strong>Listo cocina:</strong> Elaboración terminada.</li>
+                    <li><strong>Terminado:</strong> Listo para recogida (camarero ha completado con bebidas, etc.).</li>
+                    <li><strong>Entregado:</strong> El cliente lo ha recibido.</li>
+                </ol>
+                <p>Incluye tipos de pedido (Local/Llevar), simulación de pago con tarjeta y un historial de pedidos en el perfil del cliente.</p>
+            </article>
+
+            <article>
+                <h3>Funcionalidad 3: Preparación de Pedidos (Cocina)</h3>
+                <p>Interfaz diseñada para tablets en formato apaisado para los cocineros. Permite:</p>
+                <ul>
+                    <li>Asignarse un pedido en estado "En preparación" (pasa a "Cocinando").</li>
+                    <li>Confirmar la preparación de productos individualmente.</li>
+                    <li>Finalizar el pedido para avisar a sala.</li>
+                </ul>
+                <p>El Gerente dispone de una vista global donde puede ver qué cocinero (mediante su avatar) está preparando cada pedido.</p>
+            </article>
+        </section>
+
+    </main>
+</body>
+</html>

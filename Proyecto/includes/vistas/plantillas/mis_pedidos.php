@@ -33,4 +33,4 @@
     
     <br>
     <a href="<?php echo RUTA_APP; ?>/index.php" class="boton">Volver a la tienda</a>
-</div>
+</div>w

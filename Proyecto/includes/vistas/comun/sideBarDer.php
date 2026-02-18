@@ -1,8 +1,8 @@
 <?php
 // --- CONFIGURACIÓN DE SIMULACIÓN (Para probar las vistas sin BD) ---
 // Cambia esto a 'true' o 'false' para ver cómo cambia la barra lateral
-$estaLogueado = false;  // ¿El usuario ha hecho login?
-$esGerente = false;     // ¿El usuario es Gerente (Admin)?
+$estaLogueado = true;  // ¿El usuario ha hecho login?
+$esGerente = true;     // ¿El usuario es Gerente (Admin)?
 // ------------------------------------------------------------------
 ?>
 
@@ -22,7 +22,11 @@ $esGerente = false;     // ¿El usuario es Gerente (Admin)?
                 <li><a href="<?php echo RUTA_APP; ?>/editar_perfil.php">Editar mis datos</a></li>
                 
                 <?php if ($esGerente): ?>
-                    <li><a href="<?php echo RUTA_APP; ?>/admin_usuarios.php" style="color: red;"><strong>Gestionar Usuarios</strong></a></li>
+                    <li><hr></li> <li><span style="color: gray; font-size: 0.9em;">Panel Gerente</span></li>
+                    <li><a href="<?php echo RUTA_APP; ?>/admin_usuarios.php" style="color: red;">Gestión de Usuarios</a></li>
+                    <li><a href="<?php echo RUTA_APP; ?>/admin_productos.php" style="color: red;"><strong>Gestión de Carta/Productos</strong></a></li>
+                    <li><a href="<?php echo RUTA_APP; ?>/admin_categorias.php" style="color: red;">Gestión de Categorías</a></li>
+                    <li><hr></li>
                 <?php endif; ?>
 
                 <li><a href="<?php echo RUTA_APP; ?>/mis_pedidos.php">Mis Pedidos</a></li>

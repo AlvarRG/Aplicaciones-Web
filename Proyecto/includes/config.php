@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 /**
  * Parámetros de conexión a la BD

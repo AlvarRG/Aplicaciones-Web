@@ -1,10 +1,9 @@
 <?php
-// --- CONFIGURACIÓN DE SIMULACIÓN DE ROLES ---
-// Cambia estos valores a 'true' o 'false' para probar la interfaz
-$estaLogueado = true;  // ¿Hay un usuario conectado?
-$esCamarero   = false; // ¿El usuario es un Camarero?
-$esGerente    = true;  // ¿El usuario es el Gerente?
-// --------------------------------------------
+// Leemos la sesión real
+$estaLogueado = isset($_SESSION['login']) && $_SESSION['login'] === true;
+$esCamarero   = $estaLogueado && isset($_SESSION['rol']) && $_SESSION['rol'] === 'camarero';
+$esGerente    = $estaLogueado && isset($_SESSION['rol']) && $_SESSION['rol'] === 'gerente';
+$esCocinero   = $estaLogueado && isset($_SESSION['rol']) && $_SESSION['rol'] === 'cocinero';
 ?>
 
 <nav id="sidebar-left" class="menu-lateral">
@@ -23,13 +22,25 @@ $esGerente    = true;  // ¿El usuario es el Gerente?
         </ul>
     <?php endif; ?>
 
-    <?php if ($esCamarero): ?>
+    <?php if ($esCamarero || $esGerente): ?>
         <hr>
-        <h3>Zona Empleados</h3>
+        <h3>Zona Camareros</h3>
         <ul>
             <li>
                 <a href="<?php echo RUTA_APP; ?>/panel_camarero.php" style="color: #0066cc;">
-                    <strong>Terminal TPV (Camareros)</strong>
+                    <strong>Terminal TPV</strong>
+                </a>
+            </li>
+        </ul>
+    <?php endif; ?>
+
+    <?php if ($esCocinero || $esGerente): ?>
+        <hr>
+        <h3>Zona Cocina</h3>
+        <ul>
+            <li>
+                <a href="#" style="color: #e67e22;">
+                    <strong>Panel de Cocina</strong>
                 </a>
             </li>
         </ul>
@@ -37,13 +48,11 @@ $esGerente    = true;  // ¿El usuario es el Gerente?
 
     <?php if ($esGerente): ?>
         <hr>
-        <h3>Monitorización</h3>
+        <h3>Administración</h3>
         <ul>
-            <li>
-                <a href="<?php echo RUTA_APP; ?>/admin_pedidos.php" style="color: #d32f2f;">
-                    <strong>Todos los Pedidos (Global)</strong>
-                </a>
-            </li>
+            <li><a href="<?php echo RUTA_APP; ?>/admin_pedidos.php" style="color: #d32f2f;">Todos los Pedidos</a></li>
+            <li><a href="<?php echo RUTA_APP; ?>/admin_productos.php">Productos y Categorías</a></li>
+            <li><a href="<?php echo RUTA_APP; ?>/admin_usuarios.php">Gestión de Empleados</a></li>
         </ul>
     <?php endif; ?>
 </nav>

@@ -1,8 +1,11 @@
 <?php
-// --- CONFIGURACIÓN DE SIMULACIÓN (Para probar las vistas sin BD) ---
-// Cambia esto a 'true' o 'false' para ver cómo cambia la barra lateral
-$estaLogueado = true;  // ¿El usuario ha hecho login?
-$esGerente = true;     // ¿El usuario es Gerente (Admin)?
+// --- LECTURA DE SESIÓN REAL ---
+// Ya no usamos 'true' o 'false' a mano, leemos la memoria del servidor
+$estaLogueado = isset($_SESSION['login']) && $_SESSION['login'] === true;
+$esGerente    = $estaLogueado && isset($_SESSION['rol']) && $_SESSION['rol'] === 'gerente';
+
+// Si está logueado, cogemos su nombre, si no, lo dejamos por defecto
+$nombreUsuario = $estaLogueado ? $_SESSION['nombre_usuario'] : 'Invitado';
 // ------------------------------------------------------------------
 ?>
 
@@ -14,7 +17,7 @@ $esGerente = true;     // ¿El usuario es Gerente (Admin)?
             <div class="avatar">
                 <img src="<?php echo RUTA_IMGS; ?>usuario_ejemplo.png" alt="Avatar" width="50">
             </div>
-            <p>Hola, <strong>Usuario Demo</strong></p>
+            <p>Hola, <strong><?php echo htmlspecialchars($nombreUsuario); ?></strong></p>
             
             <ul class="menu-usuario">
                 <li><a href="<?php echo RUTA_APP; ?>/perfil.php">Ver mi Perfil</a></li>
@@ -37,15 +40,15 @@ $esGerente = true;     // ¿El usuario es Gerente (Admin)?
     <?php else: ?>
         <div class="login-panel">
             <h3>Identifícate</h3>
-            <form action="<?php echo RUTA_APP; ?>/login.php" method="POST">
+            <form action="<?php echo RUTA_APP; ?>/procesar_login.php" method="POST">
                 <fieldset>
                     <div>
                         <label>Usuario:</label><br>
-                        <input type="text" name="username" size="10" />
+                        <input type="text" name="username" size="10" required />
                     </div>
                     <div>
                         <label>Contraseña:</label><br>
-                        <input type="password" name="password" size="10" />
+                        <input type="password" name="password" size="10" required />
                     </div>
                     <div>
                         <button type="submit">Entrar</button>

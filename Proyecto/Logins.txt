@@ -1,0 +1,5 @@
+Administrador (usuario: admin, contraseña: admin)
+Cocinero (usuario: cocinero, contraseña: cocinero)
+Camarero (usuario: camarero, contraseña: camarero)
+Error de inicio de sesión (usuario: error, contraseña: error)
+Usuario normal (cualquier otra combinación de usuario y contraseña)

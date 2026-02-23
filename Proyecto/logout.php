@@ -1,10 +1,18 @@
 <?php
-// Archivo: C:\xampp\htdocs\practica2\logout.php
-require_once __DIR__ . '/includes/config.php';
+//Inicio del procesamiento
+session_start();
 
-// Destruimos la sesión
+//Doble seguridad: unset + destroy
+unset($_SESSION['login']);
+unset($_SESSION['esAdmin']);
+unset($_SESSION['nombre']);
+
+$tituloPagina = 'Logout';
+$contenidoPrincipal = <<<EOS
+<h1>Hasta pronto!</h1>
+EOS;
+
+
 session_destroy();
-
-// Volvemos al inicio
-header('Location: index.php');
-exit();
+require 'includes/vistas/plantillas/plantilla.php';
+?>

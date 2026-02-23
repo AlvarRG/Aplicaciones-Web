@@ -1,14 +1,56 @@
 <?php
-// C:\xampp\htdocs\practica2\perfil.php
+require_once __DIR__.'/utils.php';
+session_start();
 
-require_once __DIR__ . '/includes/config.php';
+// 1. Verificación de seguridad
+if (!isset($_SESSION['login']) || !isset($_SESSION['nombreUsuario'])) {
+    header('Location: login.php');
+    exit();
+}
+
+$conn = conexionBD();
+$u = $conn->real_escape_string($_SESSION['nombreUsuario']);
+
+// 2. Recuperar datos
+$query = "SELECT * FROM Usuarios WHERE nombreUsuario = '$u'";
+$rs = $conn->query($query);
+$datos = $rs->fetch_assoc();
+
+if (!$datos) {
+    die("Error crítico: No se han encontrado datos para el usuario logueado ($u).");
+}
 
 $tituloPagina = 'Mi Perfil';
 
-// 1. Aquí "cargamos" la comida (el HTML de la plantilla)
-ob_start();
-require __DIR__ . '/includes/vistas/plantillas/perfil.php'; 
-$contenidoPrincipal = ob_get_clean();
+// 3. Preparar vista de avatares
+$avatares = ['alvar.jpg', 'ethan.jpg', 'yago.jpg', 'zhirun.jpg'];
+$htmlAvatares = "";
+foreach($avatares as $av) {
+    $checked = ($datos['avatar'] == $av) ? "checked" : "";
+    $htmlAvatares .= "<label><img src='img/avatares/$av' width='40'><input type='radio' name='avatar_pre' value='$av' $checked></label>";
+}
 
-// 2. Aquí servimos la mesa (ponemos cabecera, contenido y pie)
-require __DIR__ . '/includes/vistas/plantilla.php';
+$contenidoPrincipal = <<<EOS
+    <h1>Perfil de {$datos['nombreUsuario']}</h1>
+    <div style="display:flex; gap: 20px;">
+        <img src="img/avatares/{$datos['avatar']}" width="150" style="border-radius:10px;" height="120">
+        
+        <form action="procesarPerfil.php" method="POST" enctype="multipart/form-data">
+            <fieldset>
+                <legend>Actualizar mis datos</legend>
+                <p>Nombre: <input type="text" name="nombre" value="{$datos['nombre']}"></p>
+                <p>Apellidos: <input type="text" name="apellidos" value="{$datos['apellidos']}"></p>
+                <p>Email: <input type="email" name="email" value="{$datos['email']}"></p>
+                
+                <h4>Cambiar Avatar</h4>
+                <div>$htmlAvatares</div>
+                <p>O sube uno propio: <input type="file" name="nueva_foto"></p>
+                <p><input type="checkbox" name="borrar_foto"> Usar foto por defecto</p>
+                
+                <button type="submit" name="actualizar">Guardar Cambios</button>
+            </fieldset>
+        </form>
+    </div>
+EOS;
+
+require 'includes/vistas/plantillas/plantilla.php';

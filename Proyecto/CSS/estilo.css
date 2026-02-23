@@ -1,0 +1,112 @@
+body {
+    background-color: #CDCDCD;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* El contenedor ahora es el jefe del espacio */
+div#contenedor {
+    width: 100%;       /* Cambiado de 95% a 100% */
+    max-width: 100%;    /* Eliminamos el tope de 1400px */
+    margin: 0;          /* Quitamos el margen para que pegue a los bordes */
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #303030;
+}
+
+header {
+    width: 100%;
+    padding: 20px;
+    background-color: #303030;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+header img {
+    height: 80px;
+}
+
+div.saludo {
+    width: 100%;
+    text-align: right;
+    padding: 10px 20px;
+    background-color: #252525;
+    color: white;
+    font-size: 0.9em;
+    box-sizing: border-box;
+}
+
+/* Sidebar Izquierdo */
+nav {
+    width: 200px;
+    padding: 20px;
+    background-color: #dddddd;
+    box-sizing: border-box;
+    flex-shrink: 0; /* No se encoge */
+}
+
+main {
+    flex: 1; 
+    padding: 40px;
+    background-color: white;
+    min-height: 800px;
+    box-sizing: border-box;
+}
+
+/* Sidebar Derecho (opcional, si lo usas) */
+aside {
+    width: 180px;
+    padding: 20px;
+    background-color: #dddddd;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+footer {
+    width: 100%;
+    padding: 15px;
+    background-color: #303030;
+    color: white;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Estilos de la Tabla para que ocupe el ancho del main */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th {
+    background-color: #f2f2f2;
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #eee;
+}
+
+/* Quitar los puntos de las listas del menú */
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: red;
+    font-weight: bold;
+    display: block;
+    margin: 10px 0;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}

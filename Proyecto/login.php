@@ -1,14 +1,28 @@
 <?php
-// Archivo: C:\xampp\htdocs\practica2\login.php
+// Inicio del procesamiento
+session_start();
 
-require_once __DIR__ . '/includes/config.php';
+$tituloPagina = 'Login';
 
-$tituloPagina = 'Iniciar Sesión';
+$contenidoPrincipal = <<<EOS
+<h1>Acceso al sistema</h1>
+<form action="procesarLogin.php" method="POST">
+    <fieldset>
+        <legend>Usuario y contraseña</legend>
+        <div>
+            <label for="nombreUsuario">Nombre de usuario:</label>
+            <input id="nombreUsuario" type="text" name="nombreUsuario" />
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input id="password" type="password" name="password" />
+        </div>
+        <div>
+            <button type="submit" name="login">Entrar</button>
+        </div>
+    </fieldset>
+</form>
+EOS;
 
-// Cargamos la vista del login (que ya creamos antes y que contiene el HTML y el mensaje de error)
-ob_start();
-require __DIR__ . '/includes/vistas/plantillas/login.php';
-$contenidoPrincipal = ob_get_clean();
-
-// Cargamos la plantilla base
-require __DIR__ . '/includes/vistas/plantilla.php';
+require 'includes/vistas/plantillas/plantilla.php';
+?>

@@ -4,7 +4,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* El contenedor ahora es el jefe del espacio */
 div#contenedor {
     width: 100%;       /* Cambiado de 95% a 100% */
     max-width: 100%;    /* Eliminamos el tope de 1400px */
@@ -39,7 +38,6 @@ div.saludo {
     box-sizing: border-box;
 }
 
-/* Sidebar Izquierdo */
 nav {
     width: 200px;
     padding: 20px;
@@ -56,7 +54,6 @@ main {
     box-sizing: border-box;
 }
 
-/* Sidebar Derecho (opcional, si lo usas) */
 aside {
     width: 180px;
     padding: 20px;
@@ -74,7 +71,6 @@ footer {
     box-sizing: border-box;
 }
 
-/* Estilos de la Tabla para que ocupe el ancho del main */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -93,7 +89,6 @@ td {
     border: 1px solid #eee;
 }
 
-/* Quitar los puntos de las listas del menú */
 nav ul {
     list-style: none;
     padding: 0;
@@ -110,3 +105,4 @@ nav a {
 nav a:hover {
     text-decoration: underline;
 }
+

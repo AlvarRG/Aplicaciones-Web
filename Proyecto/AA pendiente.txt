@@ -1,0 +1,10 @@
+-En el perfil habría que poder ver tus pedidos
+-No sé si según está ahora cada día empieza el número de pedido en 1
+-Mirar si todo el flujo es correcto, se pueden hacer todas las acciones de manera satisfactoria y según los requisitos
+-Mirar que los accesos a diferentes vistas son correctos (los cocineros / camareros / gerentes pueden entrar a todo lo que 
+necesitan sin problema y no tienen acceso a nada que no)
+-Añadir productos, categorías y una página principal con el contenido que queramos mostrar (index.php)
+-Revisar que cumple con todos los requisitos del enunciado
+-Continuar implementando los pasos del ejercicio 2 (por ejmplo aún no hay config.php)
+-Las vistas de tablet de camareros y de cocineros tienen estilos que no sé si estará bien, quizá lo que hay debería
+ser con CSS

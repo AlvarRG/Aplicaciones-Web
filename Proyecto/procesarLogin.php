@@ -12,28 +12,33 @@ $erroresFormulario = [];
 $nombreUsuario = filter_input(INPUT_POST, 'nombreUsuario', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $password = $_POST['password'] ?? '';
 
-if (empty($nombreUsuario)) $erroresFormulario['nombreUsuario'] = 'El usuario no puede estar vacío';
-if (empty($password)) $erroresFormulario['password'] = 'El password no puede estar vacío.';
+if (empty($nombreUsuario)) $erroresFormulario['nombreUsuario'] = 'El usuario no puede estar vacio';
+if (empty($password)) $erroresFormulario['password'] = 'El password no puede estar vacio.';
 
 if (count($erroresFormulario) === 0) {
     $conn = conexionBD();
-    $query = sprintf("SELECT * FROM Usuarios WHERE nombreUsuario = '%s'", $conn->real_escape_string($nombreUsuario));
+    $query = sprintf("SELECT * FROM usuarios WHERE nombreUsuario = '%s'", $conn->real_escape_string($nombreUsuario));
     $rs = $conn->query($query);
 
     if ($rs && $rs->num_rows == 1) {
         $fila = $rs->fetch_assoc();
         if (password_verify($password, $fila['password'])) {
-            // LOGIN CORRECTO
-            $_SESSION['login'] = true;
-            $_SESSION['nombre'] = $fila['nombre'];
-            $_SESSION['nombreUsuario'] = $fila['nombreUsuario']; // <-- LÍNEA CLAVE
-
-            // Cargar Roles
-            $resRoles = $conn->query("SELECT rol FROM RolesUsuario WHERE usuario = {$fila['id']}");
-            $roles = [];
-            while($r = $resRoles->fetch_assoc()) { $roles[] = $r['rol']; }
             
-            $_SESSION['esAdmin'] = in_array(ADMIN_ROLE, $roles);
+            $_SESSION['login'] = true;
+            $_SESSION['id'] = $fila['id'];
+            $_SESSION['nombre'] = $fila['nombre'];
+            $_SESSION['nombreUsuario'] = $fila['nombreUsuario'];
+            $_SESSION['avatar'] = $fila['avatar'] ?? 'default_avatar.png';
+
+            $resRoles = $conn->query("SELECT rol FROM rolesusuario WHERE usuario = {$fila['id']}");
+            $roles = [];
+            while($r = $resRoles->fetch_assoc()) { 
+                $roles[] = $r['rol']; 
+            }
+            
+            $_SESSION['esAdmin'] = in_array(4, $roles);
+            $_SESSION['esCamarero'] = in_array(2, $roles);
+            $_SESSION['esCocinero'] = in_array(3, $roles);
             
             header('Location: index.php');
             exit();
@@ -45,7 +50,6 @@ if (count($erroresFormulario) === 0) {
     }
 }
 
-// Si falla, mostramos el formulario con errores (mismo código que ya tenías)
 $htmlErroresGlobales = generaErroresGlobalesFormulario($erroresFormulario);
 $errorUsuario = generarError('nombreUsuario', $erroresFormulario);
 $errorPassword = generarError('password', $erroresFormulario);

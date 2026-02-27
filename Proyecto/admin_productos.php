@@ -1,13 +1,13 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     header('Location: index.php'); exit();
 }
 
 $tituloPagina = 'Gestión de Productos';
-$conn = conexionBD();
+$conn = Aplicacion::getInstance()->getConexionBd();
 
 $query = "SELECT P.*, C.nombre AS nombre_cat 
           FROM Productos P 

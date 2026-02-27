@@ -1,13 +1,13 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
 }
 
-$conn = conexionBD();
+$conn = Aplicacion::getInstance()->getConexionBd();
 
 $esCocinero = isset($_SESSION['esCocinero']) ? $_SESSION['esCocinero'] : false;
 

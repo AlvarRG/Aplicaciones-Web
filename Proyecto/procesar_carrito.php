@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__.'/includes/config.php';
 
 // Si alguien intenta entrar aquí sin enviar el formulario, lo echamos
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

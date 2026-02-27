@@ -1,13 +1,13 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 $tituloPagina = 'Gestión de Usuarios';
 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
-    $conn = conexionBD();
+    $conn = Aplicacion::getInstance()->getConexionBd();
     $query = "SELECT id, nombreUsuario, nombre, apellidos, email FROM Usuarios";
     $rs = $conn->query($query);
     

@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 // 1. SEGURIDAD: Usuario logueado
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -17,7 +17,7 @@ if ($idPedido === 0) {
     exit();
 }
 
-$conn = conexionBD();
+$conn = Aplicacion::getInstance()->getConexionBd();
 
 // 3. CONSULTAR LOS DATOS DEL PEDIDO (Para mostrar el número diario y el estado)
 // Aseguramos que el pedido pertenece a este usuario por privacidad

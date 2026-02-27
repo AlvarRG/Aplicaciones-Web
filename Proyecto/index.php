@@ -1,6 +1,5 @@
 <?php
-//Inicio del procesamiento
-session_start();
+require_once __DIR__.'/includes/config.php';
 
 $tituloPagina = 'Portada';
 $contenidoPrincipal = <<<EOS
@@ -8,5 +7,4 @@ $contenidoPrincipal = <<<EOS
     <p>Aquí está el contenido público, visible para todos los usuarios.</p>
 EOS;
 
-require 'includes/vistas/plantillas/plantilla.php';
-?>
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

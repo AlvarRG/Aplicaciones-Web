@@ -9,7 +9,7 @@
 <div id="contenedor">
 <?php
 require('includes/vistas/comun/cabecera.php');
-require('includes/vistas/comun/sidebarIzq.php');
+require('includes/vistas/comun/sideBarIzq.php');
 ?>
     <main>
         <article>

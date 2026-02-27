@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 // 1. REQUISITO: El usuario debe estar identificado
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -17,7 +17,7 @@ EOS;
 }
 
 $tituloPagina = 'Revisar Pedido';
-$conn = conexionBD();
+$conn = Aplicacion::getInstance()->getConexionBd();
 
 // 2. Comprobar si el carrito tiene algo
 $carrito = $_SESSION['carrito'] ?? [];

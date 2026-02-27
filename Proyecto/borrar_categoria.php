@@ -1,11 +1,12 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
+
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) exit();
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 if ($id) {
-    $conn = conexionBD();
+    $conn = Aplicacion::getInstance()->getConexionBd();
     // Nota: Si hay productos en esta categoría, fallará por la clave foránea (lo cual es bueno)
     $conn->query("DELETE FROM Categorias WHERE id = $id");
 }

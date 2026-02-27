@@ -1,13 +1,13 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     header('Location: index.php'); exit();
 }
 
 if (isset($_GET['id'])) {
-    $conn = conexionBD();
+    $conn = Aplicacion::getInstance()->getConexionBd();
     $id = intval($_GET['id']);
     
     // En lugar de DELETE, usamos UPDATE para ocultarlo

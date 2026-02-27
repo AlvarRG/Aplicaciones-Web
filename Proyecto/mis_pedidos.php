@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 // 1. SEGURIDAD: Usuario logueado obligatoriamente
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -8,7 +8,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     exit();
 }
 
-$conn = conexionBD();
+$conn = Aplicacion::getInstance()->getConexionBd();
 
 // 2. RECUPERAR EL ID DEL USUARIO (A prueba de fallos)
 $idUsuario = 0;

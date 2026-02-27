@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 // 1. SEGURIDAD: Usuario logueado y carrito con productos
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -17,7 +17,7 @@ if (empty($_SESSION['carrito'])) {
 // (Asegúrate de que el nombre de esta variable coincide con tu login, suele ser 'id' o 'idUsuario')
 $idUsuario = $_SESSION['id_usuario'] ?? $_SESSION['id'] ?? 1; // Ponemos 1 de fallback por si acaso
 
-$conn = conexionBD();
+$conn = Aplicacion::getInstance()->getConexionBd();
 
 // 2. RECIBIR EL TIPO DE PEDIDO (De carrito.php)
 if (isset($_POST['tipo_pedido'])) {

@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     die("No tienes permiso.");
@@ -9,7 +9,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 if ($id) {
-    $conn = conexionBD();
+    $conn = Aplicacion::getInstance()->getConexionBd();
     // 1. Borrar roles primero (por integridad referencial)
     $conn->query("DELETE FROM RolesUsuario WHERE usuario = $id");
     // 2. Borrar usuario

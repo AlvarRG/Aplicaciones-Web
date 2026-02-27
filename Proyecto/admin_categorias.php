@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/utils.php';
-session_start();
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Aplicacion;
 
 // Seguridad: Solo el Gerente
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
@@ -10,7 +10,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 
 $tituloPagina = 'Gestión de Categorías';
 
-$conn = conexionBD();
+$conn = Aplicacion::getInstance()->getConexionBd();
 $query = "SELECT * FROM Categorias";
 $rs = $conn->query($query);
 

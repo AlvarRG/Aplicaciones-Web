@@ -22,11 +22,11 @@
         <ul>
             <li><a href="gestion_pedidos.php">Pedidos (Global)</a></li>
             
-            <?php if ($esCamarero): ?>
+            <?php if ($esCamarero || $esAdmin): ?>
                 <li><a href="tablet_camarero.php">Tablet Camarero</a></li>
             <?php endif; ?>
 
-            <?php if ($esCocinero): ?>
+            <?php if ($esCocinero || $esAdmin): ?>
                 <li><a href="tablet_cocina.php">Tablet Cocina</a></li>
             <?php endif; ?>
         </ul>

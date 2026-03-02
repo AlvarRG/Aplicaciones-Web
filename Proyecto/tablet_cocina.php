@@ -10,8 +10,9 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 $conn = Aplicacion::getInstance()->getConexionBd();
 
 $esCocinero = isset($_SESSION['esCocinero']) ? $_SESSION['esCocinero'] : false;
+$esAdmin = isset($_SESSION['esAdmin']) ? $_SESSION['esAdmin'] : false;
 
-if (!$esCocinero) {
+if (!$esCocinero && !$esAdmin) {
     header('Location: index.php');
     exit();
 }

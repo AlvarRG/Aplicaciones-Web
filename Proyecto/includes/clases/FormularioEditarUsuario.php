@@ -20,9 +20,9 @@ class FormularioEditarUsuario extends Formulario
         // Extra de UX: Obtener el rol actual para preseleccionarlo en el menú
         $rolActual = 1; // Por defecto Cliente
         if (empty($datos)) { // Si es la primera vez que carga (no hay POST)
-            $res = $conn->query("SELECT rol FROM rolesusuario WHERE usuario = {$this->idUsuario} LIMIT 1");
+            $res = $conn->query("SELECT rol FROM usuarios WHERE id = {$this->idUsuario} LIMIT 1");
             if ($res && $res->num_rows > 0) {
-                $rolActual = $res->fetch_assoc()['rol'];
+                $rolActual = (int)$res->fetch_assoc()['rol'];
             }
         } else {
             // Si hubo error, mantenemos el que intentó guardar
@@ -41,18 +41,18 @@ class FormularioEditarUsuario extends Formulario
         $htmlErroresGlobales
         <input type="hidden" name="id" value="{$this->idUsuario}">
         
-        <fieldset style="max-width: 400px;">
+        <fieldset class="form-editar-usuario">
             <legend>Asignación de Permisos</legend>
             <p>
                 <label>Selecciona el nuevo rol principal:</label><br><br>
-                <select name="nuevo_rol" style="width: 100%; padding: 8px;">
+                <select name="nuevo_rol" class="form-editar-usuario-select">
                     <option value="1" $sel1>Cliente (Básico)</option>
                     <option value="2" $sel2>Camarero</option>
                     <option value="3" $sel3>Cocinero</option>
                     <option value="4" $sel4>Gerente (Admin)</option>
                 </select>
             </p>
-            <button type="submit" style="margin-top: 15px;">Guardar Cambios</button>
+            <button type="submit" class="form-editar-usuario-submit">Guardar Cambios</button>
         </fieldset>
 EOF;
     }
@@ -71,10 +71,8 @@ EOF;
 
         if (count($this->errores) === 0) {
             // En este sistema simple, un usuario tiene un solo rol principal.
-            // Borramos el anterior y asignamos el nuevo.
-
-            $conn->query("DELETE FROM rolesusuario WHERE usuario = $id");
-            $conn->query("INSERT INTO RolesUsuario (usuario, rol) VALUES ($id, $nuevoRol)");
+            // Actualizamos el valor en la tabla usuarios.
+            $conn->query("UPDATE usuarios SET rol = $nuevoRol WHERE id = $id");
         }
     }
 }

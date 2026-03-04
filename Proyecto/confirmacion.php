@@ -38,33 +38,33 @@ if ($rs && $rs->num_rows > 0) {
 }
 
 $tituloPagina = 'Pedido Confirmado';
+$estilosExtra = ['confirmacion.css'];
 
-// 4. VISTA DE CONFIRMACIÓN
 $contenidoPrincipal = <<<EOS
-    <div style="max-width: 600px; margin: 50px auto; text-align: center; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #28a745;">
+    <div class="confirmacion-wrapper">
         
-        <h1 style="color: #28a745; font-size: 2.5em; margin-bottom: 10px;">¡Pedido Confirmado! 🎉</h1>
-        <p style="font-size: 1.2em; color: #555;">Tu pedido ha sido registrado correctamente en nuestro sistema.</p>
+        <h1 class="confirmacion-title">Pedido Confirmado</h1>
+        <p class="confirmacion-subtitle">Tu pedido ha sido registrado correctamente en nuestro sistema.</p>
         
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 30px 0;">
-            <p style="font-size: 1.1em; margin: 0; color: #666;">Tu número de pedido es:</p>
-            <div style="font-size: 4em; font-weight: bold; color: #303030; line-height: 1;">
+        <div class="confirmacion-box">
+            <p>Tu número de pedido es:</p>
+            <div class="confirmacion-numero">
                 #{$numeroPedido}
             </div>
             
-            <p style="font-size: 1.2em; margin-top: 15px;">
+            <p class="confirmacion-estado">
                 Estado actual: 
-                <strong style="background: #e1f5fe; color: #0288d1; padding: 5px 15px; border-radius: 20px;">
+                <strong class="confirmacion-estado-badge">
                     {$estado}
                 </strong>
             </p>
         </div>
 
-        <p style="margin-bottom: 30px; color: #777;">
+        <p class="confirmacion-texto">
             Puedes consultar el estado de tu pedido en cualquier momento desde tu perfil de usuario.
         </p>
 
-        <a href="carta.php" style="background-color: #303030; color: white; padding: 15px 30px; font-size: 1.2em; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+        <a href="carta.php" class="confirmacion-boton">
             Volver al Inicio (Nueva Compra)
         </a>
         

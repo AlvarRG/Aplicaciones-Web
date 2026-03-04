@@ -58,7 +58,7 @@ class FormularioNuevoProducto extends Formulario
                     <option value="21" $sel21>21% (General)</option>
                 </select>
             </p>
-            <p style="font-size: 1.2em; color: green;">
+            <p class="form-precio-final">
                 <strong>Precio Final (con IVA): <span id="p_final">0.00</span> €</strong>
             </p>
         </fieldset>

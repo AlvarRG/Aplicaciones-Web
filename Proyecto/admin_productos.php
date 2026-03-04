@@ -7,6 +7,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 }
 
 $tituloPagina = 'Gestión de Productos';
+$estilosExtra = ['admin_productos.css'];
 $conn = Aplicacion::getInstance()->getConexionBd();
 
 $query = "SELECT P.*, C.nombre AS nombre_cat 
@@ -27,17 +28,17 @@ while ($fila = $rs->fetch_assoc()) {
     
     $filas .= <<<EOS
         <tr>
-            <td style="text-align:center;"><img src="img/productos/{$fila['imagen']}" width="40"></td>
+            <td class="admin-productos-img"><img src="img/productos/{$fila['imagen']}" width="40"></td>
             <td><small>{$fila['nombre']}</small></td>
             <td><small>{$fila['nombre_cat']}</small></td>
-            <td style="text-align:right;">{$pBase}€</td>
-            <td style="text-align:center;"><small>{$fila['iva']}%</small></td>
-            <td style="text-align:right;"><strong>{$pFinal}€</strong></td>
-            <td style="text-align:center;"><small>$disponible</small></td>
-            <td style="text-align:center;"><small>$ofertado</small></td>
-            <td style="white-space: nowrap;">
+            <td class="admin-productos-numero">{$pBase}€</td>
+            <td class="admin-productos-centro"><small>{$fila['iva']}%</small></td>
+            <td class="admin-productos-numero"><strong>{$pFinal}€</strong></td>
+            <td class="admin-productos-centro"><small>$disponible</small></td>
+            <td class="admin-productos-centro"><small>$ofertado</small></td>
+            <td class="admin-productos-acciones">
                 <a href="editar_producto.php?id={$fila['id']}"><small>[Edit]</small></a>
-                <a href="quitar_producto.php?id={$fila['id']}" style="color:red;" onclick="return confirm('¿Eliminar?')"><small>[Eliminar]</small></a>
+                <a href="quitar_producto.php?id={$fila['id']}" class="admin-productos-eliminar" onclick="return confirm('¿Eliminar?')"><small>[Eliminar]</small></a>
             </td>
         </tr>
 EOS;
@@ -45,10 +46,10 @@ EOS;
 
 $contenidoPrincipal = <<<EOS
     <h1>Gestión de la Carta</h1>
-    <p><a href="nuevo_producto.php">➕ Añadir Producto</a></p>
+    <p><a href="nuevo_producto.php">Añadir Producto</a></p>
     
-    <table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%; min-width: 600px; font-family: Arial, sans-serif;">
-            <thead style="background-color: #eee;">
+    <table class="admin-productos-tabla" border="1" cellpadding="5">
+            <thead>
                 <tr>
                     <th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Base</th><th>IVA</th>
                     <th>Total</th><th>Stock</th><th>Estado</th><th>Acciones</th>

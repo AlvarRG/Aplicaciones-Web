@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['
 }
 
 $tituloPagina = 'Tablet Camarero';
+$estilosExtra = ['tablet_camarero.css'];
 
 // Obtención de datos (Misma lógica)
 $queryPedidos = "SELECT id, numero_pedido, tipo, total, estado FROM Pedidos 
@@ -78,7 +79,7 @@ function generarTarjetaPedido($pedido, $botonTexto, $botonClase, $siguienteEstad
     foreach ($pedido['productos'] as $prod) {
         $htmlProductos .= "<div class='tablet-camarero-producto-row'>
             <span class='tablet-camarero-producto-nombre'>{$prod['cantidad']}x {$prod['nombre']}</span>
-            <span style='font-weight: bold;'>".number_format($prod['cantidad']*$prod['precio_unitario'],2)."€</span>
+            <span class='tablet-camarero-producto-precio'>".number_format($prod['cantidad']*$prod['precio_unitario'],2)."€</span>
         </div>";
     }
     $htmlProductos .= '</div>';

@@ -1,0 +1,92 @@
+.pago-resumen {
+    background: #eef9f0;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.pago-tarjetas-wrapper {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pago-tarjeta-form {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    width: 350px;
+    background: white;
+}
+
+.pago-tarjeta-form h3 {
+    margin-top: 0;
+}
+
+.pago-input-text {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.pago-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.pago-input-col {
+    flex: 1;
+}
+
+.pago-boton-confirmar {
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.pago-boton-confirmar:hover {
+    filter: brightness(1.05);
+}
+
+.pago-camarero {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    width: 350px;
+    background: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.pago-boton-camarero {
+    background-color: #303030;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.pago-boton-camarero:hover {
+    filter: brightness(1.05);
+}
+
+/* Mensaje de error en pago */
+.pago-error {
+    color: red;
+}
+

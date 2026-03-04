@@ -1,0 +1,14 @@
+.admin-categorias-tabla {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.admin-categorias-tabla th,
+.admin-categorias-tabla td {
+    padding: 8px;
+}
+
+.admin-categorias-eliminar {
+    color: red;
+}
+

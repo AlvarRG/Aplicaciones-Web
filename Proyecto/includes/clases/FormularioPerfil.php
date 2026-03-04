@@ -30,13 +30,12 @@ class FormularioPerfil extends Formulario
         $email = $datos['email'] ?? $user['email'];
         $avatarActual = $datos['avatar_pre'] ?? $user['avatar'];
 
-        // 3. Montamos la botonera de avatares predefinidos
         $avatares = ['alvar.jpg', 'ethan.jpg', 'yago.jpg', 'zhirun.jpg'];
         $htmlAvatares = "";
         foreach ($avatares as $av) {
             $checked = ($avatarActual == $av) ? "checked" : "";
-            $htmlAvatares .= "<label style='margin-right: 15px;'>
-                    <img src='img/avatares/$av' width='40' height='40' style='vertical-align: middle; object-fit: cover;'>
+            $htmlAvatares .= "<label class='perfil-avatar-opcion'>
+                    <img src='img/avatares/$av' width='40' height='40'>
                     <input type='radio' name='avatar_pre' value='$av' $checked>
                   </label>";
         }
@@ -53,7 +52,7 @@ class FormularioPerfil extends Formulario
             <p>Email: <input type="email" name="email" value="$email" required></p>
             
             <h4>Cambiar Avatar</h4>
-            <div style="margin-bottom: 15px;">$htmlAvatares</div>
+            <div>$htmlAvatares</div>
             
             <p>O sube uno propio: <input type="file" name="nueva_foto" accept="image/*"></p>
             <p><label><input type="checkbox" name="borrar_foto"> Usar foto por defecto</label></p>

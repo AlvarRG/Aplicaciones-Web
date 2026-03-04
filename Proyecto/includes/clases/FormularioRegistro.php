@@ -93,13 +93,10 @@ EOF;
             } else {
                 // Inserción en la BD
                 $passHash = password_hash($password, PASSWORD_DEFAULT);
-                $query = "INSERT INTO usuarios(nombreUsuario, nombre, apellidos, email, password, avatar) 
-                          VALUES ('$u', '$nombre', '$apellidos', '$e', '$passHash', 'default.png')";
+                $query = "INSERT INTO usuarios(nombreUsuario, nombre, apellidos, email, password, avatar, rol) 
+                          VALUES ('$u', '$nombre', '$apellidos', '$e', '$passHash', 'default.png', 1)";
 
                 if ($conn->query($query)) {
-                    $id = $conn->insert_id;
-                    $conn->query("INSERT INTO rolesusuario(usuario, rol) VALUES ($id, 1)");
-
                     $_SESSION['login'] = true;
                     $_SESSION['nombre'] = $nombre;
                     $_SESSION['nombreUsuario'] = $nombreUsuario;

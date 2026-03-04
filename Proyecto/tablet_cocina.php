@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['
 }
 
 $tituloPagina = 'Tablet Cocina';
+$estilosExtra = ['tablet_cocina.css'];
 
 // Consulta de pedidos (usando el nombre correcto de tu tabla: pedidos_productos)
 $queryPedidos = "SELECT id, numero_pedido, tipo, estado FROM pedidos 
@@ -89,7 +90,7 @@ $avatar = $_SESSION['avatar'] ?? 'default.png';
 
 $contenidoPrincipal = <<<EOS
 <div class="tablet-cocinero-header">
-    <h2>PANEL DE COCINA</h2>
+    <h2>Panel Cocina</h2>
     <div class="tablet-camarero-user">
         <span>Chef: <strong>$nombreUser</strong></span>
         <img src="img/avatares/$avatar" alt="Avatar" class="tablet-camarero-avatar">

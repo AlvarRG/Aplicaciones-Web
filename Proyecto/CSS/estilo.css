@@ -106,284 +106,215 @@ nav a:hover {
     text-decoration: underline;
 }
 
-/* ============================
-   Estilos tablet camarero
-   ============================ */
-
-.tablet-camarero-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #303030;
-    color: #ffffff;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
+#mini-carrito {
+    padding: 10px;
 }
 
-.tablet-camarero-header h2 {
-    margin: 0;
-    font-size: 1.2em;
+.mini-carrito-titulo {
+    border-bottom: 2px solid #303030;
+    padding-bottom: 5px;
 }
 
-.tablet-camarero-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.tablet-camarero-user span {
-    font-size: 0.9em;
-}
-
-.tablet-camarero-avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: 2px solid #ffffff;
-    object-fit: cover;
-}
-
-.tablet-camarero-layout {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.tablet-camarero-column {
-    flex: 1;
-    padding: 8px;
-    border-radius: 8px;
-    min-width: 0;
-    box-sizing: border-box;
-}
-
-.tablet-camarero-column--cobros {
-    background: #fff8e1;
-}
-
-.tablet-camarero-column--cocina {
-    background: #e0f7fa;
-}
-
-.tablet-camarero-column--entrega {
-    background: #e8f5e9;
-}
-
-.tablet-camarero-column h3 {
+.mini-carrito-boton {
+    display: block;
     text-align: center;
-    margin-top: 0;
-    font-size: 1em;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    padding-bottom: 4px;
-}
-
-.tablet-camarero-column--cobros h3 {
-    color: #856404;
-    border-bottom-color: #ffeeba;
-}
-
-.tablet-camarero-column--cocina h3 {
-    color: #006064;
-    border-bottom-color: #bee5eb;
-}
-
-.tablet-camarero-column--entrega h3 {
-    color: #1b5e20;
-    border-bottom-color: #c3e6cb;
-}
-
-.tablet-camarero-card {
-    background: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 6px;
-    padding: 8px;
-    margin-bottom: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    box-sizing: border-box;
-}
-
-.tablet-camarero-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9em;
-}
-
-.tablet-camarero-card-type {
-    font-size: 0.75em;
-    background: #f0f0f0;
-    padding: 1px 4px;
-    border-radius: 3px;
-}
-
-.tablet-camarero-productos {
-    margin: 5px 0;
-    font-size: 0.8em;
-    border-top: 1px solid #eeeeee;
-    border-bottom: 1px solid #eeeeee;
-    padding: 5px 0;
-}
-
-.tablet-camarero-producto-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
-}
-
-.tablet-camarero-producto-nombre {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tablet-camarero-total {
-    text-align: right;
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
     font-weight: bold;
-    font-size: 0.9em;
-    margin-bottom: 8px;
+    margin-top: 15px;
 }
 
-.tablet-camarero-btn {
-    width: 100%;
-    padding: 8px;
-    font-size: 0.85em;
-    font-weight: bold;
-    color: #ffffff;
+.mini-carrito-form {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.mini-carrito-vaciar {
+    background: none;
     border: none;
-    border-radius: 4px;
+    color: red;
+    text-decoration: underline;
     cursor: pointer;
 }
 
-.tablet-camarero-btn--cobrar {
-    background-color: #ffc107;
+.mini-carrito-vacio {
+    color: #666;
+    font-style: italic;
 }
 
-.tablet-camarero-btn--preparar {
-    background-color: #17a2b8;
+.form-precio-final {
+    font-size: 1.2em;
+    color: green;
 }
 
-.tablet-camarero-btn--entregar {
-    background-color: #28a745;
+.form-imagen-actual {
+    border: 1px solid #ccc;
+    margin: 5px 0;
+}
+
+.form-imagen-categoria {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-editar-producto-acciones {
+    margin-top: 20px;
+}
+
+.form-eliminar-producto {
+    color: red;
+    margin-left: 20px;
+}
+
+.form-editar-usuario {
+    max-width: 400px;
+}
+
+.form-editar-usuario-select {
+    width: 100%;
+    padding: 8px;
+}
+
+.form-editar-usuario-submit {
+    margin-top: 15px;
 }
 
 /* ============================
-   Estilos tablet cocinero
+   Estilos mis pedidos / badges
    ============================ */
 
-.tablet-cocinero-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #303030;
-    color: #ffffff;
-    padding: 10px 15px;
+.debug-session-error {
+    padding: 20px;
+    background: #f8d7da;
+    color: #721c24;
+    margin: 50px auto;
+    max-width: 800px;
     border-radius: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
+    border: 1px solid #f5c6cb;
 }
 
-.tablet-cocinero-header h2 {
-    margin: 0;
-    font-size: 1.2em;
-}
-
-.tablet-cocinero-layout {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.tablet-cocinero-column {
-    flex: 1;
+.debug-session-dump {
+    background: white;
     padding: 10px;
-    border-radius: 8px;
-    min-width: 0;
-    box-sizing: border-box;
+    border-radius: 5px;
+    color: black;
 }
 
-/* Solo dos columnas: Nuevas y En proceso */
-.tablet-cocinero-column--nuevas {
-    background: #fff3e0; /* Tono naranja muy claro */
-}
-
-.tablet-cocinero-column--proceso {
-    background: #e1f5fe; /* Tono azul muy claro */
-}
-
-.tablet-cocinero-column h3 {
-    text-align: center;
-    margin-top: 0;
-    font-size: 1.1em;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    padding-bottom: 6px;
-}
-
-.tablet-cocinero-column--nuevas h3 {
-    color: #e65100;
-    border-bottom-color: #ffe0b2;
-}
-
-.tablet-cocinero-column--proceso h3 {
-    color: #01579b;
-    border-bottom-color: #b3e5fc;
-}
-
-.tablet-cocinero-card {
-    background: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 6px;
-    padding: 8px;
-    margin-bottom: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    box-sizing: border-box;
-}
-
-.tablet-cocinero-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9em;
-}
-
-.tablet-cocinero-productos {
-    margin: 10px 0;
-    font-size: 0.95em;
-}
-
-.tablet-cocinero-producto-row {
-    padding: 4px 0;
-    border-bottom: 1px dashed #eee;
-}
-
-.tablet-cocinero-btn {
+.mis-pedidos-tabla {
     width: 100%;
-    padding: 12px;
-    font-size: 0.9em;
+    text-align: center;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.mis-pedidos-thead {
+    background: #303030;
+    color: black;
+}
+
+.mis-pedidos-th-principal {
+    padding: 10px;
+    border: 1px solid #555;
+}
+
+.mis-pedidos-th {
+    border: 1px solid #555;
+}
+
+.mis-pedidos-row {
+    border-bottom: 1px solid #eee;
+}
+
+.mis-pedidos-cell {
+    border: 1px solid #ddd;
+}
+
+.mis-pedidos-cell--numero {
+    padding: 15px;
     font-weight: bold;
-    color: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.mis-pedidos-total {
+    font-weight: bold;
+}
+
+.mis-pedidos-no-cancelable {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.mis-pedidos-empty {
+    background: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+.mis-pedidos-empty-link {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.form-inline {
+    display: inline;
+}
+
+.btn-cancelar-pedido-cliente {
+    background: #dc3545;
+    color: white;
     border: none;
+    padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-    text-transform: uppercase;
 }
 
-/* Botones específicos de cocina */
-.tablet-cocinero-btn--cocinar {
-    background-color: #fd7e14; /* Naranja */
+.badge-estado {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
 }
 
-.tablet-cocinero-btn--listo {
-    background-color: #28a745; /* Verde */
+.badge-estado--recibido {
+    background: #ffc107;
 }
 
-.tablet-cocinero-btn:hover {
-    filter: brightness(90%);
+.badge-estado--preparacion {
+    background: #17a2b8;
+}
+
+.badge-estado--listo-cocina {
+    background: #fd7e14;
+}
+
+.badge-estado--terminado {
+    background: #28a745;
+}
+
+.badge-estado--cancelado {
+    background: #dc3545;
+}
+
+.badge-estado--generico {
+    background: #6c757d;
+}
+
+/* Precio en línea en tablet camarero */
+.tablet-camarero-producto-precio {
+    font-weight: bold;
 }

@@ -1,0 +1,230 @@
+.perfil-header {
+    background: #333;
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.perfil-header-title {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.perfil-header-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover;
+}
+
+.perfil-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.perfil-form-wrapper {
+    flex: 1;
+    min-width: 300px;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.perfil-fieldset {
+    border: none;
+    padding: 0;
+}
+
+.perfil-legend {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.perfil-input-text {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.perfil-avatar-title {
+    margin: 25px 0 10px 0;
+}
+
+.perfil-avatar-box {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.perfil-file-input {
+    margin-top: 5px;
+}
+
+.perfil-checkbox {
+    margin-top: 15px;
+}
+
+.perfil-submit {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.perfil-panels {
+    flex: 2;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.perfil-panel {
+    background: #eceff1;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.perfil-panel-title {
+    margin-top: 0;
+    color: #455a64;
+    border-bottom: 2px solid #cfd8dc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.perfil-historial-wrapper {
+    overflow-x: auto;
+}
+
+.perfil-avatar-opcion {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.perfil-avatar-opcion img {
+    width: 40px;
+    vertical-align: middle;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+/* Pedidos activos en perfil */
+.perfil-pedido-activo {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.perfil-pedido-activo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.perfil-pedido-activo-titulo {
+    font-size: 1.1em;
+}
+
+.perfil-pedido-activo-estado {
+    background: #e0f7fa;
+    color: #006064;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.perfil-pedido-activo-detalle {
+    font-size: 0.95em;
+    color: #555;
+}
+
+.perfil-pedido-activo-detalle p {
+    margin: 5px 0;
+}
+
+.perfil-pedido-activo-total {
+    margin: 10px 0 0 0;
+    text-align: right;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.perfil-pedido-activo-total strong {
+    font-weight: bold;
+}
+
+.perfil-pedido-activo-vacio {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+    text-align: center;
+    color: #777;
+}
+
+/* Historial del perfil */
+.perfil-historial-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.perfil-historial-thead {
+    background-color: #333;
+    color: black;
+}
+
+.perfil-historial-th {
+    padding: 12px;
+    text-align: left;
+}
+
+.perfil-historial-row {
+    border-bottom: 1px solid #eee;
+}
+
+.perfil-historial-cell {
+    padding: 12px;
+}
+
+.perfil-historial-cell--total {
+    padding: 12px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.perfil-historial-vacio {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+}

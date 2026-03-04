@@ -31,11 +31,11 @@ if ($idUsuario === 0 && isset($_SESSION['nombreUsuario'])) {
 
 // SISTEMA DE DEBUGGING: Si llegamos aquí y sigue siendo 0, detenemos TODO antes del error fatal.
 if ($idUsuario === 0) {
-    echo "<div style='padding: 20px; background: #f8d7da; color: #721c24; margin: 50px auto; max-width: 800px; border-radius: 8px; border: 1px solid #f5c6cb;'>";
+    echo "<div class='debug-session-error'>";
     echo "<h3>⚠️ Alto ahí: Falta el ID del usuario</h3>";
     echo "<p>El sistema no sabe quién eres porque tu archivo de Login no guardó tu ID al iniciar sesión.</p>";
     echo "<p>Esto es lo que el servidor XAMPP conoce de ti ahora mismo en la variable \$_SESSION:</p>";
-    echo "<pre style='background: white; padding: 10px; border-radius: 5px; color: black;'>";
+    echo "<pre class='debug-session-dump'>";
     var_dump($_SESSION);
     echo "</pre>";
     echo "<p><strong>Copia lo que sale en la caja blanca de arriba y pásamelo</strong> para que te diga qué tienes que cambiar en tu Login.</p>";
@@ -65,63 +65,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
 
 $tituloPagina = 'Mis Pedidos';
 
-// 4. OBTENER SOLO LOS PEDIDOS DE ESTE USUARIO (Ahora sí, la consulta es 100% segura)
 $query = "SELECT * FROM Pedidos WHERE id_usuario = $idUsuario ORDER BY fecha DESC";
 $rs = $conn->query($query);
 
 $contenidoPrincipal = <<<EOS
-    <h1>📦 Historial de Mis Pedidos</h1>
+    <h1>Historial de Mis Pedidos</h1>
     <p>Aquí puedes consultar el estado de tus pedidos y tu historial de compras.</p>
 EOS;
 
 if ($rs && $rs->num_rows > 0) {
-    $contenidoPrincipal .= "<table style='width:100%; text-align:center; border-collapse:collapse; background: white; margin-top: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);'>";
-    $contenidoPrincipal .= "<thead style='background:#303030; color:white;'>
+    $contenidoPrincipal .= "<table class='mis-pedidos-tabla'>";
+    $contenidoPrincipal .= "<thead class='mis-pedidos-thead'>
         <tr>
-            <th style='padding: 10px; border: 1px solid #555;'>Nº Pedido</th>
-            <th style='border: 1px solid #555;'>Fecha</th>
-            <th style='border: 1px solid #555;'>Tipo</th>
-            <th style='border: 1px solid #555;'>Total</th>
-            <th style='border: 1px solid #555;'>Estado</th>
-            <th style='border: 1px solid #555;'>Acciones</th>
+            <th class='mis-pedidos-th-principal'>Nº Pedido</th>
+            <th class='mis-pedidos-th'>Fecha</th>
+            <th class='mis-pedidos-th'>Tipo</th>
+            <th class='mis-pedidos-th'>Total</th>
+            <th class='mis-pedidos-th'>Estado</th>
+            <th class='mis-pedidos-th'>Acciones</th>
         </tr>
     </thead><tbody>";
     
     while ($fila = $rs->fetch_assoc()) {
         $totalFmt = number_format($fila['total'], 2, '.', '');
         
-        $colorEstado = '#6c757d'; 
+        $claseEstado = 'badge-estado--generico'; 
         switch ($fila['estado']) {
-            case 'Recibido': $colorEstado = '#ffc107'; break; 
+            case 'Recibido': $claseEstado = 'badge-estado--recibido'; break; 
             case 'En preparación': 
-            case 'Cocinando': $colorEstado = '#17a2b8'; break; 
-            case 'Listo cocina': $colorEstado = '#fd7e14'; break; 
+            case 'En preparacion':
+            case 'Cocinando': $claseEstado = 'badge-estado--preparacion'; break; 
+            case 'Listo cocina': $claseEstado = 'badge-estado--listo-cocina'; break; 
             case 'Terminado': 
-            case 'Entregado': $colorEstado = '#28a745'; break; 
-            case 'Cancelado': $colorEstado = '#dc3545'; break; 
+            case 'Entregado': $claseEstado = 'badge-estado--terminado'; break; 
+            case 'Cancelado': $claseEstado = 'badge-estado--cancelado'; break; 
         }
         
-        $badgeEstado = "<span style='background: {$colorEstado}; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; font-weight: bold;'>{$fila['estado']}</span>";
+        $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$fila['estado']}</span>";
         
-        $contenidoPrincipal .= "<tr style='border-bottom: 1px solid #eee;'>";
-        $contenidoPrincipal .= "<td style='padding: 15px; font-weight: bold; border: 1px solid #ddd;'>#{$fila['numero_pedido']}</td>";
-        $contenidoPrincipal .= "<td style='border: 1px solid #ddd;'>{$fila['fecha']}</td>";
-        $contenidoPrincipal .= "<td style='border: 1px solid #ddd;'>{$fila['tipo']}</td>";
-        $contenidoPrincipal .= "<td style='border: 1px solid #ddd;'><strong>{$totalFmt} €</strong></td>";
-        $contenidoPrincipal .= "<td style='border: 1px solid #ddd;'>{$badgeEstado}</td>";
+        $contenidoPrincipal .= "<tr class='mis-pedidos-row'>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-cell--numero'>#{$fila['numero_pedido']}</td>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila['fecha']}</td>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila['tipo']}</td>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-total'><strong>{$totalFmt} €</strong></td>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$badgeEstado}</td>";
         
-        $contenidoPrincipal .= "<td style='border: 1px solid #ddd;'>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>";
         // Acción: Cancelar (Solo si está en estado 'Recibido')
         if ($fila['estado'] === 'Recibido') {
             $contenidoPrincipal .= "
-                <form action='mis_pedidos.php' method='POST' style='display:inline;' onsubmit='return confirm(\"¿Seguro que deseas cancelar tu pedido?\");'>
+                <form action='mis_pedidos.php' method='POST' class='form-inline' onsubmit='return confirm(\"¿Seguro que deseas cancelar tu pedido?\");'>
                     <input type='hidden' name='id_pedido' value='{$fila['id']}'>
                     <input type='hidden' name='accion' value='cancelar'>
-                    <button type='submit' style='background:#dc3545; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;'>Cancelar</button>
+                    <button type='submit' class='btn-cancelar-pedido-cliente'>Cancelar</button>
                 </form>
             ";
         } else {
-            $contenidoPrincipal .= "<span style='color: #aaa; font-size: 0.9em;'>No cancelable</span>";
+            $contenidoPrincipal .= "<span class='mis-pedidos-no-cancelable'>No cancelable</span>";
         }
         $contenidoPrincipal .= "</td>";
         $contenidoPrincipal .= "</tr>";
@@ -129,9 +129,9 @@ if ($rs && $rs->num_rows > 0) {
     
     $contenidoPrincipal .= "</tbody></table>";
 } else {
-    $contenidoPrincipal .= "<div style='background: #f9f9f9; padding: 20px; text-align: center; border-radius: 8px; margin-top: 20px; border: 1px solid #ddd;'>
+    $contenidoPrincipal .= "<div class='mis-pedidos-empty'>
         <p>Aún no has realizado ningún pedido con nosotros.</p>
-        <a href='carta.php' style='background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; margin-top: 10px;'>🍽️ Ir a la Carta</a>
+        <a href='carta.php' class='mis-pedidos-empty-link'>Ir a la Carta</a>
     </div>";
 }
 

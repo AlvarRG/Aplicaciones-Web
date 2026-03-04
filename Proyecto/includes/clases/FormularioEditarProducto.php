@@ -80,7 +80,7 @@ class FormularioEditarProducto extends Formulario
                     <option value="21" $sel21>21% (General)</option>
                 </select>
             </p>
-            <p style="font-size: 1.2em; color: green;">
+            <p class="form-precio-final">
                 <strong>Precio Final Actualizado: <span id="p_final">0.00</span> €</strong>
             </p>
         </fieldset>
@@ -88,7 +88,7 @@ class FormularioEditarProducto extends Formulario
         <fieldset>
             <legend>Imagen y Disponibilidad</legend>
             <p>Imagen actual:<br>
-               <img src="img/productos/{$product['imagen']}" width="100" style="border: 1px solid #ccc; margin: 5px 0;">
+               <img src="img/productos/{$product['imagen']}" width="100" class="form-imagen-actual">
             </p>
             <p>Cambiar imagen: <input type="file" name="imagen" accept="image/*"></p>
             
@@ -96,10 +96,10 @@ class FormularioEditarProducto extends Formulario
             <p><label><input type="checkbox" name="ofertado" $oferChecked> Visible en Carta (Ofertado)</label></p>
         </fieldset>
 
-        <div style="margin-top: 20px;">
+        <div class="form-editar-producto-acciones">
             <button type="submit">Actualizar Producto</button>
             <a href="eliminar_producto_fisico.php?id={$this->idProducto}" 
-               style="color: red; margin-left: 20px;" 
+               class="form-eliminar-producto" 
                onclick="return confirm('¿ESTÁS SEGURO? Esta acción eliminará el producto para siempre de la base de datos.')">
                Eliminar Permanentemente
             </a>

@@ -1,0 +1,31 @@
+.admin-productos-tabla {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 600px;
+    font-family: Arial, sans-serif;
+}
+
+.admin-productos-tabla thead {
+    background-color: #eee;
+}
+
+.admin-productos-img {
+    text-align: center;
+}
+
+.admin-productos-numero {
+    text-align: right;
+}
+
+.admin-productos-centro {
+    text-align: center;
+}
+
+.admin-productos-acciones {
+    white-space: nowrap;
+}
+
+.admin-productos-eliminar {
+    color: red;
+}
+

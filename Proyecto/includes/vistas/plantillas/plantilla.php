@@ -4,13 +4,12 @@
 		<meta charset="UTF-8">
 		<title><?= $tituloPagina ?></title>
 		<link rel="stylesheet" type="text/css" href="css/estilo.css?v=1.1">
-		<link rel="stylesheet" type="text/css" href="<?= RUTA_CSS ?>/estilo.css" />
 		<?php 
-			if (isset($estilosExtra)) {
-				foreach ($estilosExtra as $estilo) {
-					echo '<link rel="stylesheet" type="text/css" href="' . RUTA_CSS . '/' . $estilo . '" />';
-				}
-			}
+            if (isset($estilosExtra)) {
+                foreach ($estilosExtra as $estilo) {
+                    echo '<link rel="stylesheet" type="text/css" href="css/' . htmlspecialchars($estilo, ENT_QUOTES, 'UTF-8') . '" />';
+                }
+            }
 		?>
 	</head>
 	<body>

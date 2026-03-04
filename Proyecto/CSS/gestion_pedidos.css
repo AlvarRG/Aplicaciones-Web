@@ -1,0 +1,90 @@
+.gestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #303030;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.gestion-header-title {
+    margin: 0;
+}
+
+.gestion-header-rol {
+    background: #303030;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Tabla de gestion de pedidos */
+.gestion-pedidos-tabla {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.gestion-pedidos-thead {
+    background: #303030;
+    color: black;
+}
+
+.gestion-pedidos-th-principal {
+    padding: 15px;
+    border: 1px solid #555;
+}
+
+.gestion-pedidos-th {
+    border: 1px solid #555;
+}
+
+.gestion-pedidos-row {
+    border-bottom: 1px solid #eee;
+}
+
+.gestion-pedidos-cell {
+    border: 1px solid #ddd;
+}
+
+.gestion-pedidos-cell--numero {
+    padding: 15px;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 1px solid #ddd;
+}
+
+.gestion-pedidos-total {
+    font-weight: bold;
+}
+
+.btn-cancelar-pedido-admin {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.gestion-pedidos-sin-acciones {
+    color: #aaa;
+    font-style: italic;
+}
+
+.gestion-pedidos-empty {
+    background: #fff;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.gestion-pedidos-empty-title {
+    color: #666;
+}
+

@@ -47,7 +47,7 @@ class FormularioEditarCategoria extends Formulario
             
             <div>
                 <p>Imagen actual:</p>
-                <img src="img/categorias/{$cat['imagen']}" width="80" style="border: 1px solid #ccc; border-radius: 5px;">
+                <img src="img/categorias/{$cat['imagen']}" width="80" class="form-imagen-categoria">
             </div>
             
             <div>

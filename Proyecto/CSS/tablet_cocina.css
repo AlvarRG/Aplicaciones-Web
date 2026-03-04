@@ -1,0 +1,131 @@
+.tablet-cocinero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #303030;
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.tablet-cocinero-header h2 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+/* Bloque usuario/avatar igual que en tablet_camarero */
+.tablet-camarero-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tablet-camarero-user span {
+    font-size: 0.9em;
+}
+
+.tablet-camarero-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    object-fit: cover;
+}
+
+.tablet-cocinero-layout {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tablet-cocinero-column {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Solo dos columnas: Nuevas y En proceso */
+.tablet-cocinero-column--nuevas {
+    background: #fff3e0; /* Tono naranja muy claro */
+}
+
+.tablet-cocinero-column--proceso {
+    background: #e1f5fe; /* Tono azul muy claro */
+}
+
+.tablet-cocinero-column h3 {
+    text-align: center;
+    margin-top: 0;
+    font-size: 1.1em;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    padding-bottom: 6px;
+}
+
+.tablet-cocinero-column--nuevas h3 {
+    color: #e65100;
+    border-bottom-color: #ffe0b2;
+}
+
+.tablet-cocinero-column--proceso h3 {
+    color: #01579b;
+    border-bottom-color: #b3e5fc;
+}
+
+.tablet-cocinero-card {
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+.tablet-cocinero-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.tablet-cocinero-productos {
+    margin: 10px 0;
+    font-size: 0.95em;
+}
+
+.tablet-cocinero-producto-row {
+    padding: 4px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.tablet-cocinero-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* Botones específicos de cocina */
+.tablet-cocinero-btn--cocinar {
+    background-color: #fd7e14; /* Naranja */
+}
+
+.tablet-cocinero-btn--listo {
+    background-color: #28a745; /* Verde */
+}
+
+.tablet-cocinero-btn:hover {
+    filter: brightness(90%);
+}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-03-2026 a las 12:03:34
+-- Tiempo de generación: 04-03-2026 a las 18:01:50
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -118,7 +118,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `id_categoria`, `nombre`, `descripcion`, `precio_base`, `iva`, `disponible`, `ofertado`, `imagen`) VALUES
-(2, 1, 'Nachos Especiales', 'Nuestros nachos especiales con la receta secreta que nos caracteriza', 6.20, 21, 1, 1, 'prod_1771869372.jpg');
+(2, 1, 'Nachos Especiales', 'Nuestros nachos especiales con la receta secreta que nos caracteriza', 6.20, 21, 1, 1, 'prod_2_1772643347.jpg');
 
 -- --------------------------------------------------------
 
@@ -144,28 +144,6 @@ INSERT INTO `roles` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `rolesusuario`
---
-
-CREATE TABLE `rolesusuario` (
-  `usuario` int(11) NOT NULL,
-  `rol` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `rolesusuario`
---
-
-INSERT INTO `rolesusuario` (`usuario`, `rol`) VALUES
-(1, 4),
-(2, 3),
-(4, 2),
-(5, 4),
-(6, 2);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -176,19 +154,20 @@ CREATE TABLE `usuarios` (
   `avatar` varchar(255) DEFAULT 'default.png',
   `nombre` varchar(50) NOT NULL,
   `apellidos` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL
+  `email` varchar(100) NOT NULL,
+  `rol` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombreUsuario`, `password`, `avatar`, `nombre`, `apellidos`, `email`) VALUES
-(1, 'gerente', '$2y$10$O3c1kBFa2yDK5F47IUqusOJmIANjHP6EiPyke5dD18ldJEow.e0eS', 'gerente_1771866688.png', 'Jefe', 'Supremo', 'gerente@bistrofdi.es'),
-(2, 'Ethan', '$2y$10$0HmvdO5xJUR6ZzKa6py/K.2qu6iS.laiNnGX4gkdLnEIeSb47urCW', 'ethan.jpg', 'Ethan', 'Carrillo', 'ethancar@ucm.es'),
-(4, 'Alvar', '$2y$10$YjAOgLy5rqPhcH8av64vP.baYIWP81jdwokhKPoCD637LuTTMASzO', 'alvar.jpg', 'Alvar', 'Rodriguez', 'alvarr17@ucm.es'),
-(5, 'Yago', '$2y$10$JaoNVJ3j5pw.jWVnT27hkuvoBWC7Oh1HAtyWmEvqokNvxL5V0WsQq', 'yago.jpg', 'Yago', 'Vaquero', 'yvaquero@ucm.es'),
-(6, 'Zhirun', '$2y$10$kFGhGks0ATGbskwLy/vzv.RJtohld4C3K7kOGeEafwQHTqJUuJrpa', 'zhirun.jpg', 'Zhirun', 'Huang', 'zhihuang@ucm.es');
+INSERT INTO `usuarios` (`id`, `nombreUsuario`, `password`, `avatar`, `nombre`, `apellidos`, `email`, `rol`) VALUES
+(1, 'gerente', '$2y$10$O3c1kBFa2yDK5F47IUqusOJmIANjHP6EiPyke5dD18ldJEow.e0eS', 'gerente_1771866688.png', 'Jefe', 'Supremo', 'gerente@bistrofdi.es', 4),
+(2, 'Ethan', '$2y$10$0HmvdO5xJUR6ZzKa6py/K.2qu6iS.laiNnGX4gkdLnEIeSb47urCW', 'ethan.jpg', 'Ethan', 'Carrillo', 'ethancar@ucm.es', 3),
+(4, 'Alvar', '$2y$10$YjAOgLy5rqPhcH8av64vP.baYIWP81jdwokhKPoCD637LuTTMASzO', 'alvar.jpg', 'Alvar', 'Rodriguez', 'alvarr17@ucm.es', 1),
+(5, 'Yago', '$2y$10$JaoNVJ3j5pw.jWVnT27hkuvoBWC7Oh1HAtyWmEvqokNvxL5V0WsQq', 'yago.jpg', 'Yago', 'Vaquero', 'yvaquero@ucm.es', 4),
+(6, 'Zhirun', '$2y$10$kFGhGks0ATGbskwLy/vzv.RJtohld4C3K7kOGeEafwQHTqJUuJrpa', 'zhirun.jpg', 'Zhirun', 'Huang', 'zhihuang@ucm.es', 2);
 
 --
 -- Índices para tablas volcadas
@@ -226,13 +205,6 @@ ALTER TABLE `productos`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `rolesusuario`
---
-ALTER TABLE `rolesusuario`
-  ADD PRIMARY KEY (`usuario`,`rol`),
-  ADD KEY `rol` (`rol`);
 
 --
 -- Indices de la tabla `usuarios`

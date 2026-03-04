@@ -9,6 +9,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 }
 
 $tituloPagina = 'Gestión de Categorías';
+$estilosExtra = ['admin_categorias.css'];
 
 $conn = Aplicacion::getInstance()->getConexionBd();
 $query = "SELECT * FROM Categorias";
@@ -25,7 +26,7 @@ while ($fila = $rs->fetch_assoc()) {
             <td>{$fila['descripcion']}</td>
             <td>
                 <a href="editar_categoria.php?id=$id">[Editar]</a>
-                <a href="borrar_categoria.php?id=$id" style="color:red;" 
+                <a href="borrar_categoria.php?id=$id" class="admin-categorias-eliminar"
 				   onclick="return confirm('¡OJO! Esto borrará la categoría de la base de datos permanentemente. ¿Proceder?')">
 				   [Borrar]</a>
             </td>
@@ -35,8 +36,8 @@ EOS;
 
 $contenidoPrincipal = <<<EOS
     <h1>Categorías de Productos</h1>
-    <p><a href="nueva_categoria.php"> Crear Nueva Categoría</a></p>
-    <table border="1">
+    <p><a href="nueva_categoria.php">Crear Nueva Categoría</a></p>
+    <table class="admin-categorias-tabla" border="1">
         <thead>
             <tr>
                 <th>Imagen</th>

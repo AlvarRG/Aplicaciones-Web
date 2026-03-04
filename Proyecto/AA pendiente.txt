@@ -1,7 +1,7 @@
--En el perfil habría que poder ver tus pedidos
+-Mover todos los style a CSS como con las tablets de camarero y cocinero (no sé si hay que hacerlo todo en el 
+mismo o por separado)
 -Eliminar tabla rolesusuario y añadir en la tabla usuarios el atributo de rol (adaptar código)
 -Mover ficheros que no son vistas
 -Añadir productos, categorías y una página principal con el contenido que queramos mostrar (index.php)
 -Revisar que cumple con todos los requisitos del enunciado
--Las vistas de tablet de camareros y de cocineros tienen estilos que no sé si estará bien, quizá lo que hay debería
-ser con CSS
+-Revisar que todo lo que está escrito cumple con el temario

@@ -38,7 +38,7 @@ if ($rs && $rs->num_rows > 0) {
             <h3 class="carta-producto-nombre">{$fila['nombre']}</h3>
             <p class="carta-producto-precio">{$pFinalFmt} €</p>
             
-            <form action="procesar_carrito.php" method="POST">
+            <form action="includes/procesar_carrito.php" method="POST">
                 <input type="hidden" name="id_producto" value="{$fila['id']}">
                 <input type="hidden" name="accion" value="add">
 

@@ -2,7 +2,6 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Aplicacion;
 
-// Seguridad: Solo el Gerente
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     header('Location: index.php');
     exit();
@@ -26,9 +25,7 @@ while ($fila = $rs->fetch_assoc()) {
             <td>{$fila['descripcion']}</td>
             <td>
                 <a href="editar_categoria.php?id=$id">[Editar]</a>
-                <a href="borrar_categoria.php?id=$id" class="admin-categorias-eliminar"
-				   onclick="return confirm('¡OJO! Esto borrará la categoría de la base de datos permanentemente. ¿Proceder?')">
-				   [Borrar]</a>
+                <a href="includes/borrar_categoria.php?id=$id" class="admin-categorias-eliminar boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría de la base de datos permanentemente. ¿Proceder?">[Borrar]</a>
             </td>
         </tr>
 EOS;
@@ -48,6 +45,7 @@ $contenidoPrincipal = <<<EOS
         </thead>
         <tbody>$filas</tbody>
     </table>
+    <script src="js/confirmacion_borrado.js"></script>
 EOS;
 
 require 'includes/vistas/plantillas/plantilla.php';

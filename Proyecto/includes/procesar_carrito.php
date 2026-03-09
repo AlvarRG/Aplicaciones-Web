@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__.'/includes/config.php';
+require_once __DIR__.'/config.php';
 
 // Si alguien intenta entrar aquí sin enviar el formulario, lo echamos
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: carta.php');
+    header('Location: ../carta.php');
     exit();
 }
 
@@ -46,6 +46,6 @@ elseif ($id_producto > 0) {
 }
 
 // 4. Redirigir al usuario de vuelta
-$urlDestino = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'carta.php';
+$urlDestino = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../carta.php';
 header("Location: $urlDestino");
 exit();

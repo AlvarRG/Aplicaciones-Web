@@ -28,5 +28,12 @@
 			require('includes/vistas/comun/pie.php');
 		?>
 		</div>
+        <?php 
+            if (isset($scriptsExtra)) {
+                foreach ($scriptsExtra as $script) {
+                    echo '<script src="js/' . htmlspecialchars($script, ENT_QUOTES, 'UTF-8') . '"></script>';
+                }
+            }
+        ?>
 	</body>
 </html>

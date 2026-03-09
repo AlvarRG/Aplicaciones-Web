@@ -64,6 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
 }
 
 $tituloPagina = 'Mis Pedidos';
+$estilosExtra = $estilosExtra ?? [];
+$scriptsExtra = $scriptsExtra ?? [];
+$scriptsExtra[] = 'confirmacion_cancelar_pedido.js';
 
 $query = "SELECT * FROM Pedidos WHERE id_usuario = $idUsuario ORDER BY fecha DESC";
 $rs = $conn->query($query);
@@ -114,7 +117,7 @@ if ($rs && $rs->num_rows > 0) {
         // Acción: Cancelar (Solo si está en estado 'Recibido')
         if ($fila['estado'] === 'Recibido') {
             $contenidoPrincipal .= "
-                <form action='mis_pedidos.php' method='POST' class='form-inline' onsubmit='return confirm(\"¿Seguro que deseas cancelar tu pedido?\");'>
+                <form action='mis_pedidos.php' method='POST' class='form-inline form-cancelar-pedido-cliente' data-mensaje='¿Seguro que deseas cancelar tu pedido?'>
                     <input type='hidden' name='id_pedido' value='{$fila['id']}'>
                     <input type='hidden' name='accion' value='cancelar'>
                     <button type='submit' class='btn-cancelar-pedido-cliente'>Cancelar</button>

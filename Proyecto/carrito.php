@@ -56,7 +56,7 @@ EOS;
         $htmlArticulos .= "<td><strong>{$cantidad}</strong></td>";
         $htmlArticulos .= "<td><strong>{$subtotalFmt} €</strong></td>";
         $htmlArticulos .= "<td>
-            <form action='procesar_carrito.php' method='POST'>
+            <form action='includes/procesar_carrito.php' method='POST'>
                 <input type='hidden' name='id_producto' value='{$id}'>
                 <input type='hidden' name='accion' value='remove'>
                 <button type='submit' class='carrito-boton-quitar'>Quitar</button>
@@ -96,7 +96,7 @@ EOS;
     </div>
     
     <div class="carrito-cancelar-wrapper">
-        <form action="procesar_carrito.php" method="POST">
+        <form action="includes/procesar_carrito.php" method="POST">
             <input type="hidden" name="accion" value="vaciar">
             <button type="submit" class="carrito-boton-cancelar">
                 Cancelar Pedido (Vaciar carrito)

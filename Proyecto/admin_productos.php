@@ -19,7 +19,6 @@ $filas = "";
 while ($fila = $rs->fetch_assoc()) {
     $valorPrecioFinal = $fila['precio_base'] * (1 + ($fila['iva'] / 100));
     
-    // Formateo a 2 decimales
     $pBase = number_format($fila['precio_base'], 2, '.', '');
     $pFinal = number_format($valorPrecioFinal, 2, '.', '');
     
@@ -38,7 +37,7 @@ while ($fila = $rs->fetch_assoc()) {
             <td class="admin-productos-centro"><small>$ofertado</small></td>
             <td class="admin-productos-acciones">
                 <a href="editar_producto.php?id={$fila['id']}"><small>[Edit]</small></a>
-                <a href="quitar_producto.php?id={$fila['id']}" class="admin-productos-eliminar" onclick="return confirm('¿Eliminar?')"><small>[Eliminar]</small></a>
+                <a href="includes/borrar_producto.php?id={$fila['id']}" class="admin-productos-eliminar boton-borrar" data-mensaje="¿Estás seguro de esta acción? Borrará este producto permanentemente de la base de datos"><small>[Eliminar]</small></a>
             </td>
         </tr>
 EOS;
@@ -49,14 +48,15 @@ $contenidoPrincipal = <<<EOS
     <p><a href="nuevo_producto.php">Añadir Producto</a></p>
     
     <table class="admin-productos-tabla" border="1" cellpadding="5">
-            <thead>
-                <tr>
-                    <th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Base</th><th>IVA</th>
-                    <th>Total</th><th>Stock</th><th>Estado</th><th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>$filas</tbody>
-        </table>
+        <thead>
+            <tr>
+                <th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Base</th><th>IVA</th>
+                <th>Total</th><th>Stock</th><th>Estado</th><th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>$filas</tbody>
+    </table>
+    <script src="js/confirmacion_borrado.js"></script>
 EOS;
 
 require 'includes/vistas/plantillas/plantilla.php';

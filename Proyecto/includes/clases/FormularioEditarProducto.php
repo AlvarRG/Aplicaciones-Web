@@ -98,11 +98,6 @@ class FormularioEditarProducto extends Formulario
 
         <div class="form-editar-producto-acciones">
             <button type="submit">Actualizar Producto</button>
-            <a href="quitar_producto.php?id={$this->idProducto}" 
-               class="form-eliminar-producto" 
-               onclick="return confirm('¿ESTÁS SEGURO? Esta acción eliminará el producto para siempre de la base de datos.')">
-               Eliminar Permanentemente
-            </a>
         </div>
     EOF;
     }

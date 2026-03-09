@@ -12,7 +12,7 @@
         echo 'Revisar y Pagar';
         echo '</a>';
         
-        echo '<form action="procesar_carrito.php" method="POST" class="mini-carrito-form">';
+        echo '<form action="includes/procesar_carrito.php" method="POST" class="mini-carrito-form">';
         echo '<input type="hidden" name="accion" value="vaciar">';
         echo '<button type="submit" class="mini-carrito-vaciar">Vaciar carrito</button>';
         echo '</form>';

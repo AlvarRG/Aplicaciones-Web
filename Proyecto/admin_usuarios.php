@@ -26,7 +26,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                 <td>$nombreRol</td>
                 <td>
                     <a href="editar_usuario.php?id=$idU">[Cambiar Rol]</a> 
-                    <a href="borrar_usuario.php?id=$idU" onclick="return confirm('¿Estás seguro?')">[Borrar]</a>
+					<a href="includes/borrar_usuario.php?id=$idU" class="admin-usuarios-eliminar boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?">[Borrar]</a>
                 </td>
             </tr>
 EOS;
@@ -42,6 +42,7 @@ EOS;
             </thead>
             <tbody>$filas</tbody>
         </table>
+		<script src="js/confirmacion_borrado.js"></script>
 EOS;
 }
 

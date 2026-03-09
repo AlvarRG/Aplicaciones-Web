@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/includes/config.php';
+require_once __DIR__.'/config.php';
 use es\ucm\fdi\aw\Aplicacion;
 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) exit();
@@ -10,4 +10,4 @@ if ($id) {
     // Nota: Si hay productos en esta categoría, fallará por la clave foránea (lo cual es bueno)
     $conn->query("DELETE FROM Categorias WHERE id = $id");
 }
-header('Location: admin_categorias.php');
+header('Location: ../admin_categorias.php');

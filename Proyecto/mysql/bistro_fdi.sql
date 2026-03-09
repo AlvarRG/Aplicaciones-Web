@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-03-2026 a las 18:01:50
+-- Tiempo de generación: 09-03-2026 a las 13:00:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -67,7 +67,13 @@ INSERT INTO `pedidos` (`id`, `id_usuario`, `numero_pedido`, `fecha`, `estado`, `
 (3, 1, 3, '2026-02-25 10:44:29', 'Entregado', 'Llevar', 15.00),
 (4, 1, 4, '2026-02-25 11:11:32', 'Entregado', 'Local', 7.50),
 (5, 2, 5, '2026-02-25 11:17:07', 'Cancelado', 'Llevar', 7.50),
-(6, 1, 6, '2026-02-25 12:05:53', 'Entregado', 'Local', 8.60);
+(6, 1, 6, '2026-02-25 12:05:53', 'Entregado', 'Local', 8.60),
+(7, 1, 1, '2026-03-09 11:09:48', 'Cancelado', 'Llevar', 7.50),
+(8, 1, 2, '2026-03-09 11:10:21', 'Entregado', 'Local', 7.50),
+(9, 1, 3, '2026-03-09 11:14:04', 'Entregado', 'Llevar', 7.50),
+(10, 1, 4, '2026-03-09 11:15:31', 'Cancelado', 'Local', 7.50),
+(11, 1, 5, '2026-03-09 12:35:15', 'Cancelado', 'Llevar', 15.50),
+(12, 1, 6, '2026-03-09 12:55:55', 'Cancelado', 'Llevar', 15.50);
 
 -- --------------------------------------------------------
 
@@ -93,7 +99,15 @@ INSERT INTO `pedidos_productos` (`id_pedido`, `id_producto`, `cantidad`, `precio
 (3, 2, 2, 6.20, 21),
 (4, 2, 1, 6.20, 21),
 (5, 2, 1, 6.20, 21),
-(6, 2, 1, 6.20, 21);
+(6, 2, 1, 6.20, 21),
+(7, 2, 1, 6.20, 21),
+(8, 2, 1, 6.20, 21),
+(9, 2, 1, 6.20, 21),
+(10, 2, 1, 6.20, 21),
+(11, 2, 1, 6.20, 21),
+(11, 5, 1, 6.61, 21),
+(12, 2, 1, 6.20, 21),
+(12, 5, 1, 6.61, 21);
 
 -- --------------------------------------------------------
 
@@ -118,7 +132,8 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `id_categoria`, `nombre`, `descripcion`, `precio_base`, `iva`, `disponible`, `ofertado`, `imagen`) VALUES
-(2, 1, 'Nachos Especiales', 'Nuestros nachos especiales con la receta secreta que nos caracteriza', 6.20, 21, 1, 1, 'prod_2_1772643347.jpg');
+(2, 1, 'Nachos Especiales', 'Nuestros nachos especiales con la receta secreta que nos caracteriza', 6.20, 21, 1, 1, 'prod_2_1772643347.jpg'),
+(5, 1, 'Tequeños', 'Nuestros mundialmente famosos tequeños rellenos del mejor queso para el disfrute de todos.', 6.61, 21, 1, 1, 'prod_1773052066.jpg');
 
 -- --------------------------------------------------------
 
@@ -222,19 +237,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -246,7 +261,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restricciones para tablas volcadas

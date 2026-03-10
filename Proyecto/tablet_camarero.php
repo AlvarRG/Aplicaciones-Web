@@ -143,4 +143,4 @@ $contenidoPrincipal .= <<<EOS
     </div>
 EOS;
 
-require 'includes/vistas/plantillas/plantilla.php';
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

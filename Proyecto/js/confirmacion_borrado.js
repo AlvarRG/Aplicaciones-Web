@@ -1,3 +1,4 @@
+//Saca un mensaje de confirmación al intentar borrar algo (categorías, productos...)
 document.addEventListener('DOMContentLoaded', function () {
     const enlacesBorrar = document.querySelectorAll('.boton-borrar');
 

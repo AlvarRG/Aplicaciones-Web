@@ -1,3 +1,4 @@
+//Saca un mensaje de confirmación al intentar cancelar un pedido
 document.addEventListener('DOMContentLoaded', function () {
     const formulariosCancelar = document.querySelectorAll('.form-cancelar-pedido-cliente');
 

@@ -1,7 +1,4 @@
-/**
- * productos.js
- * Gestiona el cálculo dinámico del precio final en el formulario del Gerente.
- */
+//Calcula dinámicamente el precio
 document.addEventListener('DOMContentLoaded', function() {
     const inputBase = document.getElementById('p_base');
     const inputIva = document.getElementById('p_iva');

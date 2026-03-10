@@ -1,0 +1,150 @@
+/* ============================
+   Hero Banner
+   ============================ */
+
+.index-hero {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 40px;
+}
+
+.index-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.55);
+}
+
+.index-hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.index-hero-titulo {
+    font-size: 2.8em;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.index-hero-subtitulo {
+    font-size: 1.15em;
+    margin: 0 0 25px 0;
+    opacity: 0.9;
+}
+
+.index-hero-cta {
+    background: #e63946;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.05em;
+    transition: background 0.2s ease;
+}
+
+.index-hero-cta:hover {
+    background: #c1121f;
+}
+
+/* ============================
+   Sección categorías
+   ============================ */
+
+.index-sección-titulo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 20px 0;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #e63946;
+    display: inline-block;
+}
+
+.index-categorias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.index-categoria-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: white;
+}
+
+.index-categoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.index-categoria-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+}
+
+.index-categoria-nombre {
+    padding: 12px;
+    font-weight: bold;
+    font-size: 0.95em;
+    text-align: center;
+    color: #333;
+}
+
+/* ============================
+   Sección "Cómo funciona"
+   ============================ */
+
+.index-pasos {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.index-paso {
+    flex: 1;
+    min-width: 180px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.index-paso-icono {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.index-paso-titulo {
+    font-weight: bold;
+    margin: 0 0 6px 0;
+    color: #222;
+}
+
+.index-paso-desc {
+    font-size: 0.9em;
+    color: #666;
+    margin: 0;
+}

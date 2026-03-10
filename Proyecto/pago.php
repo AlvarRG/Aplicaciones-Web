@@ -48,7 +48,7 @@ while ($fila = $rsTotal->fetch_assoc()) {
 if (isset($_POST['metodo_pago'])) {
     $metodoPago = $_POST['metodo_pago'];
     
-    $estadoInicial = ($metodoPago === 'tarjeta') ? 'En preparación' : 'Recibido';
+    $estadoInicial = ($metodoPago === 'tarjeta') ? 'En preparacion' : 'Recibido';
     
     $queryNum = "SELECT IFNULL(MAX(numero_pedido), 0) + 1 AS nuevo_num 
                  FROM Pedidos 
@@ -151,4 +151,4 @@ $contenidoPrincipal .= <<<EOS
     </div>
 EOS;
 
-require 'includes/vistas/plantillas/plantilla.php';
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

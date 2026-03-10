@@ -95,7 +95,6 @@ if ($rs && $rs->num_rows > 0) {
         $claseEstado = 'badge-estado--generico'; 
         switch ($fila['estado']) {
             case 'Recibido': $claseEstado = 'badge-estado--recibido'; break; 
-            case 'En preparación': 
             case 'En preparacion':
             case 'Cocinando': $claseEstado = 'badge-estado--preparacion'; break; 
             case 'Listo cocina': $claseEstado = 'badge-estado--listo-cocina'; break; 
@@ -138,5 +137,4 @@ if ($rs && $rs->num_rows > 0) {
     </div>";
 }
 
-require 'includes/vistas/plantillas/plantilla.php';
-?>
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

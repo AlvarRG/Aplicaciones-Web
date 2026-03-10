@@ -1,7 +1,6 @@
 -Comprobar que todos los style están correctamente en sus CSS y no queda nada inline
 -Comprobar que ninguna función se ha estropeado al eliminar rolesusuario
 -Mirar si hay funciones que deban estar a parte fuera del php (por ejemplo en admin_usuarios.php)
--Reorganizar archivos que haya que mover
 -Añadir productos, categorías y una página principal con el contenido que queramos mostrar (index.php)
 -Revisar que cumple con todos los requisitos del enunciado
--Revisar que todo lo que está escrito cumple con el temario
+-Revisar que todo lo que no sea VISTA cumple con el temario

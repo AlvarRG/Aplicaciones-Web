@@ -37,8 +37,9 @@ if ($rs && $rs->num_rows > 0) {
     exit();
 }
 
-$tituloPagina = 'Pedido Confirmado';
 $estilosExtra = ['confirmacion.css'];
+
+$tituloPagina = 'Pedido Confirmado';
 
 $contenidoPrincipal = <<<EOS
     <div class="confirmacion-wrapper">
@@ -71,5 +72,4 @@ $contenidoPrincipal = <<<EOS
     </div>
 EOS;
 
-require 'includes/vistas/plantillas/plantilla.php';
-?>
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

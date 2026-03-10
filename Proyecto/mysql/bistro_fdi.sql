@@ -52,7 +52,7 @@ CREATE TABLE `pedidos` (
   `id_usuario` int(11) NOT NULL,
   `numero_pedido` int(11) NOT NULL,
   `fecha` datetime DEFAULT current_timestamp(),
-  `estado` enum('Recibido','En preparación','Cocinando','Listo cocina','Terminado','Entregado','Cancelado') NOT NULL DEFAULT 'Recibido',
+  `estado` enum('Recibido','En preparacion','Cocinando','Listo cocina','Terminado','Entregado','Cancelado') NOT NULL DEFAULT 'Recibido',
   `tipo` enum('Local','Llevar') NOT NULL,
   `total` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

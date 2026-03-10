@@ -1,43 +1,37 @@
 <?php
-require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\FormularioEditarProducto;
 use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\FormularioEditarProducto;
 
-// 1. Seguridad: Solo el Gerente
+require_once __DIR__.'/includes/config.php';
+
+// Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
-    header('Location: index.php');
-    exit();
+    $tituloPagina = 'Acceso Denegado';
+    $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
+} else {
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+
+    // Obtenemos el nombre del producto a editar. Este dato, solo lo usaremos para montar el contenido principal de la página
+    $conn = Aplicacion::getInstance()->getConexionBd();
+    $query = "SELECT * FROM Productos WHERE id = $id";
+    $rs = $conn->query($query);
+    if ($rs && $rs->num_rows > 0) {
+        $product = $rs->fetch_assoc();
+    }
+
+    // Creamos el formulario de edición
+    $form = new FormularioEditarProducto($id);
+    $htmlFormulario = $form->gestiona();
+
+    // Parametros para la plantilla
+    $tituloPagina = "Editar Producto";
+    
+    $contenidoPrincipal = <<<EOS
+        <h1>Editar Producto: {$product['nombre']}</h1>
+        <p><a href="admin_productos.php">⬅ Volver al listado</a></p>
+        $htmlFormulario
+        <script src="js/productos.js"></script>
+    EOS;
 }
 
-$conn = Aplicacion::getInstance()->getConexionBd();
-$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-
-if (!$id) {
-    header('Location: admin_productos.php');
-    exit();
-}
-
-// 2. Obtener datos del producto
-$query = "SELECT * FROM Productos WHERE id = $id";
-$rs = $conn->query($query);
-$product = $rs->fetch_assoc();
-
-if (!$product) {
-    die("Producto no encontrado.");
-}
-
-$tituloPagina = "Editar Producto: " . htmlspecialchars($product['nombre']);
-
-// 3. Instanciar el formulario
-$form = new FormularioEditarProducto($id);
-$htmlFormulario = $form->gestiona();
-
-// 4. Montar el contenido de la vista
-$contenidoPrincipal = <<<EOS
-    <h1>Editar Producto: {$product['nombre']}</h1>
-    <p><a href="admin_productos.php">⬅ Volver al listado</a></p>
-    $htmlFormulario
-    <script src="js/productos.js"></script>
-EOS;
-
-require 'includes/vistas/plantillas/plantilla.php';
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

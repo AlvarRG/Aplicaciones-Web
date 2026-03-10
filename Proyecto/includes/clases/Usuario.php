@@ -52,6 +52,28 @@ class Usuario
         return $result;
     }
 
+    //Devuelve todos los usuarios de la base de datos en un array
+    public static function buscaTodos()
+    {
+        $conn = Aplicacion::getInstance()->getConexionBd();
+    
+        $query = "SELECT U.id, U.nombreUsuario, U.nombre, U.apellidos, U.email, R.nombre AS nombreRol 
+                  FROM usuarios U 
+                  JOIN roles R ON U.rol = R.id";
+        $rs = $conn->query($query);
+        
+        $usuarios = [];
+        if ($rs) {
+            while ($fila = $rs->fetch_assoc()) {
+                $usuarios[] = $fila;
+            }
+            $rs->free();
+        } else {
+            error_log("Error BD ({$conn->errno}): {$conn->error}");
+        }
+        return $usuarios;
+    }
+
 	//Busca un usuario por id
     public static function buscaPorId($idUsuario)
     {

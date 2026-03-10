@@ -33,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['
 $tituloPagina = 'Tablet Cocina';
 $estilosExtra = ['tablet_cocina.css'];
 
-//Consulta para coger los pedidos con estados preparación y cocinando desde la base de datos
+//Consulta para coger los pedidos con estados preparacion y cocinando desde la base de datos
 $queryPedidos = "SELECT id, numero_pedido, tipo, estado FROM pedidos 
-                 WHERE estado IN ('En preparación', 'Cocinando') ORDER BY fecha ASC";
+                 WHERE estado IN ('En preparacion', 'Cocinando') ORDER BY fecha ASC";
 $rs = $conn->query($queryPedidos);
 
 //Si la consulta anterior ha devuelto algo, recorremos los pedidos devueltos para estructurar los arrays que se usarán posteriormente
@@ -103,7 +103,7 @@ $colProceso = "";
 
 //Recorre los pedidos con el array creado anteriormente y creamos las tarjetas de cocina dependiendo del estado del pedido
 foreach ($pedidos as $p) {
-    if ($p['estado'] === 'En preparación') {
+    if ($p['estado'] === 'En preparacion') {
         $colNuevas .= generarTarjetaCocina($p, 'COCINAR', 'tablet-cocinero-btn--cocinar', 'Cocinando');
     } elseif ($p['estado'] === 'Cocinando') {
         $colProceso .= generarTarjetaCocina($p, 'LISTO', 'tablet-cocinero-btn--listo', 'Listo cocina');
@@ -136,4 +136,4 @@ $contenidoPrincipal = <<<EOS
 </div>
 EOS;
 
-require 'includes/vistas/plantillas/plantilla.php';
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

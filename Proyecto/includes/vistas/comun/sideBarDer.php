@@ -3,6 +3,7 @@
     <h3 class="mini-carrito-titulo">Tu Pedido</h3>
     
     <?php
+	//Si hay algo en el carrito mostramos una vista resumen del contenido con opción de realizar acciones sobre él, si está vacío mostramos un mensaje
     if (isset($_SESSION['carrito']) && count($_SESSION['carrito']) > 0) {
         $totalArticulos = array_sum($_SESSION['carrito']);
         

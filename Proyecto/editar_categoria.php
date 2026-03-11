@@ -12,11 +12,13 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
     // Obtenemos el nombre de la categoría a editar. Este dato, solo lo usaremos para montar el contenido principal de la página
-    $conn = Aplicacion::getInstance()->getConexionBd();
-    $query = "SELECT * FROM Categorias WHERE id = $id";
-    $rs = $conn->query($query);
+    $queryCategoriaPorId = "SELECT * FROM Categorias WHERE id = ?";
+    $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategoriaPorId, "i", (int)$id)->get_result();
     if ($rs && $rs->num_rows > 0) {
         $cat = $rs->fetch_assoc();
+    }
+    if ($rs) {
+        $rs->free();
     }
 
     // Creamos el formulario de edición

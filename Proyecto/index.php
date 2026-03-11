@@ -2,11 +2,9 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Aplicacion;
 
-$conn = Aplicacion::getInstance()->getConexionBd();
-
 // Obtenemos las categorías para mostrarlas como tarjetas en la portada
-$query = "SELECT id, nombre, imagen FROM Categorias ORDER BY nombre";
-$rsCategorias = $conn->query($query);
+$queryCategorias = "SELECT id, nombre, imagen FROM Categorias ORDER BY nombre";
+$rsCategorias = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategorias)->get_result();
 
 // Construimos las tarjetas de categorías
 $tarjetas = "";

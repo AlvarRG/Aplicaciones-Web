@@ -2,20 +2,18 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Aplicacion;
 
-$conn = Aplicacion::getInstance()->getConexionBd();
-
 // Inicializamos el carrito en sesión si el usuario aún no tiene ninguno
 if (!isset($_SESSION['carrito'])) {
     $_SESSION['carrito'] = [];
 }
 
 // Obtenemos todos los productos ofertados junto con su categoría, ordenados por categoría y nombre
-$query = "SELECT P.*, C.nombre AS nombre_cat
+$queryProductosCarta = "SELECT P.*, C.nombre AS nombre_cat
           FROM Productos P
           JOIN Categorias C ON P.id_categoria = C.id
           WHERE P.ofertado = 1
           ORDER BY C.nombre, P.nombre";
-$rs = $conn->query($query);
+$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosCarta)->get_result();
 
 // Construimos el HTML de la carta agrupando los productos por categoría
 $cartaHTML    = "";

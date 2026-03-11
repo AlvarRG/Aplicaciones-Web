@@ -17,11 +17,12 @@ class FormularioEditarCategoria extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-
-        $query = "SELECT * FROM categorias WHERE id = {$this->idCategoria}";
-        $res = $conn->query($query);
-        $cat = $res->fetch_assoc();
+        $queryCategoriaPorId = "SELECT * FROM categorias WHERE id = ?";
+        $rsCategoria = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategoriaPorId, "i", (int)$this->idCategoria)->get_result();
+        $cat = $rsCategoria ? $rsCategoria->fetch_assoc() : null;
+        if ($rsCategoria) {
+            $rsCategoria->free();
+        }
 
         $nombre = $datos['nombre'] ?? $cat['nombre'];
         $descripcion = $datos['descripcion'] ?? $cat['descripcion'];
@@ -63,11 +64,10 @@ class FormularioEditarCategoria extends Formulario
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];
-        $conn = Aplicacion::getInstance()->getConexionBd();
 
         $id = (int)$datos['id'];
-        $nombre = $conn->real_escape_string($datos['nombre'] ?? '');
-        $descripcion = $conn->real_escape_string($datos['descripcion'] ?? '');
+        $nombre = (string)($datos['nombre'] ?? '');
+        $descripcion = (string)($datos['descripcion'] ?? '');
 
         if (!$nombre) {
             $this->errores['nombre'] = "El nombre no puede estar vacío.";
@@ -75,9 +75,13 @@ class FormularioEditarCategoria extends Formulario
 
         if (count($this->errores) === 0) {
             // Recuperar imagen actual por si no se cambia
-            $res = $conn->query("SELECT imagen FROM categorias WHERE id = $id");
-            $fila = $res->fetch_assoc();
-            $imagenFinal = $fila['imagen'];
+            $queryImagenCategoria = "SELECT imagen FROM categorias WHERE id = ?";
+            $rsImagen = Aplicacion::getInstance()->ejecutarConsultaBd($queryImagenCategoria, "i", $id)->get_result();
+            $fila = $rsImagen ? $rsImagen->fetch_assoc() : null;
+            $imagenFinal = $fila['imagen'] ?? 'cat_default.png';
+            if ($rsImagen) {
+                $rsImagen->free();
+            }
 
             // Si se sube una nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -91,10 +95,8 @@ class FormularioEditarCategoria extends Formulario
             }
 
             // Actualizamos en BD
-            $query = "UPDATE categorias SET nombre='$nombre', descripcion='$descripcion', imagen='$imagenFinal' WHERE id = $id";
-            if (!$conn->query($query)) {
-                $this->errores[] = "Error al actualizar la categoría: " . $conn->error;
-            }
+            $queryUpdateCategoria = "UPDATE categorias SET nombre = ?, descripcion = ?, imagen = ? WHERE id = ?";
+            Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateCategoria, "sssi", $nombre, $descripcion, $imagenFinal, $id);
         }
     }
 }

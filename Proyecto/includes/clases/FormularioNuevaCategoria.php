@@ -41,10 +41,9 @@ class FormularioNuevaCategoria extends Formulario
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];
-        $conn = Aplicacion::getInstance()->getConexionBd();
 
-        $nombre = $conn->real_escape_string($datos['nombre'] ?? '');
-        $descripcion = $conn->real_escape_string($datos['descripcion'] ?? '');
+        $nombre = (string)($datos['nombre'] ?? '');
+        $descripcion = (string)($datos['descripcion'] ?? '');
         $imagen = 'cat_default.png';
 
         if (!$nombre) {
@@ -63,11 +62,8 @@ class FormularioNuevaCategoria extends Formulario
                 }
             }
             
-            $query = "INSERT INTO categorias (nombre, descripcion, imagen) VALUES ('$nombre', '$descripcion', '$imagen')";
-            
-            if (!$conn->query($query)) {
-                $this->errores[] = "Error al crear categoría: " . $conn->error;
-            }
+            $queryInsertCategoria = "INSERT INTO categorias (nombre, descripcion, imagen) VALUES (?, ?, ?)";
+            Aplicacion::getInstance()->ejecutarConsultaBd($queryInsertCategoria, "sss", $nombre, $descripcion, $imagen);
         }
     }
 }

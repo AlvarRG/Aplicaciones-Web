@@ -10,9 +10,8 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 //Si tenemos un id válido
 if ($id) {
-	//Conexión a la base de datos
-    $conn = Aplicacion::getInstance()->getConexionBd();
 	//Borramos el producto con ese id
-    $conn->query("DELETE FROM Productos WHERE id = $id");
+    $queryBorrarProducto = "DELETE FROM Productos WHERE id = ?";
+    Aplicacion::getInstance()->ejecutarConsultaBd($queryBorrarProducto, "i", (int)$id);
 }
 header('Location: ../admin_productos.php');

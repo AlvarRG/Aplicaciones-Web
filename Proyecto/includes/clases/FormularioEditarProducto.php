@@ -15,12 +15,13 @@ class FormularioEditarProducto extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-        
         // 1. Obtener datos del producto
-        $query = "SELECT * FROM productos WHERE id = {$this->idProducto}";
-        $res = $conn->query($query);
-        $product = $res->fetch_assoc();
+        $queryProductoPorId = "SELECT * FROM productos WHERE id = ?";
+        $rsProducto = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductoPorId, "i", (int)$this->idProducto)->get_result();
+        $product = $rsProducto ? $rsProducto->fetch_assoc() : null;
+        if ($rsProducto) {
+            $rsProducto->free();
+        }
 
         // 2. Preparar los datos (Recordar lo escrito si hay error, si no, usar DB)
         $nombre = $datos['nombre'] ?? $product['nombre'];
@@ -39,13 +40,17 @@ class FormularioEditarProducto extends Formulario
         }
 
         // 3. Generar el selector de categorías dinámico
-        $resCat = $conn->query("SELECT id, nombre FROM categorias");
+        $queryCategorias = "SELECT id, nombre FROM categorias";
+        $resCat = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategorias)->get_result();
         $selectorCategorias = '<select name="id_categoria" required>';
         while($cat = $resCat->fetch_assoc()) {
             $selected = ($cat['id'] == $id_categoria_actual) ? 'selected' : '';
             $selectorCategorias .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
         }
         $selectorCategorias .= '</select>';
+        if ($resCat) {
+            $resCat->free();
+        }
 
         // Atributos de IVA
         $sel4  = ($iva_actual == 4) ? 'selected' : '';
@@ -105,11 +110,10 @@ class FormularioEditarProducto extends Formulario
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];
-        $conn = Aplicacion::getInstance()->getConexionBd();
         
         $id = (int)$datos['id'];
-        $nombre = $conn->real_escape_string($datos['nombre'] ?? '');
-        $descripcion = $conn->real_escape_string($datos['descripcion'] ?? '');
+        $nombre = (string)($datos['nombre'] ?? '');
+        $descripcion = (string)($datos['descripcion'] ?? '');
         $id_categoria = (int)($datos['id_categoria'] ?? 0);
         $precio_base = (float)($datos['precio_base'] ?? 0);
         $iva = (int)($datos['iva'] ?? 10);
@@ -127,9 +131,13 @@ class FormularioEditarProducto extends Formulario
 
         if (count($this->errores) === 0) {
             // Recuperar imagen actual
-            $res = $conn->query("SELECT imagen FROM productos WHERE id = $id");
-            $fila = $res->fetch_assoc();
-            $imagenFinal = $fila['imagen'];
+            $queryImagenProducto = "SELECT imagen FROM productos WHERE id = ?";
+            $rsImagen = Aplicacion::getInstance()->ejecutarConsultaBd($queryImagenProducto, "i", $id)->get_result();
+            $fila = $rsImagen ? $rsImagen->fetch_assoc() : null;
+            $imagenFinal = $fila['imagen'] ?? 'prod_default.png';
+            if ($rsImagen) {
+                $rsImagen->free();
+            }
 
             // Gestión de nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -142,20 +150,20 @@ class FormularioEditarProducto extends Formulario
                 }
             }
 
-            $query = "UPDATE productos SET 
-                        nombre='$nombre', 
-                        id_categoria=$id_categoria, 
-                        descripcion='$descripcion',
-                        precio_base=$precio_base, 
-                        iva=$iva, 
-                        disponible=$disponible, 
-                        ofertado=$ofertado, 
-                        imagen='$imagenFinal' 
-                      WHERE id = $id";
-
-            if (!$conn->query($query)) {
-                $this->errores[] = "Error al actualizar producto: " . $conn->error;
-            }
+            $queryUpdateProducto = "UPDATE productos SET nombre = ?, id_categoria = ?, descripcion = ?, precio_base = ?, iva = ?, disponible = ?, ofertado = ?, imagen = ? WHERE id = ?";
+            Aplicacion::getInstance()->ejecutarConsultaBd(
+                $queryUpdateProducto,
+                "sisdiiisi",
+                $nombre,
+                $id_categoria,
+                $descripcion,
+                $precio_base,
+                $iva,
+                $disponible,
+                $ofertado,
+                $imagenFinal,
+                $id
+            );
         }
     }
 }

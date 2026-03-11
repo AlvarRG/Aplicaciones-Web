@@ -12,8 +12,6 @@ class FormularioNuevoProducto extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-        
         $nombre = $datos['nombre'] ?? '';
         $descripcion = $datos['descripcion'] ?? '';
         $precio_base = $datos['precio_base'] ?? '';
@@ -23,13 +21,17 @@ class FormularioNuevoProducto extends Formulario
         $dispChecked = (empty($datos) || isset($datos['disponible'])) ? 'checked' : '';
 
         // Necesitamos las categorías para el selector (Requisito de usabilidad)
-        $resCat = $conn->query("SELECT id, nombre FROM categorias");
+        $queryCategorias = "SELECT id, nombre FROM categorias";
+        $resCat = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategorias)->get_result();
         $selectorCategorias = '<select name="id_categoria" required>';
         while($cat = $resCat->fetch_assoc()) {
             $selected = ($cat['id'] == $id_categoria_seleccionada) ? 'selected' : '';
             $selectorCategorias .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
         }
         $selectorCategorias .= '</select>';
+        if ($resCat) {
+            $resCat->free();
+        }
 
         $sel4  = ($iva_seleccionado == 4) ? 'selected' : '';
         $sel10 = ($iva_seleccionado == 10) ? 'selected' : '';
@@ -76,12 +78,11 @@ EOF;
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];
-        $conn = Aplicacion::getInstance()->getConexionBd();
 
         // 1. Recogida de datos y saneamiento
-        $nombre = $conn->real_escape_string($datos['nombre'] ?? '');
+        $nombre = (string)($datos['nombre'] ?? '');
         $id_categoria = (int)($datos['id_categoria'] ?? 0);
-        $descripcion = $conn->real_escape_string($datos['descripcion'] ?? '');
+        $descripcion = (string)($datos['descripcion'] ?? '');
         $precio_base = (float)($datos['precio_base'] ?? 0);
         $iva = (int)($datos['iva'] ?? 10);
         
@@ -115,12 +116,19 @@ EOF;
             }
 
             // 4. Inserción en la BD
-            $query = "INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, imagen) 
-                      VALUES ($id_categoria, '$nombre', '$descripcion', $precio_base, $iva, $disponible, $ofertado, '$imagen')";
-
-            if (!$conn->query($query)) {
-                $this->errores[] = "Error al crear el producto: " . $conn->error;
-            }
+            $queryInsertProducto = "INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            Aplicacion::getInstance()->ejecutarConsultaBd(
+                $queryInsertProducto,
+                "issdiiis",
+                $id_categoria,
+                $nombre,
+                $descripcion,
+                $precio_base,
+                $iva,
+                $disponible,
+                $ofertado,
+                $imagen
+            );
         }
     }
 }

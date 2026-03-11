@@ -10,9 +10,8 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 //Si tenemos un id válido
 if ($id) {
-	//Conexión a la base de datos
-    $conn = Aplicacion::getInstance()->getConexionBd();
 	//Borramos la categoría con ese id, pero si hay productos en esta categoría, fallará por la clave foránea (hay que borrar todos los productos pertenecientes a una categoría antes que esta)
-    $conn->query("DELETE FROM Categorias WHERE id = $id");
+    $queryBorrarCategoria = "DELETE FROM Categorias WHERE id = ?";
+    Aplicacion::getInstance()->ejecutarConsultaBd($queryBorrarCategoria, "i", (int)$id);
 }
 header('Location: ../admin_categorias.php');

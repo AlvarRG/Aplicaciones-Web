@@ -10,10 +10,9 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 //Si tenemos un id válido
 if ($id) {
-	//Conexión a la base de datos
-    $conn = Aplicacion::getInstance()->getConexionBd();
-	//Borramos el producto con ese id
-    $conn->query("DELETE FROM Usuarios WHERE id = $id");
+	//Borramos el usuario con ese id
+    $queryBorrarUsuario = "DELETE FROM Usuarios WHERE id = ?";
+    Aplicacion::getInstance()->ejecutarConsultaBd($queryBorrarUsuario, "i", (int)$id);
 }
 
 header('Location: ../admin_usuarios.php');

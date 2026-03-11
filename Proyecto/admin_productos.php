@@ -9,11 +9,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
     // Consulta para obtener todos los productos
-    $conn = Aplicacion::getInstance()->getConexionBd();
-    $query = "SELECT P.*, C.nombre AS nombre_cat
+    $queryProductosAdmin = "SELECT P.*, C.nombre AS nombre_cat
               FROM Productos P
               JOIN Categorias C ON P.id_categoria = C.id";
-    $productos = $conn->query($query);
+    $productos = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosAdmin)->get_result();
 
     // Si la consulta anterior ha devuelto algo, recorremos los productos devueltos y construimos las filas de la tabla
     $filas = "";
@@ -41,6 +40,9 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                 </tr>
             EOS;
         }
+    }
+    if ($productos) {
+        $productos->free();
     }
 
     // Parámetros para la plantilla

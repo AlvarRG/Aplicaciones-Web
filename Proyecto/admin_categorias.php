@@ -9,9 +9,8 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
     // Consulta para obtener todas las categorías
-    $conn = Aplicacion::getInstance()->getConexionBd();
-    $query = "SELECT * FROM Categorias";
-    $categorias = $conn->query($query);
+    $queryCategoriasAdmin = "SELECT * FROM Categorias";
+    $categorias = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategoriasAdmin)->get_result();
 
     // Si la consulta anterior ha devuelto algo, recorremos las categorías devueltas y construimos las filas de la tabla
     $filas = "";
@@ -29,6 +28,9 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                 </tr>
             EOS;
         }
+    }
+    if ($categorias) {
+        $categorias->free();
     }
 
     //Parametros para la plantilla

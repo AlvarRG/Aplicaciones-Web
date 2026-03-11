@@ -16,16 +16,16 @@ if (empty($_SESSION['carrito'])) {
 
 $idUsuario = $_SESSION['id_usuario'] ?? $_SESSION['id'] ?? 1;
 
-$conn = Aplicacion::getInstance()->getConexionBd();
-
 if (isset($_POST['tipo_pedido'])) {
     $_SESSION['tipo_pedido'] = $_POST['tipo_pedido'];
 }
 $tipoPedido = $_SESSION['tipo_pedido'] ?? 'Local';
 
-$ids = implode(',', array_map('intval', array_keys($_SESSION['carrito'])));
-$queryTotal = "SELECT * FROM Productos WHERE id IN ($ids)";
-$rsTotal = $conn->query($queryTotal);
+$idsProductos = array_map('intval', array_keys($_SESSION['carrito']));
+$placeholders = implode(',', array_fill(0, count($idsProductos), '?'));
+$queryProductosCarrito = "SELECT * FROM Productos WHERE id IN ($placeholders)";
+$tiposIdsProductos = str_repeat('i', count($idsProductos));
+$rsTotal = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosCarrito, $tiposIdsProductos, ...$idsProductos)->get_result();
 
 $totalPedido = 0;
 $productosDetalle = [];
@@ -44,41 +44,50 @@ while ($fila = $rsTotal->fetch_assoc()) {
         'iva' => $fila['iva']
     ];
 }
+if ($rsTotal) {
+    $rsTotal->free();
+}
 
 if (isset($_POST['metodo_pago'])) {
     $metodoPago = $_POST['metodo_pago'];
     
     $estadoInicial = ($metodoPago === 'tarjeta') ? 'En preparacion' : 'Recibido';
     
-    $queryNum = "SELECT IFNULL(MAX(numero_pedido), 0) + 1 AS nuevo_num 
+    $queryNuevoNumeroPedido = "SELECT IFNULL(MAX(numero_pedido), 0) + 1 AS nuevo_num 
                  FROM Pedidos 
                  WHERE DATE(fecha) = CURDATE()";
-    $rsNum = $conn->query($queryNum);
+    $rsNum = Aplicacion::getInstance()->ejecutarConsultaBd($queryNuevoNumeroPedido)->get_result();
     $filaNum = $rsNum->fetch_assoc();
     $numeroPedidoDiario = $filaNum['nuevo_num'];
+    if ($rsNum) {
+        $rsNum->free();
+    }
     
-    $queryPedido = sprintf("INSERT INTO Pedidos (id_usuario, numero_pedido, estado, tipo, total) 
-                            VALUES (%d, %d, '%s', '%s', %F)",
-        $idUsuario,
-        $numeroPedidoDiario,
-        $estadoInicial,
-        $conn->real_escape_string($tipoPedido),
-        $totalPedido
+    $queryInsertPedido = "INSERT INTO Pedidos (id_usuario, numero_pedido, estado, tipo, total) VALUES (?, ?, ?, ?, ?)";
+    Aplicacion::getInstance()->ejecutarConsultaBd(
+        $queryInsertPedido,
+        "iissd",
+        (int)$idUsuario,
+        (int)$numeroPedidoDiario,
+        (string)$estadoInicial,
+        (string)$tipoPedido,
+        (float)$totalPedido
     );
-    
-    if ($conn->query($queryPedido)) {
-        $idNuevoPedido = $conn->insert_id;
+
+    $idNuevoPedido = Aplicacion::getInstance()->getConexionBd()->insert_id;
+    if ($idNuevoPedido) {
         
         foreach ($productosDetalle as $prod) {
-            $queryDetalle = sprintf("INSERT INTO Pedidos_Productos (id_pedido, id_producto, cantidad, precio_unitario, iva) 
-                                     VALUES (%d, %d, %d, %F, %d)",
-                $idNuevoPedido,
-                $prod['id'],
-                $prod['cantidad'],
-                $prod['precio_unitario'],
-                $prod['iva']
+            $queryInsertDetallePedido = "INSERT INTO Pedidos_Productos (id_pedido, id_producto, cantidad, precio_unitario, iva) VALUES (?, ?, ?, ?, ?)";
+            Aplicacion::getInstance()->ejecutarConsultaBd(
+                $queryInsertDetallePedido,
+                "iiidi",
+                (int)$idNuevoPedido,
+                (int)$prod['id'],
+                (int)$prod['cantidad'],
+                (float)$prod['precio_unitario'],
+                (int)$prod['iva']
             );
-            $conn->query($queryDetalle);
         }
         
         unset($_SESSION['carrito']);
@@ -87,7 +96,7 @@ if (isset($_POST['metodo_pago'])) {
         header("Location: confirmacion.php?pedido=$idNuevoPedido");
         exit();
     } else {
-        $errorDB = "Hubo un problema al guardar el pedido: " . $conn->error;
+        $errorDB = "Hubo un problema al guardar el pedido.";
     }
 }
 

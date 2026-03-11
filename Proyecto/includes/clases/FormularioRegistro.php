@@ -81,30 +81,36 @@ EOF;
 
         // Si no hay errores, comprobamos la BD
         if (count($this->errores) === 0) {
-            $conn = Aplicacion::getInstance()->getConexionBd();
-            $u = $conn->real_escape_string($nombreUsuario);
-            $e = $conn->real_escape_string($email);
-
             // Comprobar si existe
-            $check = $conn->query("SELECT id FROM usuarios WHERE nombreUsuario='$u' OR email='$e'");
+            $queryCheckUsuarioEmail = "SELECT id FROM usuarios WHERE nombreUsuario = ? OR email = ?";
+            $check = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheckUsuarioEmail, "ss", $nombreUsuario, $email)->get_result();
             
-            if ($check->num_rows > 0) {
+            if ($check && $check->num_rows > 0) {
                 $this->errores[] = "El usuario o el email ya existen.";
             } else {
                 // Inserción en la BD
                 $passHash = password_hash($password, PASSWORD_DEFAULT);
-                $query = "INSERT INTO usuarios(nombreUsuario, nombre, apellidos, email, password, avatar, rol) 
-                          VALUES ('$u', '$nombre', '$apellidos', '$e', '$passHash', 'default.png', 1)";
+                $queryInsertUsuario = "INSERT INTO usuarios(nombreUsuario, nombre, apellidos, email, password, avatar, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                Aplicacion::getInstance()->ejecutarConsultaBd(
+                    $queryInsertUsuario,
+                    "ssssssi",
+                    $nombreUsuario,
+                    $nombre,
+                    $apellidos,
+                    $email,
+                    $passHash,
+                    'default.png',
+                    1
+                );
 
-                if ($conn->query($query)) {
-                    $_SESSION['login'] = true;
-                    $_SESSION['nombre'] = $nombre;
-                    $_SESSION['nombreUsuario'] = $nombreUsuario;
-                    $_SESSION['esAdmin'] = false;
-                    
-                } else {
-                    $this->errores[] = "Error al registrar en la base de datos.";
-                }
+                $_SESSION['login'] = true;
+                $_SESSION['nombre'] = $nombre;
+                $_SESSION['nombreUsuario'] = $nombreUsuario;
+                $_SESSION['esAdmin'] = false;
+            }
+
+            if ($check) {
+                $check->free();
             }
         }
     }

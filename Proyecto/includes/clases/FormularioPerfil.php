@@ -32,12 +32,13 @@ class FormularioPerfil extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-
         // 1. Obtenemos los datos actuales del usuario
-        $query = "SELECT * FROM usuarios WHERE nombreUsuario = '{$this->nombreUsuario}'";
-        $rs = $conn->query($query);
-        $user = $rs->fetch_assoc();
+        $queryUsuarioPerfil = "SELECT * FROM usuarios WHERE nombreUsuario = ?";
+        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuarioPerfil, "s", (string)$this->nombreUsuario)->get_result();
+        $user = $rs ? $rs->fetch_assoc() : null;
+        if ($rs) {
+            $rs->free();
+        }
 
         // 2. Preparamos las variables (Prioridad: lo escrito tras un error > lo que hay en BD)
         $nombre    = htmlspecialchars($datos['nombre']     ?? $user['nombre']);
@@ -79,13 +80,12 @@ class FormularioPerfil extends Formulario
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];
-        $conn = Aplicacion::getInstance()->getConexionBd();
 
         // 1. Recoger textos
-        $nombre    = $conn->real_escape_string($datos['nombre']     ?? '');
-        $apellidos = $conn->real_escape_string($datos['apellidos']  ?? '');
-        $email     = $conn->real_escape_string($datos['email']      ?? '');
-        $avatarFinal = $conn->real_escape_string($datos['avatar_pre'] ?? 'default.png');
+        $nombre    = (string)($datos['nombre']     ?? '');
+        $apellidos = (string)($datos['apellidos']  ?? '');
+        $email     = (string)($datos['email']      ?? '');
+        $avatarFinal = (string)($datos['avatar_pre'] ?? 'default.png');
 
         // 2. Validaciones básicas
         if (empty($nombre)) {
@@ -111,16 +111,21 @@ class FormularioPerfil extends Formulario
             }
 
             // 4. Actualizar BD
-            $query = "UPDATE usuarios SET nombre='$nombre', apellidos='$apellidos', email='$email', avatar='$avatarFinal' WHERE nombreUsuario='{$this->nombreUsuario}'";
+            $queryUpdatePerfil = "UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, avatar = ? WHERE nombreUsuario = ?";
+            Aplicacion::getInstance()->ejecutarConsultaBd(
+                $queryUpdatePerfil,
+                "sssss",
+                $nombre,
+                $apellidos,
+                $email,
+                $avatarFinal,
+                (string)$this->nombreUsuario
+            );
 
-            if ($conn->query($query)) {
-                $_SESSION['nombre'] = $nombre;
-                // Redireccionamos para evitar reenvío del formulario (PRG pattern)
-                header("Location: perfil.php?success=1");
-                exit();
-            } else {
-                $this->errores[] = "Error al actualizar tu perfil: " . $conn->error;
-            }
+            $_SESSION['nombre'] = $nombre;
+            // Redireccionamos para evitar reenvío del formulario (PRG pattern)
+            header("Location: perfil.php?success=1");
+            exit();
         }
     }
 }

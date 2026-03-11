@@ -19,7 +19,6 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 }
 
 $tituloPagina = 'Revisar Pedido';
-$conn         = Aplicacion::getInstance()->getConexionBd();
 
 // Obtenemos el carrito de la sesión (array id_producto => cantidad)
 $carrito = $_SESSION['carrito'] ?? [];
@@ -37,10 +36,8 @@ if (empty($carrito)) {
     $placeholders = str_repeat('?,', count($ids) - 1) . '?';
     $tipos        = str_repeat('i', count($ids)); // 'i' = integer por cada id
 
-    $stmt = $conn->prepare("SELECT * FROM Productos WHERE id IN ($placeholders)");
-    $stmt->bind_param($tipos, ...$ids);
-    $stmt->execute();
-    $rs = $stmt->get_result();
+    $queryProductosCarrito = "SELECT * FROM Productos WHERE id IN ($placeholders)";
+    $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosCarrito, $tipos, ...$ids)->get_result();
 
     // Construimos las filas y el total acumulado
     $filasTabla  = "";
@@ -129,6 +126,10 @@ if (empty($carrito)) {
 
     // Montamos el contenido final: tabla de artículos + formulario de entrega
     $contenidoPrincipal = "<h1>Revisar Pedido</h1>" . $htmlArticulos . $htmlFormulario;
+
+    if ($rs) {
+        $rs->free();
+    }
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

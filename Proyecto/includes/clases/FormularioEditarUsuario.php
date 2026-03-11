@@ -15,14 +15,16 @@ class FormularioEditarUsuario extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-
         // Extra de UX: Obtener el rol actual para preseleccionarlo en el menú
         $rolActual = 1; // Por defecto Cliente
         if (empty($datos)) { // Si es la primera vez que carga (no hay POST)
-            $res = $conn->query("SELECT rol FROM usuarios WHERE id = {$this->idUsuario} LIMIT 1");
-            if ($res && $res->num_rows > 0) {
-                $rolActual = (int)$res->fetch_assoc()['rol'];
+            $queryRolUsuario = "SELECT rol FROM usuarios WHERE id = ? LIMIT 1";
+            $rsRol = Aplicacion::getInstance()->ejecutarConsultaBd($queryRolUsuario, "i", (int)$this->idUsuario)->get_result();
+            if ($rsRol && $rsRol->num_rows > 0) {
+                $rolActual = (int)$rsRol->fetch_assoc()['rol'];
+            }
+            if ($rsRol) {
+                $rsRol->free();
             }
         } else {
             // Si hubo error, mantenemos el que intentó guardar
@@ -60,7 +62,6 @@ EOF;
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];
-        $conn = Aplicacion::getInstance()->getConexionBd();
 
         $id = (int)$datos['id'];
         $nuevoRol = (int)$datos['nuevo_rol'];
@@ -72,7 +73,8 @@ EOF;
         if (count($this->errores) === 0) {
             // En este sistema simple, un usuario tiene un solo rol principal.
             // Actualizamos el valor en la tabla usuarios.
-            $conn->query("UPDATE usuarios SET rol = $nuevoRol WHERE id = $id");
+            $queryUpdateRolUsuario = "UPDATE usuarios SET rol = ? WHERE id = ?";
+            Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateRolUsuario, "ii", $nuevoRol, $id);
         }
     }
 }

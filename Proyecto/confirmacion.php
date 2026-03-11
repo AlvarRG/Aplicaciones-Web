@@ -17,15 +17,10 @@ if ($idPedido === 0) {
     exit();
 }
 
-$conn = Aplicacion::getInstance()->getConexionBd();
-
 // 3. CONSULTAR LOS DATOS DEL PEDIDO (Para mostrar el número diario y el estado)
 // Aseguramos que el pedido pertenece a este usuario por privacidad
-$query = sprintf("SELECT numero_pedido, estado FROM Pedidos WHERE id = %d AND id_usuario = %d", 
-    $idPedido, 
-    $idUsuario
-);
-$rs = $conn->query($query);
+$queryPedidoConfirmacion = "SELECT numero_pedido, estado FROM Pedidos WHERE id = ? AND id_usuario = ?";
+$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidoConfirmacion, "ii", $idPedido, (int)$idUsuario)->get_result();
 
 if ($rs && $rs->num_rows > 0) {
     $fila = $rs->fetch_assoc();
@@ -35,6 +30,9 @@ if ($rs && $rs->num_rows > 0) {
     // Si intentan poner un ID que no existe o no es suyo
     header('Location: index.php');
     exit();
+}
+if ($rs) {
+    $rs->free();
 }
 
 $estilosExtra = ['confirmacion.css'];

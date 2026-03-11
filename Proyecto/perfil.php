@@ -8,19 +8,21 @@ if (!isset($_SESSION['login']) || !isset($_SESSION['nombreUsuario'])) {
     exit();
 }
 
-$conn = Aplicacion::getInstance()->getConexionBd();
 $estilosExtra = ['perfil.css'];
 
 // Saneamiento de datos y posteriormente consulta en la BD sobre información del usuario logeado
-$nombreUsuario = $conn->real_escape_string($_SESSION['nombreUsuario']);
-$query = "SELECT * FROM usuarios WHERE nombreUsuario = '$nombreUsuario'";
-$rs = $conn->query($query);
-$usuario = $rs->fetch_assoc();
+$nombreUsuario = (string)$_SESSION['nombreUsuario'];
+$queryUsuario = "SELECT * FROM usuarios WHERE nombreUsuario = ?";
+$rsUsuario = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuario, "s", $nombreUsuario)->get_result();
+$usuario = $rsUsuario ? $rsUsuario->fetch_assoc() : null;
+if ($rsUsuario) {
+    $rsUsuario->free();
+}
 
 // Obtención de pedidos activos del usuario (Pedidos en curso)
 $estadosActivos = "'En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'";
-$query = "SELECT * FROM pedidos WHERE id_usuario = {$usuario['id']} AND estado IN ($estadosActivos) ORDER BY fecha DESC";
-$rs = $conn->query($query);
+$queryPedidosActivos = "SELECT * FROM pedidos WHERE id_usuario = ? AND estado IN ($estadosActivos) ORDER BY fecha DESC";
+$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosActivos, "i", (int)$usuario['id'])->get_result();
 
 // Pestañas de pedidos activos
 $htmlActivos = "";
@@ -42,10 +44,13 @@ if ($rs && $rs->num_rows > 0) {
 } else {
     $htmlActivos = "<div class='perfil-pedido-activo-vacio'>No tienes pedidos en curso actualmente.</div>";
 }
+if ($rs) {
+    $rs->free();
+}
 
 // Obtención de pedidos entregados o cancelados del usuario (Historial de pedidos)
-$query = "SELECT * FROM pedidos WHERE id_usuario = {$usuario['id']} AND estado NOT IN ($estadosActivos) ORDER BY fecha DESC";
-$rs = $conn->query($query);
+$queryPedidosHistorial = "SELECT * FROM pedidos WHERE id_usuario = ? AND estado NOT IN ($estadosActivos) ORDER BY fecha DESC";
+$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosHistorial, "i", (int)$usuario['id'])->get_result();
 
 // Contenido tabla de historial de pedidos
 if ($rs && $rs->num_rows > 0) {
@@ -63,6 +68,9 @@ if ($rs && $rs->num_rows > 0) {
     }
 } else {
     $filasHistorial = "<tr><td colspan='5' class='perfil-historial-vacio'>No hay historial de pedidos.</td></tr>";
+}
+if ($rs) {
+    $rs->free();
 }
 
 // Tabla de historial de pedidos una vez obtenido el contenido

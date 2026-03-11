@@ -12,11 +12,13 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
     // Obtenemos el nombre del usuario a editar. Este dato, solo lo usaremos para montar el contenido principal de la página
-    $conn = Aplicacion::getInstance()->getConexionBd();
-    $queary = "SELECT nombreUsuario FROM usuarios WHERE id = $id";
-    $rs = $conn->query($queary);
+    $queryNombreUsuarioPorId = "SELECT nombreUsuario FROM usuarios WHERE id = ?";
+    $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryNombreUsuarioPorId, "i", (int)$id)->get_result();
     if ($rs && $rs->num_rows > 0) {
         $usuario = $rs->fetch_assoc();
+    }
+    if ($rs) {
+        $rs->free();
     }
 
     // Creamos el formulario de edición

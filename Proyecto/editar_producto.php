@@ -12,11 +12,13 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
     // Obtenemos el nombre del producto a editar. Este dato, solo lo usaremos para montar el contenido principal de la página
-    $conn = Aplicacion::getInstance()->getConexionBd();
-    $query = "SELECT * FROM Productos WHERE id = $id";
-    $rs = $conn->query($query);
+    $queryProductoPorId = "SELECT * FROM Productos WHERE id = ?";
+    $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductoPorId, "i", (int)$id)->get_result();
     if ($rs && $rs->num_rows > 0) {
         $product = $rs->fetch_assoc();
+    }
+    if ($rs) {
+        $rs->free();
     }
 
     // Creamos el formulario de edición

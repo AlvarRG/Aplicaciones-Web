@@ -8,8 +8,6 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     exit();
 }
 
-$conn = Aplicacion::getInstance()->getConexionBd();
-
 // Leemos los roles del usuario desde la sesión
 $esAdmin    = isset($_SESSION['esAdmin'])    ? $_SESSION['esAdmin']    : false;
 $esCamarero = isset($_SESSION['esCamarero']) ? $_SESSION['esCamarero'] : false;
@@ -34,15 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
     $idPed = (int)$_POST['id_pedido'];
 
     // Solo se puede cancelar un pedido si está en estado 'Recibido'
-    $queryCheck = "SELECT estado FROM Pedidos WHERE id = $idPed";
-    $rsCheck = $conn->query($queryCheck);
+    $queryCheckEstadoPedido = "SELECT estado FROM Pedidos WHERE id = ?";
+    $rsCheck = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheckEstadoPedido, "i", $idPed)->get_result();
 
     if ($rsCheck && $rsCheck->num_rows > 0) {
         $estadoActual = $rsCheck->fetch_assoc()['estado'];
         if ($estadoActual === 'Recibido') {
-            $queryCancel = "UPDATE Pedidos SET estado = 'Cancelado' WHERE id = $idPed";
-            $conn->query($queryCancel);
+            $queryCancelarPedido = "UPDATE Pedidos SET estado = 'Cancelado' WHERE id = ?";
+            Aplicacion::getInstance()->ejecutarConsultaBd($queryCancelarPedido, "i", $idPed);
         }
+    }
+    if ($rsCheck) {
+        $rsCheck->free();
     }
 
     // Redirigimos para evitar reenvío del formulario al refrescar
@@ -56,11 +57,11 @@ $estilosExtra = ['gestion_pedidos.css'];
 $tituloPagina = 'Gestion Global de Pedidos';
 
 // Obtenemos todos los pedidos junto con el nombre del cliente, ordenados por fecha
-$query = "SELECT p.id, p.numero_pedido, p.fecha, p.estado, p.tipo, p.total, u.nombre AS nombre_cliente 
+$queryPedidosGestion = "SELECT p.id, p.numero_pedido, p.fecha, p.estado, p.tipo, p.total, u.nombre AS nombre_cliente 
           FROM Pedidos p 
           JOIN usuarios u ON p.id_usuario = u.id 
           ORDER BY p.fecha DESC";
-$rs = $conn->query($query);
+$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosGestion)->get_result();
 
 // Cabecera de la página con el rol del usuario actual
 $contenidoPrincipal = <<<EOS
@@ -139,6 +140,10 @@ if ($rs && $rs->num_rows > 0) {
             <h3 class='gestion-pedidos-empty-title'>No hay pedidos registrados en el sistema todavia.</h3>
         </div>
     EOS;
+}
+
+if ($rs) {
+    $rs->free();
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

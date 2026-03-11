@@ -36,9 +36,8 @@ class Usuario
 	//Dado un nombre de usuario lo busca en la base de datos y 
     public static function buscaUsuario($nombreUsuario)
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-        $query = sprintf("SELECT * FROM usuarios WHERE nombreUsuario='%s'", $conn->real_escape_string($nombreUsuario));
-        $rs = $conn->query($query);
+        $queryUsuario = "SELECT * FROM usuarios WHERE nombreUsuario = ?";
+        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuario, "s", $nombreUsuario)->get_result();
         $result = false;
         if ($rs) {
             $fila = $rs->fetch_assoc();
@@ -46,8 +45,6 @@ class Usuario
                 $result = new Usuario($fila['nombreUsuario'], $fila['password'], $fila['nombre'], $fila['id'], $fila['rol'], $fila['avatar']);
             }
             $rs->free();
-        } else {
-            error_log("Error BD ({$conn->errno}): {$conn->error}");
         }
         return $result;
     }
@@ -55,12 +52,10 @@ class Usuario
     //Devuelve todos los usuarios de la base de datos en un array
     public static function buscaTodos()
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-    
-        $query = "SELECT U.id, U.nombreUsuario, U.nombre, U.apellidos, U.email, R.nombre AS nombreRol 
+        $queryUsuarios = "SELECT U.id, U.nombreUsuario, U.nombre, U.apellidos, U.email, R.nombre AS nombreRol 
                   FROM usuarios U 
                   JOIN roles R ON U.rol = R.id";
-        $rs = $conn->query($query);
+        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuarios)->get_result();
         
         $usuarios = [];
         if ($rs) {
@@ -68,8 +63,6 @@ class Usuario
                 $usuarios[] = $fila;
             }
             $rs->free();
-        } else {
-            error_log("Error BD ({$conn->errno}): {$conn->error}");
         }
         return $usuarios;
     }
@@ -77,9 +70,8 @@ class Usuario
 	//Busca un usuario por id
     public static function buscaPorId($idUsuario)
     {
-        $conn = Aplicacion::getInstance()->getConexionBd();
-        $query = sprintf("SELECT * FROM usuarios WHERE id=%d", $idUsuario);
-        $rs = $conn->query($query);
+        $queryUsuarioPorId = "SELECT * FROM usuarios WHERE id = ?";
+        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuarioPorId, "i", $idUsuario)->get_result();
         $result = false;
         if ($rs) {
             $fila = $rs->fetch_assoc();
@@ -87,8 +79,6 @@ class Usuario
                 $result = new Usuario($fila['nombreUsuario'], $fila['password'], $fila['nombre'], $fila['id'], $fila['rol'], $fila['avatar']);
             }
             $rs->free();
-        } else {
-            error_log("Error BD ({$conn->errno}): {$conn->error}");
         }
         return $result;
     }
@@ -102,56 +92,52 @@ class Usuario
 	//Dado un usuario lo mete en la base de datos
     private static function inserta($usuario)
     {
-		//Conexión a la base de datos
-        $conn = Aplicacion::getInstance()->getConexionBd();
-		//Inserta el usuario con los valores correspondientes
-        $query = sprintf("INSERT INTO usuarios(nombreUsuario, nombre, password, rol) VALUES ('%s', '%s', '%s', %d)"
-            , $conn->real_escape_string($usuario->nombreUsuario)
-            , $conn->real_escape_string($usuario->nombre)
-            , $conn->real_escape_string($usuario->password)
-            , $usuario->rol
+        $queryInsertUsuario = "INSERT INTO usuarios(nombreUsuario, nombre, password, rol) VALUES (?, ?, ?, ?)";
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd(
+            $queryInsertUsuario,
+            "sssi",
+            $usuario->nombreUsuario,
+            $usuario->nombre,
+            $usuario->password,
+            $usuario->rol
         );
-		//Si ha tenido éxito devolvemos el usuario, si no false y escribimos un error
-        if ($conn->query($query)) {
-            $usuario->id = $conn->insert_id;
-            return $usuario;
-        } else {
-            error_log("Error BD ({$conn->errno}): {$conn->error}");
+
+        if ($stmt->affected_rows !== 1) {
             return false;
         }
+
+        $usuario->id = Aplicacion::getInstance()->getConexionBd()->insert_id;
+        return $usuario;
     }
     
 	//Actualiza un usuario con sus nuevos datos asociados
     private static function actualiza($usuario)
     {
-		//Conexión a la base de datos
-        $conn = Aplicacion::getInstance()->getConexionBd();
-		//Inserta el usuario con los valores correspondientes
-        $query = sprintf("UPDATE usuarios SET nombreUsuario = '%s', nombre='%s', password='%s', rol=%d WHERE id=%d"
-            , $conn->real_escape_string($usuario->nombreUsuario)
-            , $conn->real_escape_string($usuario->nombre)
-            , $conn->real_escape_string($usuario->password)
-            , $usuario->rol
-            , $usuario->id
+        $queryUpdateUsuario = "UPDATE usuarios SET nombreUsuario = ?, nombre = ?, password = ?, rol = ? WHERE id = ?";
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd(
+            $queryUpdateUsuario,
+            "sssii",
+            $usuario->nombreUsuario,
+            $usuario->nombre,
+            $usuario->password,
+            $usuario->rol,
+            $usuario->id
         );
-		//Si ha tenido éxito devolvemos el usuario, si no false y escribimos un error
-        if ($conn->query($query)) {
-            return $usuario;
-        } else {
-            error_log("Error BD ({$conn->errno}): {$conn->error}");
+
+        if ($stmt->affected_rows < 0) {
             return false;
         }
+
+        return $usuario;
     }
     
 	//Borra el usuario que corresponde con el id dado
     private static function borraPorId($idUsuario)
     {
         if (!$idUsuario) return false;
-		//Conexión a la base de datos
-        $conn = Aplicacion::getInstance()->getConexionBd();
-		//Elimina al usuario de la base de datos
-        $query = sprintf("DELETE FROM usuarios WHERE id = %d", $idUsuario);
-        return $conn->query($query);
+        $queryDeleteUsuario = "DELETE FROM usuarios WHERE id = ?";
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd($queryDeleteUsuario, "i", $idUsuario);
+        return $stmt->affected_rows === 1;
     }
 
     private $id;

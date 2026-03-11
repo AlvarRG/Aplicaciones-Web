@@ -27,9 +27,9 @@ class Usuario
     }
     
 	//Crea un nuevo usuario con los parámetros dados
-    public static function crea($nombreUsuario, $password, $nombre, $rol)
+    public static function crea($nombreUsuario, $password, $nombre, $rol, $apellidos = null, $email = null)
     {
-        $user = new Usuario($nombreUsuario, self::hashPassword($password), $nombre, null, $rol);
+        $user = new Usuario($nombreUsuario, self::hashPassword($password), $nombre, null, $rol, null, $apellidos, $email);
         return $user->guarda();
     }
 
@@ -42,7 +42,7 @@ class Usuario
         if ($rs) {
             $fila = $rs->fetch_assoc();
             if ($fila) {
-                $result = new Usuario($fila['nombreUsuario'], $fila['password'], $fila['nombre'], $fila['id'], $fila['rol'], $fila['avatar']);
+                $result = new Usuario($fila['nombreUsuario'], $fila['password'], $fila['nombre'], $fila['id'], $fila['rol'], $fila['avatar'], $fila['apellidos'], $fila['email']);
             }
             $rs->free();
         }
@@ -115,7 +115,7 @@ class Usuario
         if ($rs) {
             $fila = $rs->fetch_assoc();
             if ($fila) {
-                $result = new Usuario($fila['nombreUsuario'], $fila['password'], $fila['nombre'], $fila['id'], $fila['rol'], $fila['avatar']);
+                $result = new Usuario($fila['nombreUsuario'], $fila['password'], $fila['nombre'], $fila['id'], $fila['rol'], $fila['avatar'], $fila['apellidos'], $fila['email']);
             }
             $rs->free();
         }
@@ -131,14 +131,16 @@ class Usuario
 	//Dado un usuario lo mete en la base de datos
     private static function inserta($usuario)
     {
-        $queryInsertUsuario = "INSERT INTO usuarios(nombreUsuario, nombre, password, rol) VALUES (?, ?, ?, ?)";
+        $queryInsertUsuario = "INSERT INTO usuarios(nombreUsuario, nombre, password, rol, apellidos, email) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = Aplicacion::getInstance()->ejecutarConsultaBd(
             $queryInsertUsuario,
-            "sssi",
+            "sssiss",
             $usuario->nombreUsuario,
             $usuario->nombre,
             $usuario->password,
-            $usuario->rol
+            $usuario->rol,
+            $usuario->apellidos,
+            $usuario->email
         );
 
         if ($stmt->affected_rows !== 1) {
@@ -152,14 +154,16 @@ class Usuario
 	//Actualiza un usuario con sus nuevos datos asociados
     private static function actualiza($usuario)
     {
-        $queryUpdateUsuario = "UPDATE usuarios SET nombreUsuario = ?, nombre = ?, password = ?, rol = ? WHERE id = ?";
+        $queryUpdateUsuario = "UPDATE usuarios SET nombreUsuario = ?, nombre = ?, password = ?, rol = ?, apellidos = ?, email = ? WHERE id = ?";
         $stmt = Aplicacion::getInstance()->ejecutarConsultaBd(
             $queryUpdateUsuario,
-            "sssii",
+            "sssissi",
             $usuario->nombreUsuario,
             $usuario->nombre,
             $usuario->password,
             $usuario->rol,
+            $usuario->apellidos,
+            $usuario->email,
             $usuario->id
         );
 
@@ -185,9 +189,11 @@ class Usuario
     private $nombre;
     private $rol;
     private $avatar;
+    private $apellidos;
+    private $email;
 
 	//Constructor de la clase
-    private function __construct($nombreUsuario, $password, $nombre, $id = null, $rol = self::USER_ROLE, $avatar = null)
+    private function __construct($nombreUsuario, $password, $nombre, $id = null, $rol = self::USER_ROLE, $avatar = null, $apellidos = null, $email = null)
     {
         $this->id = $id;
         $this->nombreUsuario = $nombreUsuario;
@@ -195,6 +201,8 @@ class Usuario
         $this->nombre = $nombre;
         $this->rol = $rol;
         $this->avatar = $avatar;
+        $this->apellidos = $apellidos;
+        $this->email = $email;
     }
 
     public function getId() { return $this->id; } //Devuelve el id
@@ -202,6 +210,8 @@ class Usuario
     public function getNombre() { return $this->nombre; } //Devuelve el nombre
     public function getAvatar() { return $this->avatar ?? 'default.png'; } //Devuelve el avatar
     public function getRol() { return $this->rol; } //Devuelve el rol
+    public function getApellidos() { return $this->apellidos; } //Devuelve apellidos
+    public function getEmail() { return $this->email; } //Devuelve email
 
 	//Devuelve si el usuario tiene el rol dado o no
     public function tieneRol($role)

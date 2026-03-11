@@ -3,7 +3,8 @@ namespace es\ucm\fdi\aw;
 
 class FormularioRegistro extends Formulario
 {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('formRegistro', [
             'urlRedireccion' => 'index.php' // Adónde va si todo sale bien
         ]);
@@ -67,11 +68,11 @@ EOF;
         $nombre = htmlspecialchars(trim($datos['nombre'] ?? ''));
         $apellidos = htmlspecialchars(trim($datos['apellidos'] ?? ''));
         $email = filter_var($datos['email'] ?? '', FILTER_SANITIZE_EMAIL);
-        
+
         $password = $datos['password'] ?? '';
         $password2 = $datos['password2'] ?? '';
 
-       // 2. Validaciones básicas
+        // 2. Validaciones básicas
         if ($password !== $password2) {
             $this->errores[] = "Las contraseñas no coinciden."; // <-- Corchetes vacíos
         }
@@ -83,16 +84,18 @@ EOF;
         if (count($this->errores) === 0) {
             // Comprobar si existe
             $disponible = Usuario::compruebaDisponibilidad($nombreUsuario, $email);
-            
+
             if (!$disponible) {
                 $this->errores[] = "El usuario o el email ya existen.";
-            } else {
+            }
+            else {
                 // Inserción en la BD
                 $passHash = password_hash($password, PASSWORD_DEFAULT);
-                $usuarioCreado = Usuario::crea($nombreUsuario, $password, $nombre, Usuario::USER_ROLE);
+                $usuarioCreado = Usuario::crea($nombreUsuario, $password, $nombre, Usuario::USER_ROLE, $apellidos, $email);
                 if (!$usuarioCreado) {
                     $this->errores[] = "Error al registrar en la base de datos.";
-                } else {
+                }
+                else {
                     $_SESSION['login'] = true;
                     $_SESSION['nombre'] = $nombre;
                     $_SESSION['nombreUsuario'] = $nombreUsuario;

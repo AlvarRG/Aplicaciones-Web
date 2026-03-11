@@ -26,8 +26,8 @@ class FormularioPerfil extends Formulario
         if ($usuario) {
             $user = [
                 'nombre'   => $usuario->getNombre(),
-                'apellidos'=> '', // no los tenemos en la clase Usuario actual
-                'email'    => '', // idem
+                'apellidos'=> $usuario->getApellidos(),
+                'email'    => $usuario->getEmail(),
                 'avatar'   => $usuario->getAvatar(),
             ];
         }

@@ -46,7 +46,6 @@ if (!empty($listaPedidos)) {
 		//Guardamos los ids de los pedidos
         $idsPedidos[] = $fila['id'];
     }
-    $rs->free();
 }
 //Si hay algún pedido
 if (!empty($idsPedidos)) {

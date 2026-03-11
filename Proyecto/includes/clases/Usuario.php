@@ -171,7 +171,7 @@ class Usuario
     }
     
 	//Borra el usuario que corresponde con el id dado
-    private static function borraPorId($idUsuario)
+    public static function borraPorId($idUsuario)
     {
         if (!$idUsuario) return false;
         $queryDeleteUsuario = "DELETE FROM usuarios WHERE id = ?";
@@ -222,14 +222,5 @@ class Usuario
             return self::actualiza($this);
         }
         return self::inserta($this);
-    }
-    
-	//Si el usuario existe lo borra
-    public function borrate()
-    {
-        if ($this->id !== null) {
-            return self::borraPorId($this->id);
-        }
-        return false;
     }
 }

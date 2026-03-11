@@ -19,7 +19,7 @@ $accion = isset($_POST['accion']) ? $_POST['accion'] : 'add';
 
 //Si quieremos vaciar
 if ($accion === 'vaciar') {
-    // Vaciamos el array del carrito
+    //Vaciamos el array del carrito
     $_SESSION['carrito'] = []; 
 }
 

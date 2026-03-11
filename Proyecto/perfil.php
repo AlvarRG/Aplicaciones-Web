@@ -11,7 +11,7 @@ if (!isset($_SESSION['login']) || !isset($_SESSION['nombreUsuario'])) {
 
 $estilosExtra = ['perfil.css'];
 
-// Recuperamos la información del usuario logueado desde la capa de dominio
+//Recuperamos la información del usuario logueado desde la capa de dominio
 $nombreUsuario = (string)$_SESSION['nombreUsuario'];
 $usuarioObj = Usuario::buscaUsuario($nombreUsuario);
 if (!$usuarioObj) {
@@ -19,7 +19,7 @@ if (!$usuarioObj) {
     exit();
 }
 
-// Para no tocar demasiado HTML existente, montamos un array compatible
+//Para no tocar demasiado HTML existente, montamos un array compatible
 $usuario = [
     'id'            => $usuarioObj->getId(),
     'nombreUsuario' => $usuarioObj->getNombreUsuario(),
@@ -27,10 +27,10 @@ $usuario = [
     'avatar'        => $usuarioObj->getAvatar(),
 ];
 
-// Obtención de pedidos activos del usuario (Pedidos en curso)
+//Obtención de pedidos activos del usuario (Pedidos en curso)
 $pedidosActivos = Pedido::activosPorUsuario((int)$usuario['id']);
 
-// Pestañas de pedidos activos
+//Pestañas de pedidos activos
 $htmlActivos = "";
 if (!empty($pedidosActivos)) {
     foreach ($pedidosActivos as $pedido) {
@@ -51,10 +51,10 @@ if (!empty($pedidosActivos)) {
     $htmlActivos = "<div class='perfil-pedido-activo-vacio'>No tienes pedidos en curso actualmente.</div>";
 }
 
-// Obtención de pedidos entregados o cancelados del usuario (Historial de pedidos)
+//Obtención de pedidos entregados o cancelados del usuario (Historial de pedidos)
 $pedidosHistorial = Pedido::historialPorUsuario((int)$usuario['id']);
 
-// Contenido tabla de historial de pedidos
+//Contenido tabla de historial de pedidos
 if (!empty($pedidosHistorial)) {
     $filasHistorial = "";
     foreach ($pedidosHistorial as $ped) {
@@ -72,7 +72,7 @@ if (!empty($pedidosHistorial)) {
     $filasHistorial = "<tr><td colspan='5' class='perfil-historial-vacio'>No hay historial de pedidos.</td></tr>";
 }
 
-// Tabla de historial de pedidos una vez obtenido el contenido
+//Tabla de historial de pedidos una vez obtenido el contenido
 $htmlHistorial = <<<EOS
     <table class='perfil-historial-tabla'>
         <thead class='perfil-historial-thead'>
@@ -88,11 +88,11 @@ $htmlHistorial = <<<EOS
     </table>
 EOS;
 
-// Formulario de edición de perfil
+//Formulario de edición de perfil
 $formPerfil = new FormularioPerfil($_SESSION['nombreUsuario']);
 $htmlFormPerfil = $formPerfil->gestiona();
 
-// Parámetros para la plantilla
+//Parámetros para la plantilla
 $tituloPagina = 'Mi Perfil';
 
 $contenidoPrincipal = <<<EOS

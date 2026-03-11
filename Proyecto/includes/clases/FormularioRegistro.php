@@ -5,14 +5,15 @@ class FormularioRegistro extends Formulario
 {
     public function __construct()
     {
+		//Página a la que puede redirigir cuando tiene éxito
         parent::__construct('formRegistro', [
-            'urlRedireccion' => 'index.php' // Adónde va si todo sale bien
+            'urlRedireccion' => 'index.php'
         ]);
     }
 
     protected function generaCamposFormulario(&$datos)
     {
-        // Recuperar datos si hubo un error de validación
+        //Cogemos los datos
         $nombre = $datos['nombre'] ?? '';
         $apellidos = $datos['apellidos'] ?? '';
         $email = $datos['email'] ?? '';
@@ -63,7 +64,7 @@ EOF;
     {
         $this->errores = [];
 
-        // 1. Saneamiento (como tenías en tu filter_input)
+        //Tomamos las variables filtrando su contenido
         $nombreUsuario = htmlspecialchars(trim($datos['nombreUsuario'] ?? ''));
         $nombre = htmlspecialchars(trim($datos['nombre'] ?? ''));
         $apellidos = htmlspecialchars(trim($datos['apellidos'] ?? ''));
@@ -72,26 +73,26 @@ EOF;
         $password = $datos['password'] ?? '';
         $password2 = $datos['password2'] ?? '';
 
-        // 2. Validaciones básicas
+        //Validaciones básicas
         if ($password !== $password2) {
-            $this->errores[] = "Las contraseñas no coinciden."; // <-- Corchetes vacíos
+            $this->errores[] = "Las contraseñas no coinciden."; //<-- Corchetes vacíos
         }
         if (mb_strlen($password) < 5) {
-            $this->errores[] = "La contraseña debe tener al menos 5 caracteres."; // <-- Corchetes vacíos
+            $this->errores[] = "La contraseña debe tener al menos 5 caracteres."; //<-- Corchetes vacíos
         }
 
-        // Si no hay errores, comprobamos la BD
+        //Si no hay errores, comprobamos la BD
         if (count($this->errores) === 0) {
-            // Comprobar si existe
+            //Comprobar si existe
             $disponible = Usuario::compruebaDisponibilidad($nombreUsuario, $email);
-
             if (!$disponible) {
                 $this->errores[] = "El usuario o el email ya existen.";
             }
             else {
-                // Inserción en la BD
+                //Inserción en la BD
                 $passHash = password_hash($password, PASSWORD_DEFAULT);
                 $usuarioCreado = Usuario::crea($nombreUsuario, $password, $nombre, Usuario::USER_ROLE, $apellidos, $email);
+				//Si no ha habido problemas iniciamos la sesión del nuevo usuario
                 if (!$usuarioCreado) {
                     $this->errores[] = "Error al registrar en la base de datos.";
                 }

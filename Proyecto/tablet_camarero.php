@@ -50,7 +50,7 @@ if (!empty($listaPedidos)) {
 
 //Si hay algún pedido
 if (!empty($idsPedidos)) {
-    // Obtenemos los productos asociados a cada pedido
+    //Obtenemos los productos asociados a cada pedido
     $detalles = Pedido::detallesPedidos($idsPedidos);
     foreach ($detalles as $idPedido => $lineas) {
         foreach ($lineas as $p) {

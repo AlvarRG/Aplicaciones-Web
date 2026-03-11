@@ -6,6 +6,7 @@ class FormularioEditarProducto extends Formulario
     private $idProducto;
 
     public function __construct($idProducto) {
+		//Página a la que redirige cuando tiene éxito
         parent::__construct('formEditarProducto', [
             'urlRedireccion' => 'admin_productos.php?success=edit',
             'enctype' => 'multipart/form-data'
@@ -15,17 +16,17 @@ class FormularioEditarProducto extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        // 1. Obtener datos del producto
+        //Cogemos el producto
         $product = Producto::porId((int)$this->idProducto);
 
-        // 2. Preparar los datos (Recordar lo escrito si hay error, si no, usar DB)
+		//Preparamos las variables, si tenemos datos usamos esos, si no los que hemos consultado
         $nombre = $datos['nombre'] ?? $product['nombre'];
         $descripcion = $datos['descripcion'] ?? $product['descripcion'];
         $precio_base = $datos['precio_base'] ?? $product['precio_base'];
         $id_categoria_actual = $datos['id_categoria'] ?? $product['id_categoria'];
         $iva_actual = $datos['iva'] ?? $product['iva'];
         
-       // Checkboxes de estado
+       //Checkboxes de estado
         if (!empty($datos)) {
             $dispChecked = isset($datos['disponible']) ? 'checked' : '';
             $oferChecked = isset($datos['ofertado']) ? 'checked' : '';
@@ -34,7 +35,7 @@ class FormularioEditarProducto extends Formulario
             $oferChecked = ($product['ofertado'] == 1) ? 'checked' : '';
         }
 
-        // 3. Generar el selector de categorías dinámico
+        //Generar el selector de categorías dinámico
         $categorias = Categoria::todas();
         $selectorCategorias = '<select name="id_categoria" required>';
         foreach ($categorias as $cat) {
@@ -43,14 +44,13 @@ class FormularioEditarProducto extends Formulario
         }
         $selectorCategorias .= '</select>';
 
-        // Atributos de IVA
+        //Atributos de IVA
         $sel4  = ($iva_actual == 4) ? 'selected' : '';
         $sel10 = ($iva_actual == 10) ? 'selected' : '';
         $sel21 = ($iva_actual == 21) ? 'selected' : '';
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
 
-        // 5. Devolver el HTML sin la etiqueta <form>
         return <<<EOF
         $htmlErroresGlobales
         <input type="hidden" name="id" value="{$this->idProducto}">
@@ -100,8 +100,8 @@ class FormularioEditarProducto extends Formulario
 
     protected function procesaFormulario(&$datos)
     {
+		//Tomamos los datos
         $this->errores = [];
-        
         $id = (int)$datos['id'];
         $nombre = (string)($datos['nombre'] ?? '');
         $descripcion = (string)($datos['descripcion'] ?? '');
@@ -112,7 +112,7 @@ class FormularioEditarProducto extends Formulario
         $disponible = isset($datos['disponible']) ? 1 : 0;
         $ofertado = isset($datos['ofertado']) ? 1 : 0;
 
-        // Validaciones
+        //Validaciones
         if (empty($nombre)) {
             $this->errores['nombre'] = "El nombre del producto no puede estar vacío.";
         }
@@ -121,11 +121,11 @@ class FormularioEditarProducto extends Formulario
         }
 
         if (count($this->errores) === 0) {
-            // Recuperar imagen actual
+            //Recuperar imagen actual
             $productoActual = Producto::porId($id);
             $imagenFinal = $productoActual['imagen'] ?? 'prod_default.png';
 
-            // Gestión de nueva imagen
+            //Gestión de nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $dir = "img/productos/";
                 $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
@@ -136,6 +136,7 @@ class FormularioEditarProducto extends Formulario
                 }
             }
 
+			//Actualizar la BD
             Producto::actualizar(
                 $id,
                 $id_categoria,

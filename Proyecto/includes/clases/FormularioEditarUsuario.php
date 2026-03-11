@@ -6,7 +6,7 @@ class FormularioEditarUsuario extends Formulario
     private $idUsuario;
 
     public function __construct($idUsuario) {
-        // Redirige al panel de usuarios tras el éxito
+        //Página a la que redirige cuando tiene éxito
         parent::__construct('formEditarUsuario', [
             'urlRedireccion' => 'admin_usuarios.php?success=edit'
         ]);
@@ -15,19 +15,19 @@ class FormularioEditarUsuario extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        // Extra de UX: Obtener el rol actual para preseleccionarlo en el menú
-        $rolActual = 1; // Por defecto Cliente
-        if (empty($datos)) { // Si es la primera vez que carga (no hay POST)
+        //Cogemos el rol
+        $rolActual = 1; //Por defecto Cliente
+        if (empty($datos)) { //Si es la primera vez que carga (no hay POST)
             $usuarioObj = Usuario::buscaPorId((int)$this->idUsuario);
             if ($usuarioObj) {
                 $rolActual = $usuarioObj->getRol();
             }
         } else {
-            // Si hubo error, mantenemos el que intentó guardar
+            //Si hubo error, mantenemos el que intentó guardar
             $rolActual = $datos['nuevo_rol'] ?? 1;
         }
 
-        // Marcamos la opción correspondiente
+        //Marcamos la opción correspondiente
         $sel1 = ($rolActual == 1) ? 'selected' : '';
         $sel2 = ($rolActual == 2) ? 'selected' : '';
         $sel3 = ($rolActual == 3) ? 'selected' : '';
@@ -57,18 +57,18 @@ EOF;
 
     protected function procesaFormulario(&$datos)
     {
+		//Tomamos los datos
         $this->errores = [];
-
         $id = (int)$datos['id'];
         $nuevoRol = (int)$datos['nuevo_rol'];
 
+		//Validación de los datos
         if ($id <= 0 || $nuevoRol <= 0) {
             $this->errores[] = "Datos de rol inválidos.";
         }
 
+		//Si no ha habido errores actualizamos el rol
         if (count($this->errores) === 0) {
-            // En este sistema simple, un usuario tiene un solo rol principal.
-            // Actualizamos el valor en la tabla usuarios.
             Usuario::actualizarRol($id, $nuevoRol);
         }
     }

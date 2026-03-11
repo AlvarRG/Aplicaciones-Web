@@ -4,6 +4,8 @@ namespace es\ucm\fdi\aw;
 class FormularioNuevoProducto extends Formulario
 {
     public function __construct() {
+		
+		//Página a la que redirige cuando tiene éxito
         parent::__construct('formNuevoProducto', [
             'urlRedireccion' => 'admin_productos.php?success=1',
             'enctype' => 'multipart/form-data'
@@ -12,6 +14,7 @@ class FormularioNuevoProducto extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
+		//Cogemos los datos
         $nombre = $datos['nombre'] ?? '';
         $descripcion = $datos['descripcion'] ?? '';
         $precio_base = $datos['precio_base'] ?? '';
@@ -20,7 +23,7 @@ class FormularioNuevoProducto extends Formulario
         
         $dispChecked = (empty($datos) || isset($datos['disponible'])) ? 'checked' : '';
 
-        // Necesitamos las categorías para el selector (Requisito de usabilidad)
+        //Cogemos todas las categorías para el selector
         $categorias = Categoria::todas();
         $selectorCategorias = '<select name="id_categoria" required>';
         foreach ($categorias as $cat) {
@@ -28,7 +31,8 @@ class FormularioNuevoProducto extends Formulario
             $selectorCategorias .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
         }
         $selectorCategorias .= '</select>';
-
+		
+		//Atributos de IVA
         $sel4  = ($iva_seleccionado == 4) ? 'selected' : '';
         $sel10 = ($iva_seleccionado == 10) ? 'selected' : '';
         $sel21 = ($iva_seleccionado == 21) ? 'selected' : '';
@@ -75,18 +79,18 @@ EOF;
     {
         $this->errores = [];
 
-        // 1. Recogida de datos y saneamiento
+        //Tomamos las variables filtrando su contenido
         $nombre = (string)($datos['nombre'] ?? '');
         $id_categoria = (int)($datos['id_categoria'] ?? 0);
         $descripcion = (string)($datos['descripcion'] ?? '');
         $precio_base = (float)($datos['precio_base'] ?? 0);
         $iva = (int)($datos['iva'] ?? 10);
         
-        // Checkbox: si no se marca, no llega en el POST
+        //Checkbox: si no se marca, no llega en el POST
         $disponible = isset($datos['disponible']) ? 1 : 0;
-        $ofertado = 1; // Por defecto al crearlo está en la carta
+        $ofertado = 1; //Por defecto al crearlo está en la carta
 
-        // 2. Validaciones básicas
+        //Validaciones básicas
         if (empty($nombre)) {
             $this->errores['nombre'] = "El nombre es obligatorio.";
         }
@@ -94,13 +98,13 @@ EOF;
             $this->errores['precio_base'] = "El precio no puede ser negativo.";
         }
 
-        // 3. Si no hay errores, subimos foto y guardamos
+        //Si no hay errores, subimos foto y guardamos
         if (count($this->errores) === 0) {
             $imagen = 'prod_default.png';
             
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $dir = "img/productos/";
-                  // Creamos la carpeta si no existe (por seguridad)
+                  //Creamos la carpeta si no existe (por seguridad)
                 if (!file_exists($dir)) { mkdir($dir, 0777, true); }
                 
                 $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
@@ -111,7 +115,7 @@ EOF;
                 }
             }
 
-            // 4. Inserción en la BD a través de la clase de dominio
+            //Inserción en la BD
             Producto::crear(
                 $id_categoria,
                 $nombre,

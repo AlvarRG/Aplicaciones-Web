@@ -2,15 +2,15 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Producto;
 
-// Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
+//Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $tituloPagina = 'Acceso Denegado';
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
-    // Consulta para obtener todos los productos
+    //Consulta para obtener todos los productos
     $productos = Producto::todosConCategoria();
 
-    // Si la consulta anterior ha devuelto algo, recorremos los productos devueltos y construimos las filas de la tabla
+    //Si la consulta anterior ha devuelto algo, recorremos los productos devueltos y construimos las filas de la tabla
     $filas = "";
     if(!empty($productos)) {
         foreach ($productos as $fila) {
@@ -38,7 +38,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
         }
     }
 
-    // Parámetros para la plantilla
+    //Parámetros para la plantilla
     $estilosExtra = ['admin_productos.css'];
 
     $tituloPagina = 'Gestión de Productos';

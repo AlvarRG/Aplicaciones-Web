@@ -49,7 +49,7 @@ class Pedido
                            ORDER BY fecha DESC";
 
         $params = array_merge([(int)$idUsuario], $estadosActivos);
-        // Reordenamos porque hemos puesto el usuario el primero en la query
+        //Reordenamos porque hemos puesto el usuario el primero en la query
         $paramsOrdenados = array_merge($estadosActivos, [(int)$idUsuario]);
 
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryHistorial, $tipos, ...$paramsOrdenados)->get_result();
@@ -228,7 +228,7 @@ class Pedido
 
         $estadoInicial = ($metodoPago === 'tarjeta') ? 'En preparacion' : 'Recibido';
 
-        // Nuevo número de pedido diario
+        //Nuevo número de pedido diario
         $queryNuevoNumeroPedido = "SELECT IFNULL(MAX(numero_pedido), 0) + 1 AS nuevo_num
                                    FROM pedidos
                                    WHERE DATE(fecha) = CURDATE()";
@@ -239,7 +239,7 @@ class Pedido
             $rsNum->free();
         }
 
-        // Insertar pedido
+        //Insertar pedido
         $queryInsertPedido = "INSERT INTO pedidos (id_usuario, numero_pedido, estado, tipo, total)
                               VALUES (?, ?, ?, ?, ?)";
         Aplicacion::getInstance()->ejecutarConsultaBd(
@@ -257,7 +257,7 @@ class Pedido
             return null;
         }
 
-        // Insertar líneas
+        //Insertar líneas
         $queryInsertDetalle = "INSERT INTO pedidos_productos (id_pedido, id_producto, cantidad, precio_unitario, iva)
                                VALUES (?, ?, ?, ?, ?)";
 

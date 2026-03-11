@@ -2,15 +2,15 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Categoria;
 
-// Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
+//Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $tituloPagina = 'Acceso Denegado';
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
-    // Consulta para obtener todas las categorías
+    //Consulta para obtener todas las categorías
     $categorias = Categoria::todas();
 
-    // Si la consulta anterior ha devuelto algo, recorremos las categorías devueltas y construimos las filas de la tabla
+    //Si la consulta anterior ha devuelto algo, recorremos las categorías devueltas y construimos las filas de la tabla
     $filas = "";
     if(!empty($categorias)) {
         foreach ($categorias as $fila) {

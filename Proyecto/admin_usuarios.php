@@ -5,15 +5,15 @@ require_once __DIR__.'/includes/config.php';
 
 
 
-// Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
+//Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $tituloPagina = 'Acceso Denegado';
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
-    // Obtener todos los usuarios haciendo uso de la función buscaTodos() de la clase Usuario
+    //Obtener todos los usuarios haciendo uso de la función buscaTodos() de la clase Usuario
     $usuarios = Usuario::buscaTodos();
     
-    // Si la consulta anterior ha devuelto algo, recorremos los usuarios devueltos y construimos las filas de la tabla
+    //Si la consulta anterior ha devuelto algo, recorremos los usuarios devueltos y construimos las filas de la tabla
     $filas = "";
     if(!empty($usuarios)) {
         foreach ($usuarios as $fila) {
@@ -32,7 +32,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
         }
     }
 
-    // Parametros para la plantilla
+    //Parametros para la plantilla
     $estilosExtra = ['admin_usuarios.css'];
 
     $tituloPagina = 'Gestión de Usuarios';

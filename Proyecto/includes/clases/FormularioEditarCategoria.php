@@ -8,6 +8,7 @@ class FormularioEditarCategoria extends Formulario
 
     public function __construct($idCategoria)
     {
+		//Página a la que redirige cuando tiene éxito
         parent::__construct('formEditarCategoria', [
             'urlRedireccion' => 'admin_categorias.php?success=edit',
             'enctype' => 'multipart/form-data'
@@ -17,8 +18,10 @@ class FormularioEditarCategoria extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
+		//Cogemos la categoría
         $cat = Categoria::porId((int)$this->idCategoria);
 
+		//Cogemos los datos, si no tenemos usamos los que hemos consultado
         $nombre = $datos['nombre'] ?? $cat['nombre'];
         $descripcion = $datos['descripcion'] ?? $cat['descripcion'];
 
@@ -58,22 +61,24 @@ class FormularioEditarCategoria extends Formulario
 
     protected function procesaFormulario(&$datos)
     {
+		//Tomamos los datos
         $this->errores = [];
-
         $id = (int)$datos['id'];
         $nombre = (string)($datos['nombre'] ?? '');
         $descripcion = (string)($datos['descripcion'] ?? '');
 
+		//Si no hay nombre
         if (!$nombre) {
             $this->errores['nombre'] = "El nombre no puede estar vacío.";
         }
 
+		//si no ha habido imagen
         if (count($this->errores) === 0) {
-            // Recuperar imagen actual por si no se cambia
+            //Recuperar imagen actual por si no se cambia
             $categoriaActual = Categoria::porId($id);
             $imagenFinal = $categoriaActual['imagen'] ?? 'cat_default.png';
 
-            // Si se sube una nueva imagen
+            //Si se sube una nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $dir = "img/categorias/";
                 $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
@@ -84,7 +89,7 @@ class FormularioEditarCategoria extends Formulario
                 }
             }
 
-            // Actualizamos en BD
+            //Actualizamos en BD
             Categoria::actualizar($id, $nombre, $descripcion, $imagenFinal);
         }
     }

@@ -4,6 +4,7 @@ namespace es\ucm\fdi\aw;
 class FormularioNuevaCategoria extends Formulario
 {
     public function __construct() {
+		//Página a la que redirige cuando tiene éxito
         parent::__construct('formNuevaCategoria', [
             'urlRedireccion' => 'admin_categorias.php',
             'enctype' => 'multipart/form-data'
@@ -12,6 +13,7 @@ class FormularioNuevaCategoria extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
+		//Cogemos los datos
         $nombre = $datos['nombre'] ?? '';
         $descripcion = $datos['descripcion'] ?? '';
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
@@ -40,8 +42,8 @@ class FormularioNuevaCategoria extends Formulario
 
     protected function procesaFormulario(&$datos)
     {
+		//Tomamos los datos
         $this->errores = [];
-
         $nombre = (string)($datos['nombre'] ?? '');
         $descripcion = (string)($datos['descripcion'] ?? '');
         $imagen = 'cat_default.png';
@@ -51,7 +53,7 @@ class FormularioNuevaCategoria extends Formulario
         }
 
         if (count($this->errores) === 0) {
-            // Lógica de subida de imagen
+            //Lógica de subida de imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $dir = "img/categorias/";
                 $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
@@ -61,7 +63,8 @@ class FormularioNuevaCategoria extends Formulario
                     $imagen = $nombreImg;
                 }
             }
-
+			
+			//Creamos la categoría en la BD
             Categoria::crear($nombre, $descripcion, $imagen);
         }
     }

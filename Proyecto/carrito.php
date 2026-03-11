@@ -4,7 +4,7 @@ use es\ucm\fdi\aw\Producto;
 
 $estilosExtra = ['carrito.css'];
 
-// Si el usuario no ha iniciado sesión, mostramos un mensaje para que haga login antes de pedir
+//Si el usuario no ha iniciado sesión, mostramos un mensaje para que haga login antes de pedir
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     $tituloPagina       = 'Inicia Sesión';
     $contenidoPrincipal = <<<EOS
@@ -20,11 +20,11 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 
 $tituloPagina = 'Revisar Pedido';
 
-// Obtenemos el carrito de la sesión (array id_producto => cantidad)
+//Obtenemos el carrito de la sesión (array id_producto => cantidad)
 $carrito = $_SESSION['carrito'] ?? [];
 
 if (empty($carrito)) {
-    // Carrito vacío: informamos al usuario y le invitamos a volver a la carta
+    //Carrito vacío: informamos al usuario y le invitamos a volver a la carta
     $contenidoPrincipal = <<<EOS
         <h1>Tu Pedido</h1>
         <p>Tu carrito está vacío ahora mismo.</p>
@@ -34,7 +34,7 @@ if (empty($carrito)) {
     $ids = array_keys($carrito);
     $productos = Producto::porIds($ids);
 
-    // Construimos las filas y el total acumulado
+    //Construimos las filas y el total acumulado
     $filasTabla  = "";
     $totalPedido = 0;
 
@@ -42,7 +42,7 @@ if (empty($carrito)) {
         $id       = $fila['id'];
         $cantidad = $carrito[$id];
 
-        // Precio unitario con IVA y subtotal para esta línea
+        //Precio unitario con IVA y subtotal para esta línea
         $precioUd     = Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']);
         $subtotal     = $precioUd * $cantidad;
         $totalPedido += $subtotal;
@@ -69,7 +69,7 @@ if (empty($carrito)) {
 
     $totalPedidoFmt = number_format($totalPedido, 2, '.', '');
 
-    // Tabla completa con las filas construidas
+    //Tabla completa con las filas construidas
     $htmlArticulos = <<<EOS
         <table class='carrito-tabla'>
             <thead>
@@ -86,7 +86,7 @@ if (empty($carrito)) {
         <h2 class='carrito-total'>Total a pagar: {$totalPedidoFmt} €</h2>
     EOS;
 
-    // Formulario de opciones de entrega y acceso al pago
+    //Formulario de opciones de entrega y acceso al pago
     $htmlFormulario = <<<EOS
         <div class="carrito-resumen">
             <h3>Opciones de entrega</h3>
@@ -119,7 +119,7 @@ if (empty($carrito)) {
         </div>
     EOS;
 
-    // Montamos el contenido final: tabla de artículos + formulario de entrega
+    //Montamos el contenido final: tabla de artículos + formulario de entrega
     $contenidoPrincipal = "<h1>Revisar Pedido</h1>" . $htmlArticulos . $htmlFormulario;
 }
 

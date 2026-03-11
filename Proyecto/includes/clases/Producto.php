@@ -116,7 +116,8 @@ class Producto
         int $disponible,
         int $ofertado,
         string $imagen
-    ): bool {
+        ): bool
+    {
         $queryInsertProducto = "INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, imagen)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -149,7 +150,8 @@ class Producto
         int $disponible,
         int $ofertado,
         string $imagen
-    ): bool {
+        ): bool
+    {
         $queryUpdateProducto = "UPDATE productos
                                 SET nombre = ?, id_categoria = ?, descripcion = ?, precio_base = ?, iva = ?, disponible = ?, ofertado = ?, imagen = ?
                                 WHERE id = ?";
@@ -201,4 +203,3 @@ class Producto
         return $precioBase * (1 + $iva / 100);
     }
 }
-

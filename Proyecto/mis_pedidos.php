@@ -71,7 +71,7 @@ if (!empty($pedidosUsuario)) {
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$badgeEstado}</td>";
         
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>";
-        // Acción: Cancelar (Solo si está en estado 'Recibido')
+        //Cancelar el pedido, solo si está en estado 'Recibido'
         if ($fila['estado'] === 'Recibido') {
             $contenidoPrincipal .= "
                 <form action='mis_pedidos.php' method='POST' class='form-inline form-cancelar-pedido-cliente' data-mensaje='¿Seguro que deseas cancelar tu pedido?'>

@@ -4,16 +4,16 @@ namespace es\ucm\fdi\aw;
 
 class Usuario
 {
-    /** Rol cliente (id en BD = 1) */
+    //Rol cliente (id en BD = 1)
     public const USER_ROLE = 1;
 
-    /** Rol camarero (id en BD = 2) */
+    //Rol camarero (id en BD = 2)
     public const CAMARERO_ROLE = 2;
 
-    /** Rol cocinero (id en BD = 3) */
+    //Rol cocinero (id en BD = 3)
     public const COCINERO_ROLE = 3;
 
-    /** Rol gerente/admin (id en BD = 4) */
+    //Rol gerente/admin (id en BD = 4)
     public const ADMIN_ROLE = 4;
 
 	//Busca el nombre del usuario, y si la contraseña no coincide devuelve false
@@ -67,7 +67,7 @@ class Usuario
         return $usuarios;
     }
 
-    // Comprueba si un nombre de usuario o email ya están en uso
+    //Comprueba si un nombre de usuario o email ya están en uso
     public static function compruebaDisponibilidad($nombreUsuario, $email)
     {
         $queryCheckUsuarioEmail = "SELECT id FROM usuarios WHERE nombreUsuario = ? OR email = ?";
@@ -82,7 +82,7 @@ class Usuario
         return $disponible;
     }
 
-    // Actualiza el perfil de un usuario
+    //Actualiza el perfil de un usuario
     public static function actualizarPerfil($nombreUsuario, $nombre, $apellidos, $email, $avatar)
     {
         $queryUpdatePerfil = "UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, avatar = ? WHERE nombreUsuario = ?";
@@ -98,7 +98,7 @@ class Usuario
         return $stmt->affected_rows >= 0;
     }
 
-    // Actualiza el rol de un usuario
+    //Actualiza el rol de un usuario
     public static function actualizarRol($idUsuario, $nuevoRol)
     {
         $queryUpdateRolUsuario = "UPDATE usuarios SET rol = ? WHERE id = ?";

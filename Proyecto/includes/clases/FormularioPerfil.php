@@ -8,6 +8,7 @@ class FormularioPerfil extends Formulario
 
     public function __construct($nombreUsuario)
     {
+		//Página a la que puede redirigir cuando tiene éxito
         parent::__construct('formPerfil', [
             'action'  => 'perfil.php',
             'enctype' => 'multipart/form-data',
@@ -20,7 +21,7 @@ class FormularioPerfil extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        // 1. Obtenemos los datos actuales del usuario
+        //Cogemos el usuario
         $usuario = Usuario::buscaUsuario($this->nombreUsuario);
         $user = null;
         if ($usuario) {
@@ -32,7 +33,7 @@ class FormularioPerfil extends Formulario
             ];
         }
 
-        // 2. Preparamos las variables (Prioridad: lo escrito tras un error > lo que hay en BD)
+        //Preparamos las variables, si tenemos datos usamos esos, si no los que hemos consultado
         $nombre    = htmlspecialchars($datos['nombre']     ?? $user['nombre']);
         $apellidos = htmlspecialchars($datos['apellidos']  ?? $user['apellidos']);
         $email     = htmlspecialchars($datos['email']      ?? $user['email']);
@@ -47,7 +48,6 @@ class FormularioPerfil extends Formulario
 
         $htmlErrores = self::generaListaErroresGlobales($this->errores);
 
-        // 3. Retornamos el HTML del formulario con las clases CSS del diseño de perfil.php
         return <<<EOF
         $htmlErrores
         <fieldset class="perfil-fieldset">
@@ -70,13 +70,13 @@ class FormularioPerfil extends Formulario
     {
         $this->errores = [];
 
-        // 1. Recoger textos
+        //Tomamos los datos
         $nombre    = (string)($datos['nombre']     ?? '');
         $apellidos = (string)($datos['apellidos']  ?? '');
         $email     = (string)($datos['email']      ?? '');
         $avatarFinal = (string)($datos['avatar_pre'] ?? 'default.png');
 
-        // 2. Validaciones básicas
+        //Validaciones básicas
         if (empty($nombre)) {
             $this->errores['nombre'] = "El nombre no puede estar vacío.";
         }
@@ -85,7 +85,7 @@ class FormularioPerfil extends Formulario
         }
 
         if (count($this->errores) === 0) {
-            // 3. Lógica del Avatar
+            //Lógica del Avatar
             if (isset($datos['borrar_foto'])) {
                 $avatarFinal = 'default.png';
             } elseif (isset($_FILES['nueva_foto']) && $_FILES['nueva_foto']['error'] === UPLOAD_ERR_OK) {
@@ -99,7 +99,7 @@ class FormularioPerfil extends Formulario
                 }
             }
 
-            // 4. Actualizar BD
+            //Actualizar BD
             Usuario::actualizarPerfil(
                 (string)$this->nombreUsuario,
                 $nombre,

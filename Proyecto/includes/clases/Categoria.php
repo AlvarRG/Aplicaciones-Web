@@ -4,11 +4,7 @@ namespace es\ucm\fdi\aw;
 
 class Categoria
 {
-    /**
-     * Devuelve todas las categorías.
-     *
-     * @return array<int,array<string,mixed>>
-     */
+    //Devuelve todas las categorías
     public static function todas(): array
     {
         $queryCategorias = "SELECT * FROM categorias";
@@ -25,9 +21,7 @@ class Categoria
         return $categorias;
     }
 
-    /**
-     * Devuelve una categoría por id o null si no existe.
-     */
+    //Devuelve una categoría por id o null si no existe.
     public static function porId(int $id): ?array
     {
         $queryCategoriaPorId = "SELECT * FROM categorias WHERE id = ?";
@@ -42,9 +36,7 @@ class Categoria
         return $categoria;
     }
 
-    /**
-     * Crea una nueva categoría.
-     */
+    //Crea una nueva categoría
     public static function crear(string $nombre, ?string $descripcion, string $imagen): bool
     {
         $queryInsertCategoria = "INSERT INTO categorias (nombre, descripcion, imagen) VALUES (?, ?, ?)";
@@ -53,9 +45,7 @@ class Categoria
         return $stmt->affected_rows === 1;
     }
 
-    /**
-     * Actualiza una categoría existente.
-     */
+    //Actualiza una categoría existente
     public static function actualizar(int $id, string $nombre, ?string $descripcion, string $imagen): bool
     {
         $queryUpdateCategoria = "UPDATE categorias SET nombre = ?, descripcion = ?, imagen = ? WHERE id = ?";
@@ -64,9 +54,7 @@ class Categoria
         return $stmt->affected_rows >= 0;
     }
 
-    /**
-     * Borra una categoría por id.
-     */
+    //Borra una categoría dado su id
     public static function borrar(int $id): bool
     {
         $queryBorrarCategoria = "DELETE FROM categorias WHERE id = ?";
@@ -75,4 +63,3 @@ class Categoria
         return $stmt->affected_rows >= 0;
     }
 }
-

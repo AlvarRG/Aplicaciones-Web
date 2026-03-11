@@ -3,6 +3,7 @@ use es\ucm\fdi\aw\FormularioLogin;
 
 require_once __DIR__.'/includes/config.php';
 
+//Creamos un formulario de login que tiene la lógica
 $form = new FormularioLogin();
 $htmlFormLogin = $form->gestiona();
 

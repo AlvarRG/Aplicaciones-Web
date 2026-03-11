@@ -10,25 +10,13 @@ class FormularioPerfil extends Formulario
     {
         parent::__construct('formPerfil', [
             'action'  => 'perfil.php',
-            'enctype' => 'multipart/form-data'
+            'enctype' => 'multipart/form-data',
+            'urlRedireccion' => 'perfil.php?success=1'
         ]);
         $this->nombreUsuario = $nombreUsuario;
     }
 
-    /**
-     * Genera y devuelve el HTML completo del formulario de perfil (incluyendo el <form>)
-     * para ser embebido directamente en el layout de perfil.php.
-     */
-    public function generaHtml()
-    {
-        $this->errores = [];
-        $datos = $_POST ?: [];
-        // Si el formulario fue enviado, lo procesamos (puede poblar $this->errores)
-        if ($this->formularioEnviado($datos)) {
-            $this->procesaFormulario($datos);
-        }
-        return $this->generaCamposFormulario($datos);
-    }
+
 
     protected function generaCamposFormulario(&$datos)
     {
@@ -62,22 +50,19 @@ class FormularioPerfil extends Formulario
         // 3. Retornamos el HTML del formulario con las clases CSS del diseño de perfil.php
         return <<<EOF
         $htmlErrores
-        <form action="perfil.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="formId" value="formPerfil">
-            <fieldset class="perfil-fieldset">
-                <legend class="perfil-legend">Actualizar mis datos</legend>
-                <p>Nombre:<br><input type="text" name="nombre" value="$nombre" class="perfil-input-text" required></p>
-                <p>Apellidos:<br><input type="text" name="apellidos" value="$apellidos" class="perfil-input-text"></p>
-                <p>Email:<br><input type="email" name="email" value="$email" class="perfil-input-text" required></p>
+        <fieldset class="perfil-fieldset">
+            <legend class="perfil-legend">Actualizar mis datos</legend>
+            <p>Nombre:<br><input type="text" name="nombre" value="$nombre" class="perfil-input-text" required></p>
+            <p>Apellidos:<br><input type="text" name="apellidos" value="$apellidos" class="perfil-input-text"></p>
+            <p>Email:<br><input type="email" name="email" value="$email" class="perfil-input-text" required></p>
 
-                <h4 class="perfil-avatar-title">Cambiar Avatar</h4>
-                <div class="perfil-avatar-box">$htmlAvatares</div>
-                <p>O sube uno propio:<br><input type="file" name="nueva_foto" accept="image/*" class="perfil-file-input"></p>
-                <p class="perfil-checkbox"><input type="checkbox" name="borrar_foto"> Usar foto por defecto</p>
+            <h4 class="perfil-avatar-title">Cambiar Avatar</h4>
+            <div class="perfil-avatar-box">$htmlAvatares</div>
+            <p>O sube uno propio:<br><input type="file" name="nueva_foto" accept="image/*" class="perfil-file-input"></p>
+            <p class="perfil-checkbox"><input type="checkbox" name="borrar_foto"> Usar foto por defecto</p>
 
-                <button type="submit" name="actualizar" class="perfil-submit">Guardar Cambios</button>
-            </fieldset>
-        </form>
+            <button type="submit" name="actualizar" class="perfil-submit">Guardar Cambios</button>
+        </fieldset>
         EOF;
     }
 
@@ -124,9 +109,6 @@ class FormularioPerfil extends Formulario
             );
 
             $_SESSION['nombre'] = $nombre;
-            // Redireccionamos para evitar reenvío del formulario (PRG pattern)
-            header("Location: perfil.php?success=1");
-            exit();
         }
     }
 }

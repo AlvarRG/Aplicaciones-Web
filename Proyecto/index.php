@@ -2,10 +2,10 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Categoria;
 
-// Obtenemos las categorías para mostrarlas como tarjetas en la portada
+//Obtenemos las categorías para mostrarlas como tarjetas en la portada
 $categorias = Categoria::todas();
 
-// Construimos las tarjetas de categorías
+//Construimos las tarjetas de categorías
 $tarjetas = "";
 if (!empty($categorias)) {
     foreach ($categorias as $cat) {
@@ -18,7 +18,7 @@ if (!empty($categorias)) {
     }
 }
 
-// Parámetros para la plantilla
+//Parámetros para la plantilla
 $tituloPagina = 'Bistro FDI';
 $estilosExtra = ['index.css'];
 

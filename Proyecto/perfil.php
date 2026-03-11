@@ -90,7 +90,7 @@ EOS;
 
 // Formulario de edición de perfil
 $formPerfil = new FormularioPerfil($_SESSION['nombreUsuario']);
-$htmlFormPerfil = $formPerfil->generaHtml();
+$htmlFormPerfil = $formPerfil->gestiona();
 
 // Parámetros para la plantilla
 $tituloPagina = 'Mi Perfil';

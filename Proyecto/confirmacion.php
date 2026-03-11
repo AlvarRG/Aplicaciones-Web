@@ -1,31 +1,31 @@
 <?php
-require_once __DIR__.'/includes/config.php';
+require_once __DIR__ . '/includes/config.php';
 use es\ucm\fdi\aw\Pedido;
 
-// 1. SEGURIDAD: Usuario logueado
+//Si el usuario no está logeado le mandamos al login
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
 }
 
-// 2. RECUPERAR EL ID DEL PEDIDO
+//Cogemos el id del pedido y el id del usuario
 $idPedido = isset($_GET['pedido']) ? (int)$_GET['pedido'] : 0;
-$idUsuario = $_SESSION['id_usuario'] ?? $_SESSION['id'] ?? 1;
+$idUsuario = (int)$_SESSION['id'];
 
 if ($idPedido === 0) {
     header('Location: index.php');
     exit();
 }
 
-// 3. CONSULTAR LOS DATOS DEL PEDIDO (Para mostrar el número diario y el estado)
-// Aseguramos que el pedido pertenece a este usuario por privacidad
+//Cogemos los datos del pedido
 $pedido = Pedido::porIdYUsuario($idPedido, (int)$idUsuario);
 
 if ($pedido) {
     $numeroPedido = $pedido['numero_pedido'];
     $estado = $pedido['estado'];
-} else {
-    // Si intentan poner un ID que no existe o no es suyo
+}
+else {
+    //Si intentan poner un ID que no existe o no es suyo
     header('Location: index.php');
     exit();
 }
@@ -65,4 +65,4 @@ $contenidoPrincipal = <<<EOS
     </div>
 EOS;
 
-require __DIR__.'/includes/vistas/plantillas/plantilla.php';
+require __DIR__ . '/includes/vistas/plantillas/plantilla.php';

@@ -15,7 +15,7 @@ if (empty($_SESSION['carrito'])) {
     exit();
 }
 
-$idUsuario = $_SESSION['id_usuario'] ?? $_SESSION['id'] ?? 1;
+$idUsuario = (int)$_SESSION['id'];
 
 if (isset($_POST['tipo_pedido'])) {
     $_SESSION['tipo_pedido'] = $_POST['tipo_pedido'];

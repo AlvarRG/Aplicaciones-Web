@@ -2,18 +2,18 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Pedido;
 
-// Redirigimos si el usuario no ha iniciado sesión
+//Redirigimos si el usuario no ha iniciado sesión
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
 }
 
-// Leemos los roles del usuario desde la sesión
+//Leemos los roles del usuario desde la sesión
 $esAdmin    = isset($_SESSION['esAdmin'])    ? $_SESSION['esAdmin']    : false;
 $esCamarero = isset($_SESSION['esCamarero']) ? $_SESSION['esCamarero'] : false;
 $esCocinero = isset($_SESSION['esCocinero']) ? $_SESSION['esCocinero'] : false;
 
-// Solo el personal del restaurante puede acceder a esta página
+//Solo el personal del restaurante puede acceder a esta página
 $esPersonal = $esAdmin || $esCamarero || $esCocinero;
 
 if (!$esPersonal) {
@@ -21,33 +21,33 @@ if (!$esPersonal) {
     exit();
 }
 
-// Determinamos el nombre del rol para mostrarlo en la vista (el más prioritario gana)
+//Determinamos el nombre del rol para mostrarlo en la vista (el más prioritario gana)
 $nombreRol = "Personal";
 if ($esCamarero) $nombreRol = "Camarero";
 if ($esCocinero) $nombreRol = "Cocinero";
 if ($esAdmin)    $nombreRol = "Gerente";
 
-// Procesamos la acción de cancelar pedido si se ha enviado el formulario
+//Procesamos la acción de cancelar pedido si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'cancelar') {
     $idPed = (int)$_POST['id_pedido'];
 
-    // Solo se puede cancelar un pedido si está en estado 'Recibido'
+    //Solo se puede cancelar un pedido si está en estado 'Recibido'
     Pedido::cambiarEstado($idPed, 'Cancelado');
 
-    // Redirigimos para evitar reenvío del formulario al refrescar
+    //Redirigimos para evitar reenvío del formulario al refrescar
     header('Location: gestion_pedidos.php');
     exit();
 }
 
-// Parámetros para la plantilla
+//Parámetros para la plantilla
 $estilosExtra = ['gestion_pedidos.css'];
 
 $tituloPagina = 'Gestion Global de Pedidos';
 
-// Obtenemos todos los pedidos junto con el nombre del cliente, ordenados por fecha
+//Obtenemos todos los pedidos junto con el nombre del cliente, ordenados por fecha
 $listaPedidos = Pedido::todosConCliente();
 
-// Cabecera de la página con el rol del usuario actual
+//Cabecera de la página con el rol del usuario actual
 $contenidoPrincipal = <<<EOS
     <div class="gestion-header">
         <h1 class="gestion-header-title">Panel de Gestion de Pedidos</h1>
@@ -55,13 +55,13 @@ $contenidoPrincipal = <<<EOS
     </div>
 EOS;
 
-// Construimos las filas de la tabla (solo la parte variable)
+//Construimos las filas de la tabla (solo la parte variable)
 if (!empty($listaPedidos)) {
     $filasTabla = "";
     foreach ($listaPedidos as $fila) {
         $totalFmt = number_format($fila['total'], 2, '.', '');
 
-        // Clase CSS del badge según el estado del pedido
+        //Clase CSS del badge según el estado del pedido
         $claseEstado = 'badge-estado--generico';
         switch ($fila['estado']) {
             case 'Recibido':        $claseEstado = 'badge-estado--recibido';     break;
@@ -75,7 +75,7 @@ if (!empty($listaPedidos)) {
 
         $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$fila['estado']}</span>";
 
-        // Columna de acciones: solo los pedidos 'Recibido' se pueden cancelar
+        //Columna de acciones: solo los pedidos 'Recibido' se pueden cancelar
         if ($fila['estado'] === 'Recibido') {
             $accion = "
                 <form action='gestion_pedidos.php' method='POST' class='form-inline'>
@@ -100,7 +100,7 @@ if (!empty($listaPedidos)) {
         EOS;
     }
 
-    // Tabla completa con las filas construidas
+    //Tabla completa con las filas construidas
     $contenidoPrincipal .= <<<EOS
         <table class='gestion-pedidos-tabla'>
             <thead class='gestion-pedidos-thead'>
@@ -118,7 +118,7 @@ if (!empty($listaPedidos)) {
         </table>
     EOS;
 } else {
-    // Mensaje si no hay ningún pedido en el sistema
+    //Mensaje si no hay ningún pedido en el sistema
     $contenidoPrincipal .= <<<EOS
         <div class='gestion-pedidos-empty'>
             <h3 class='gestion-pedidos-empty-title'>No hay pedidos registrados en el sistema todavia.</h3>

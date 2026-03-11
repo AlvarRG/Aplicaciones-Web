@@ -3,50 +3,19 @@ require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\Usuario;
 use es\ucm\fdi\aw\Pedido;
 
-// 1. SEGURIDAD: Usuario logueado obligatoriamente
+//Si el usuario no está logeado lo mandamos a login
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
 }
 
-// 2. RECUPERAR EL ID DEL USUARIO (A prueba de fallos)
-$idUsuario = 0;
+//Cogemos el id del usuario
+$idUsuario = (int)$_SESSION['id'];
 
-if (isset($_SESSION['id_usuario'])) {
-    $idUsuario = (int)$_SESSION['id_usuario'];
-} elseif (isset($_SESSION['id'])) {
-    $idUsuario = (int)$_SESSION['id'];
-}
-
-// PARCHE AUTOSANADOR: Si no hay ID pero tenemos el nombre, lo buscamos en la base de datos
-if ($idUsuario === 0 && isset($_SESSION['nombreUsuario'])) {
-    $nombreUser = (string)$_SESSION['nombreUsuario'];
-    $usuarioObj = Usuario::buscaUsuario($nombreUser);
-    if ($usuarioObj) {
-        $idUsuario = (int)$usuarioObj->getId();
-        $_SESSION['id'] = $idUsuario; // Lo guardamos para que no vuelva a fallar
-    }
-}
-
-// SISTEMA DE DEBUGGING: Si llegamos aquí y sigue siendo 0, detenemos TODO antes del error fatal.
-if ($idUsuario === 0) {
-    echo "<div class='debug-session-error'>";
-    echo "<h3>⚠️ Alto ahí: Falta el ID del usuario</h3>";
-    echo "<p>El sistema no sabe quién eres porque tu archivo de Login no guardó tu ID al iniciar sesión.</p>";
-    echo "<p>Esto es lo que el servidor XAMPP conoce de ti ahora mismo en la variable \$_SESSION:</p>";
-    echo "<pre class='debug-session-dump'>";
-    var_dump($_SESSION);
-    echo "</pre>";
-    echo "<p><strong>Copia lo que sale en la caja blanca de arriba y pásamelo</strong> para que te diga qué tienes que cambiar en tu Login.</p>";
-    echo "</div>";
-    exit(); // Esto aborta la página para que NO llegue a la línea del error SQL.
-}
-
-// 3. PROCESAR CANCELACIÓN DEL CLIENTE
+//Cancelar el pedido
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'cancelar') {
     $idPed = (int)$_POST['id_pedido'];
     
-    // Lógica de cancelación delegada en la clase Pedido
     Pedido::cancelarCliente($idPed, $idUsuario);
     
     header('Location: mis_pedidos.php');

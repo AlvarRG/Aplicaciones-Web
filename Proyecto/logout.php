@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
 
-//Doble seguridad: unset + destroy
+//Para cerrar sesión, actualizamos _SESSION y destruímos la sesión
 unset($_SESSION['login']);
 unset($_SESSION['esAdmin']);
 unset($_SESSION['nombre']);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-03-2026 a las 13:00:18
+-- Tiempo de generación: 11-03-2026 a las 09:43:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -39,7 +39,10 @@ CREATE TABLE `categorias` (
 --
 
 INSERT INTO `categorias` (`id`, `nombre`, `descripcion`, `imagen`) VALUES
-(1, 'Entrantes', 'Platos perfectos para abrir el apetito', 'cat_1_1771869641.jpg');
+(1, 'Entrantes', 'Platos perfectos para abrir el apetito', 'cat_1_1771869641.jpg'),
+(9, 'Bebidas', 'Refrescos, zumos naturales y cafés recién hechos para acompañar tu plato favorito.', 'cat_1773181544.jpg'),
+(10, 'Postres', 'Tentaciones dulces y repostería artesanal para disfrutar después de tu plato principal.', 'cat_1773181630.jpg'),
+(11, 'Platos principales', 'Platos contundentes y especialidades gourmet. La esencia de Bistro FDI en cada bocado.', 'cat_1773181815.jpg');
 
 -- --------------------------------------------------------
 
@@ -73,7 +76,8 @@ INSERT INTO `pedidos` (`id`, `id_usuario`, `numero_pedido`, `fecha`, `estado`, `
 (9, 1, 3, '2026-03-09 11:14:04', 'Entregado', 'Llevar', 7.50),
 (10, 1, 4, '2026-03-09 11:15:31', 'Cancelado', 'Local', 7.50),
 (11, 1, 5, '2026-03-09 12:35:15', 'Cancelado', 'Llevar', 15.50),
-(12, 1, 6, '2026-03-09 12:55:55', 'Cancelado', 'Llevar', 15.50);
+(12, 1, 6, '2026-03-09 12:55:55', 'Cancelado', 'Llevar', 15.50),
+(13, 5, 1, '2026-03-10 23:16:17', 'En preparacion', 'Local', 22.51);
 
 -- --------------------------------------------------------
 
@@ -107,7 +111,8 @@ INSERT INTO `pedidos_productos` (`id_pedido`, `id_producto`, `cantidad`, `precio
 (11, 2, 1, 6.20, 21),
 (11, 5, 1, 6.61, 21),
 (12, 2, 1, 6.20, 21),
-(12, 5, 1, 6.61, 21);
+(12, 5, 1, 6.61, 21),
+(13, 2, 3, 6.20, 21);
 
 -- --------------------------------------------------------
 
@@ -133,7 +138,21 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`id`, `id_categoria`, `nombre`, `descripcion`, `precio_base`, `iva`, `disponible`, `ofertado`, `imagen`) VALUES
 (2, 1, 'Nachos Especiales', 'Nuestros nachos especiales con la receta secreta que nos caracteriza', 6.20, 21, 1, 1, 'prod_2_1772643347.jpg'),
-(5, 1, 'Tequeños', 'Nuestros mundialmente famosos tequeños rellenos del mejor queso para el disfrute de todos.', 6.61, 21, 1, 1, 'prod_1773052066.jpg');
+(5, 1, 'Tequeños', 'Nuestros mundialmente famosos tequeños rellenos del mejor queso para el disfrute de todos.', 6.61, 21, 1, 1, 'prod_1773052066.jpg'),
+(10, 1, 'Tabla de quesos y embutidos', 'Selección de quesos locales, jamón ibérico y tostas de pan artesanal con tomate', 18.40, 10, 1, 1, 'prod_1773182188.jpg'),
+(11, 1, 'Croquetas de la casa', 'Nuestras famosas croquetas de jamón o setas, crujientes por fuera y cremosas por dentro.', 8.00, 10, 1, 1, 'prod_1773182319.jpg'),
+(13, 9, 'Zumo de naranja', 'Zumo recién exprimido con naranjas seleccionadas de temporada. 100% natural y sin azúcares añadidos.', 3.00, 10, 1, 1, 'prod_1773182663.jpeg'),
+(14, 9, 'Coca-Cola', 'El refresco clásico por excelencia, servido bien frío con hielo y una rodaja de limón.', 2.00, 10, 1, 1, 'prod_1773182698.jpg'),
+(15, 9, 'Sprite', 'Refresco de lima-limón con burbujas intensas y un toque cítrico natural.', 2.00, 10, 1, 1, 'prod_1773182737.jpg'),
+(16, 9, 'Cerveza', 'Cerveza de barril premium, equilibrada y refrescante, con el punto justo de amargor.', 2.00, 10, 1, 1, 'prod_1773182767.jpg'),
+(17, 10, 'Coulant de Chocolate Belga', 'Bizcocho caliente con corazón de chocolate fundido, acompañado de una bola de helado de vainilla bourbon.', 6.50, 10, 1, 1, 'prod_1773182889.jpg'),
+(18, 10, 'Tarta de Queso Bistro Fdi', 'Nuestra famosa tarta de queso fluida al horno, con base de galleta artesana y mermelada de frutos rojos.', 5.90, 10, 1, 1, 'prod_1773182938.jpg'),
+(19, 10, 'Apple Crumble con Canela', 'Manzana asada con especias bajo una capa crujiente de galleta y mantequilla, servido tibio', 5.00, 10, 1, 1, 'prod_1773183046.gif'),
+(20, 10, 'Mousse de Limón y Merengue', 'Crema ligera y refrescante de cítricos con trozos de merengue seco y ralladura de lima.', 4.20, 10, 1, 1, 'prod_1773183103.jpg'),
+(21, 11, 'Hamburguesa \"Bistro Deluxe\"', '200g de carne de buey madurada, queso brie fundido, cebolla caramelizada al Pedro Ximénez y rúcula en pan brioche.', 13.90, 10, 1, 1, 'prod_1773183231.webp'),
+(22, 11, 'Risotto de Setas Silvestres y Trufa', 'Arroz cremoso con variedad de setas de temporada, lascas de parmesano reggiano y esencia de trufa negra.', 15.50, 10, 1, 1, 'prod_1773183272.jpg'),
+(23, 11, 'Salmón al Horno con Costra de Hierbas', 'Lomo de salmón fresco con costra de finas hierbas, servido sobre una cama de espárragos trigueros y puré de patata trufado.', 16.90, 10, 1, 1, 'prod_1773183329.jpg'),
+(24, 11, 'Raviolis Artesanos de Calabaza', 'Pasta fresca rellena de calabaza asada y ricotta, con salsa de mantequilla de salvia y piñones tostados.', 12.50, 10, 1, 1, 'prod_1773183368.jpg');
 
 -- --------------------------------------------------------
 
@@ -237,19 +256,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`

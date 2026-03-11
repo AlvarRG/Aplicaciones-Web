@@ -136,4 +136,27 @@ class Aplicacion
 		}
 		return $this->conn;
 	}
+	
+	//Función para ejecutar consultas de forma segura
+	public function ejecutarConsultaBd($sql, $tipos = null, ...$parametros) {
+		$this->compruebaInstanciaInicializada();
+		$conn = $this->getConexionBd();
+		
+		$stmt = $conn->prepare($sql);
+		if (!$stmt) {
+			echo "Error al preparar la consulta ({$conn->errno}): {$conn->error}";
+			exit();
+		}
+
+		if ($tipos && !empty($parametros)) {
+			$stmt->bind_param($tipos, ...$parametros);
+		}
+
+		if (!$stmt->execute()) {
+			echo "Error al ejecutar la consulta ({$stmt->errno}): {$stmt->error}";
+			exit();
+		}
+
+		return $stmt;
+	}
 }

@@ -24,7 +24,8 @@ if (!$esCamarero && !$esAdmin) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['nuevo_estado'])) {
     $idPed = (int)$_POST['id_pedido'];
     $nuevoEst = $conn->real_escape_string($_POST['nuevo_estado']);
-    $conn->query("UPDATE Pedidos SET estado = '$nuevoEst' WHERE id = $idPed");
+	Aplicacion::getInstance()->ejecutarConsultaBd("UPDATE Pedidos SET estado = ? WHERE id = ?", "si", $nuevoEst, $idPed);
+    //$conn->query("UPDATE Pedidos SET estado = '$nuevoEst' WHERE id = $idPed");
     header('Location: tablet_camarero.php');
     exit();
 }

@@ -37,7 +37,8 @@ $estilosExtra = ['tablet_camarero.css'];
 //Consulta para coger los pedidos con estados recibido, listo cocina y terminado desde la base de datos
 $queryPedidos = "SELECT id, numero_pedido, tipo, total, estado FROM Pedidos 
                  WHERE estado IN ('Recibido', 'Listo cocina', 'Terminado') ORDER BY fecha ASC";
-$rs = $conn->query($queryPedidos);
+$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidos)->get_result();
+//$rs = $conn->query($queryPedidos);
 
 //Si la consulta anterior ha devuelto algo, recorremos los pedidos devueltos para estructurar los arrays que se usarán posteriormente
 $pedidos = [];
@@ -51,6 +52,7 @@ if ($rs && $rs->num_rows > 0) {
 		//Guardamos los ids de los pedidos
         $idsPedidos[] = $fila['id'];
     }
+	$rs->free();
 }
 
 //Si hay algún pedido

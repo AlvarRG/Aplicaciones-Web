@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Usuario;
+use es\ucm\fdi\aw\Pedido;
 
 // 1. SEGURIDAD: Usuario logueado obligatoriamente
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -20,14 +21,10 @@ if (isset($_SESSION['id_usuario'])) {
 // PARCHE AUTOSANADOR: Si no hay ID pero tenemos el nombre, lo buscamos en la base de datos
 if ($idUsuario === 0 && isset($_SESSION['nombreUsuario'])) {
     $nombreUser = (string)$_SESSION['nombreUsuario'];
-    $queryUsuarioId = "SELECT id FROM usuarios WHERE nombreUsuario = ?";
-    $rsBusqueda = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuarioId, "s", $nombreUser)->get_result();
-    if ($rsBusqueda && $rsBusqueda->num_rows > 0) {
-        $idUsuario = (int)$rsBusqueda->fetch_assoc()['id'];
+    $usuarioObj = Usuario::buscaUsuario($nombreUser);
+    if ($usuarioObj) {
+        $idUsuario = (int)$usuarioObj->getId();
         $_SESSION['id'] = $idUsuario; // Lo guardamos para que no vuelva a fallar
-    }
-    if ($rsBusqueda) {
-        $rsBusqueda->free();
     }
 }
 
@@ -49,20 +46,8 @@ if ($idUsuario === 0) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'cancelar') {
     $idPed = (int)$_POST['id_pedido'];
     
-    // Verificamos que el pedido sea SUYO y esté en estado 'Recibido'
-    $queryCheckEstadoPedido = "SELECT estado FROM Pedidos WHERE id = ? AND id_usuario = ?";
-    $rsCheck = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheckEstadoPedido, "ii", $idPed, $idUsuario)->get_result();
-    
-    if ($rsCheck && $rsCheck->num_rows > 0) {
-        $estadoActual = $rsCheck->fetch_assoc()['estado'];
-        if ($estadoActual === 'Recibido') {
-            $queryCancelarPedido = "UPDATE Pedidos SET estado = 'Cancelado' WHERE id = ?";
-            Aplicacion::getInstance()->ejecutarConsultaBd($queryCancelarPedido, "i", $idPed);
-        }
-    }
-    if ($rsCheck) {
-        $rsCheck->free();
-    }
+    // Lógica de cancelación delegada en la clase Pedido
+    Pedido::cancelarCliente($idPed, $idUsuario);
     
     header('Location: mis_pedidos.php');
     exit();
@@ -73,15 +58,14 @@ $estilosExtra = $estilosExtra ?? [];
 $scriptsExtra = $scriptsExtra ?? [];
 $scriptsExtra[] = 'confirmacion_cancelar_pedido.js';
 
-$queryPedidosUsuario = "SELECT * FROM Pedidos WHERE id_usuario = ? ORDER BY fecha DESC";
-$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosUsuario, "i", $idUsuario)->get_result();
+$pedidosUsuario = Pedido::porUsuario($idUsuario);
 
 $contenidoPrincipal = <<<EOS
     <h1>Historial de Mis Pedidos</h1>
     <p>Aquí puedes consultar el estado de tus pedidos y tu historial de compras.</p>
 EOS;
 
-if ($rs && $rs->num_rows > 0) {
+if (!empty($pedidosUsuario)) {
     $contenidoPrincipal .= "<table class='mis-pedidos-tabla'>";
     $contenidoPrincipal .= "<thead class='mis-pedidos-thead'>
         <tr>
@@ -94,7 +78,7 @@ if ($rs && $rs->num_rows > 0) {
         </tr>
     </thead><tbody>";
     
-    while ($fila = $rs->fetch_assoc()) {
+    foreach ($pedidosUsuario as $fila) {
         $totalFmt = number_format($fila['total'], 2, '.', '');
         
         $claseEstado = 'badge-estado--generico'; 
@@ -140,10 +124,6 @@ if ($rs && $rs->num_rows > 0) {
         <p>Aún no has realizado ningún pedido con nosotros.</p>
         <a href='carta.php' class='mis-pedidos-empty-link'>Ir a la Carta</a>
     </div>";
-}
-
-if ($rs) {
-    $rs->free();
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

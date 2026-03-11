@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Producto;
 
 // Inicializamos el carrito en sesión si el usuario aún no tiene ninguno
 if (!isset($_SESSION['carrito'])) {
@@ -8,21 +8,16 @@ if (!isset($_SESSION['carrito'])) {
 }
 
 // Obtenemos todos los productos ofertados junto con su categoría, ordenados por categoría y nombre
-$queryProductosCarta = "SELECT P.*, C.nombre AS nombre_cat
-          FROM Productos P
-          JOIN Categorias C ON P.id_categoria = C.id
-          WHERE P.ofertado = 1
-          ORDER BY C.nombre, P.nombre";
-$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosCarta)->get_result();
+$productosCarta = Producto::todosOfertados();
 
 // Construimos el HTML de la carta agrupando los productos por categoría
 $cartaHTML    = "";
 $categoriaActual = "";
 
-if ($rs && $rs->num_rows > 0) {
+if (!empty($productosCarta)) {
     $cartaHTML .= "<div class='carta-contenedor'>";
 
-    while ($fila = $rs->fetch_assoc()) {
+    foreach ($productosCarta as $fila) {
 
         // Cada vez que cambia la categoría insertamos un título de sección
         if ($categoriaActual !== $fila['nombre_cat']) {
@@ -31,7 +26,7 @@ if ($rs && $rs->num_rows > 0) {
         }
 
         // Calculamos el precio final aplicando el IVA al precio base
-        $precioFinal = number_format($fila['precio_base'] * (1 + $fila['iva'] / 100), 2, ',', '');
+        $precioFinal = number_format(Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']), 2, ',', '');
 
         // Tarjeta del producto con su formulario para añadir al carrito
         $cartaHTML .= <<<EOS

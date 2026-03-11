@@ -67,6 +67,45 @@ class Usuario
         return $usuarios;
     }
 
+    // Comprueba si un nombre de usuario o email ya están en uso
+    public static function compruebaDisponibilidad($nombreUsuario, $email)
+    {
+        $queryCheckUsuarioEmail = "SELECT id FROM usuarios WHERE nombreUsuario = ? OR email = ?";
+        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheckUsuarioEmail, "ss", $nombreUsuario, $email)->get_result();
+        $disponible = true;
+        if ($rs && $rs->num_rows > 0) {
+            $disponible = false;
+        }
+        if ($rs) {
+            $rs->free();
+        }
+        return $disponible;
+    }
+
+    // Actualiza el perfil de un usuario
+    public static function actualizarPerfil($nombreUsuario, $nombre, $apellidos, $email, $avatar)
+    {
+        $queryUpdatePerfil = "UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, avatar = ? WHERE nombreUsuario = ?";
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd(
+            $queryUpdatePerfil,
+            "sssss",
+            $nombre,
+            $apellidos,
+            $email,
+            $avatar,
+            $nombreUsuario
+        );
+        return $stmt->affected_rows >= 0;
+    }
+
+    // Actualiza el rol de un usuario
+    public static function actualizarRol($idUsuario, $nuevoRol)
+    {
+        $queryUpdateRolUsuario = "UPDATE usuarios SET rol = ? WHERE id = ?";
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateRolUsuario, "ii", $nuevoRol, $idUsuario);
+        return $stmt->affected_rows >= 0;
+    }
+
 	//Busca un usuario por id
     public static function buscaPorId($idUsuario)
     {

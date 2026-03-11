@@ -18,13 +18,9 @@ class FormularioEditarUsuario extends Formulario
         // Extra de UX: Obtener el rol actual para preseleccionarlo en el menú
         $rolActual = 1; // Por defecto Cliente
         if (empty($datos)) { // Si es la primera vez que carga (no hay POST)
-            $queryRolUsuario = "SELECT rol FROM usuarios WHERE id = ? LIMIT 1";
-            $rsRol = Aplicacion::getInstance()->ejecutarConsultaBd($queryRolUsuario, "i", (int)$this->idUsuario)->get_result();
-            if ($rsRol && $rsRol->num_rows > 0) {
-                $rolActual = (int)$rsRol->fetch_assoc()['rol'];
-            }
-            if ($rsRol) {
-                $rsRol->free();
+            $usuarioObj = Usuario::buscaPorId((int)$this->idUsuario);
+            if ($usuarioObj) {
+                $rolActual = $usuarioObj->getRol();
             }
         } else {
             // Si hubo error, mantenemos el que intentó guardar
@@ -73,8 +69,7 @@ EOF;
         if (count($this->errores) === 0) {
             // En este sistema simple, un usuario tiene un solo rol principal.
             // Actualizamos el valor en la tabla usuarios.
-            $queryUpdateRolUsuario = "UPDATE usuarios SET rol = ? WHERE id = ?";
-            Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateRolUsuario, "ii", $nuevoRol, $id);
+            Usuario::actualizarRol($id, $nuevoRol);
         }
     }
 }

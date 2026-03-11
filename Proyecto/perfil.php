@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Usuario;
+use es\ucm\fdi\aw\Pedido;
 use es\ucm\fdi\aw\FormularioPerfil;
 
 if (!isset($_SESSION['login']) || !isset($_SESSION['nombreUsuario'])) {
@@ -10,24 +11,29 @@ if (!isset($_SESSION['login']) || !isset($_SESSION['nombreUsuario'])) {
 
 $estilosExtra = ['perfil.css'];
 
-// Saneamiento de datos y posteriormente consulta en la BD sobre información del usuario logeado
+// Recuperamos la información del usuario logueado desde la capa de dominio
 $nombreUsuario = (string)$_SESSION['nombreUsuario'];
-$queryUsuario = "SELECT * FROM usuarios WHERE nombreUsuario = ?";
-$rsUsuario = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuario, "s", $nombreUsuario)->get_result();
-$usuario = $rsUsuario ? $rsUsuario->fetch_assoc() : null;
-if ($rsUsuario) {
-    $rsUsuario->free();
+$usuarioObj = Usuario::buscaUsuario($nombreUsuario);
+if (!$usuarioObj) {
+    header('Location: logout.php');
+    exit();
 }
 
+// Para no tocar demasiado HTML existente, montamos un array compatible
+$usuario = [
+    'id'            => $usuarioObj->getId(),
+    'nombreUsuario' => $usuarioObj->getNombreUsuario(),
+    'nombre'        => $usuarioObj->getNombre(),
+    'avatar'        => $usuarioObj->getAvatar(),
+];
+
 // Obtención de pedidos activos del usuario (Pedidos en curso)
-$estadosActivos = "'En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'";
-$queryPedidosActivos = "SELECT * FROM pedidos WHERE id_usuario = ? AND estado IN ($estadosActivos) ORDER BY fecha DESC";
-$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosActivos, "i", (int)$usuario['id'])->get_result();
+$pedidosActivos = Pedido::activosPorUsuario((int)$usuario['id']);
 
 // Pestañas de pedidos activos
 $htmlActivos = "";
-if ($rs && $rs->num_rows > 0) {
-    foreach ($rs as $pedido) {
+if (!empty($pedidosActivos)) {
+    foreach ($pedidosActivos as $pedido) {
         $htmlActivos .= "
         <div class='perfil-pedido-activo'>
             <div class='perfil-pedido-activo-header'>
@@ -44,18 +50,14 @@ if ($rs && $rs->num_rows > 0) {
 } else {
     $htmlActivos = "<div class='perfil-pedido-activo-vacio'>No tienes pedidos en curso actualmente.</div>";
 }
-if ($rs) {
-    $rs->free();
-}
 
 // Obtención de pedidos entregados o cancelados del usuario (Historial de pedidos)
-$queryPedidosHistorial = "SELECT * FROM pedidos WHERE id_usuario = ? AND estado NOT IN ($estadosActivos) ORDER BY fecha DESC";
-$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosHistorial, "i", (int)$usuario['id'])->get_result();
+$pedidosHistorial = Pedido::historialPorUsuario((int)$usuario['id']);
 
 // Contenido tabla de historial de pedidos
-if ($rs && $rs->num_rows > 0) {
+if (!empty($pedidosHistorial)) {
     $filasHistorial = "";
-    foreach ($rs as $ped) {
+    foreach ($pedidosHistorial as $ped) {
         $total = number_format($ped['total'], 2);
         $filasHistorial .= "
         <tr class='perfil-historial-row'>
@@ -68,9 +70,6 @@ if ($rs && $rs->num_rows > 0) {
     }
 } else {
     $filasHistorial = "<tr><td colspan='5' class='perfil-historial-vacio'>No hay historial de pedidos.</td></tr>";
-}
-if ($rs) {
-    $rs->free();
 }
 
 // Tabla de historial de pedidos una vez obtenido el contenido

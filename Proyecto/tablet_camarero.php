@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Pedido;
 
 //Si no hay sesión iniciada te lleva al login
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -22,8 +22,7 @@ if (!$esCamarero && !$esAdmin) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['nuevo_estado'])) {
     $idPed = (int)$_POST['id_pedido'];
     $nuevoEst = (string)$_POST['nuevo_estado'];
-    $queryUpdateEstadoPedido = "UPDATE Pedidos SET estado = ? WHERE id = ?";
-	Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateEstadoPedido, "si", $nuevoEst, $idPed);
+    Pedido::cambiarEstado($idPed, $nuevoEst);
     header('Location: tablet_camarero.php');
     exit();
 }
@@ -33,15 +32,13 @@ $tituloPagina = 'Tablet Camarero';
 $estilosExtra = ['tablet_camarero.css'];
 
 //Consulta para coger los pedidos con estados recibido, listo cocina y terminado desde la base de datos
-$queryPedidos = "SELECT id, numero_pedido, tipo, total, estado FROM Pedidos 
-                 WHERE estado IN ('Recibido', 'Listo cocina', 'Terminado') ORDER BY fecha ASC";
-$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidos)->get_result();
+$listaPedidos = Pedido::porEstados(['Recibido', 'Listo cocina', 'Terminado']);
 
 //Si la consulta anterior ha devuelto algo, recorremos los pedidos devueltos para estructurar los arrays que se usarán posteriormente
 $pedidos = [];
 $idsPedidos = [];
-if ($rs && $rs->num_rows > 0) {
-    while ($fila = $rs->fetch_assoc()) {
+if (!empty($listaPedidos)) {
+    foreach ($listaPedidos as $fila) {
 		//Guardamos los pedidos con su id como clave
         $pedidos[$fila['id']] = $fila;
 		//Creamos un array vacío en cada pedido para posteriormente almacenar ahí los productos
@@ -54,21 +51,12 @@ if ($rs && $rs->num_rows > 0) {
 
 //Si hay algún pedido
 if (!empty($idsPedidos)) {
-	//Consulta a la base de datos que devuelve la información de todos los productos de todos los pedidos
-    $placeholders = implode(',', array_fill(0, count($idsPedidos), '?'));
-	//Consulta a la base de datos que devuelve la información de todos los productos de todos los pedidos
-    $queryProductosPedidos = "SELECT pp.id_pedido, pp.cantidad, pp.precio_unitario, p.nombre 
-                   FROM pedidos_productos pp 
-                   JOIN productos p ON pp.id_producto = p.id 
-                   WHERE pp.id_pedido IN ($placeholders)";
-    $tiposIdsPedido = str_repeat('i', count($idsPedidos));
-    $rsProds = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosPedidos, $tiposIdsPedido, ...$idsPedidos)->get_result();
-	//Si la consulta ha devuelto algo, recorremos la lista de pedidos almacenando en cada uno los productos correspondientes (en el array vacío que habíamos creado antes)
-    if ($rsProds && $rsProds->num_rows > 0) {
-        while ($p = $rsProds->fetch_assoc()) {
-            $pedidos[$p['id_pedido']]['productos'][] = $p;
+    // Obtenemos los productos asociados a cada pedido
+    $detalles = Pedido::detallesPedidos($idsPedidos);
+    foreach ($detalles as $idPedido => $lineas) {
+        foreach ($lineas as $p) {
+            $pedidos[$idPedido]['productos'][] = $p;
         }
-        $rsProds->free();
     }
 }
 

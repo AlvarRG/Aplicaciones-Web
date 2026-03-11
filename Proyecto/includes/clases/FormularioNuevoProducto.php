@@ -21,17 +21,13 @@ class FormularioNuevoProducto extends Formulario
         $dispChecked = (empty($datos) || isset($datos['disponible'])) ? 'checked' : '';
 
         // Necesitamos las categorías para el selector (Requisito de usabilidad)
-        $queryCategorias = "SELECT id, nombre FROM categorias";
-        $resCat = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategorias)->get_result();
+        $categorias = Categoria::todas();
         $selectorCategorias = '<select name="id_categoria" required>';
-        while($cat = $resCat->fetch_assoc()) {
+        foreach ($categorias as $cat) {
             $selected = ($cat['id'] == $id_categoria_seleccionada) ? 'selected' : '';
             $selectorCategorias .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
         }
         $selectorCategorias .= '</select>';
-        if ($resCat) {
-            $resCat->free();
-        }
 
         $sel4  = ($iva_seleccionado == 4) ? 'selected' : '';
         $sel10 = ($iva_seleccionado == 10) ? 'selected' : '';
@@ -115,11 +111,8 @@ EOF;
                 }
             }
 
-            // 4. Inserción en la BD
-            $queryInsertProducto = "INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            Aplicacion::getInstance()->ejecutarConsultaBd(
-                $queryInsertProducto,
-                "issdiiis",
+            // 4. Inserción en la BD a través de la clase de dominio
+            Producto::crear(
                 $id_categoria,
                 $nombre,
                 $descripcion,

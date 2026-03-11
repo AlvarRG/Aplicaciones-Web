@@ -11,7 +11,6 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 //Si tenemos un id válido
 if ($id) {
 	//Borramos la categoría con ese id, pero si hay productos en esta categoría, fallará por la clave foránea (hay que borrar todos los productos pertenecientes a una categoría antes que esta)
-    $queryBorrarCategoria = "DELETE FROM Categorias WHERE id = ?";
-    Aplicacion::getInstance()->ejecutarConsultaBd($queryBorrarCategoria, "i", (int)$id);
+    es\ucm\fdi\aw\Categoria::borrar((int)$id);
 }
 header('Location: ../admin_categorias.php');

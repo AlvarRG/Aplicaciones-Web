@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Pedido;
 
 // Redirigimos si el usuario no ha iniciado sesión
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -32,19 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
     $idPed = (int)$_POST['id_pedido'];
 
     // Solo se puede cancelar un pedido si está en estado 'Recibido'
-    $queryCheckEstadoPedido = "SELECT estado FROM Pedidos WHERE id = ?";
-    $rsCheck = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheckEstadoPedido, "i", $idPed)->get_result();
-
-    if ($rsCheck && $rsCheck->num_rows > 0) {
-        $estadoActual = $rsCheck->fetch_assoc()['estado'];
-        if ($estadoActual === 'Recibido') {
-            $queryCancelarPedido = "UPDATE Pedidos SET estado = 'Cancelado' WHERE id = ?";
-            Aplicacion::getInstance()->ejecutarConsultaBd($queryCancelarPedido, "i", $idPed);
-        }
-    }
-    if ($rsCheck) {
-        $rsCheck->free();
-    }
+    Pedido::cambiarEstado($idPed, 'Cancelado');
 
     // Redirigimos para evitar reenvío del formulario al refrescar
     header('Location: gestion_pedidos.php');
@@ -57,11 +45,7 @@ $estilosExtra = ['gestion_pedidos.css'];
 $tituloPagina = 'Gestion Global de Pedidos';
 
 // Obtenemos todos los pedidos junto con el nombre del cliente, ordenados por fecha
-$queryPedidosGestion = "SELECT p.id, p.numero_pedido, p.fecha, p.estado, p.tipo, p.total, u.nombre AS nombre_cliente 
-          FROM Pedidos p 
-          JOIN usuarios u ON p.id_usuario = u.id 
-          ORDER BY p.fecha DESC";
-$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosGestion)->get_result();
+$listaPedidos = Pedido::todosConCliente();
 
 // Cabecera de la página con el rol del usuario actual
 $contenidoPrincipal = <<<EOS
@@ -72,9 +56,9 @@ $contenidoPrincipal = <<<EOS
 EOS;
 
 // Construimos las filas de la tabla (solo la parte variable)
-if ($rs && $rs->num_rows > 0) {
+if (!empty($listaPedidos)) {
     $filasTabla = "";
-    foreach ($rs as $fila) {
+    foreach ($listaPedidos as $fila) {
         $totalFmt = number_format($fila['total'], 2, '.', '');
 
         // Clase CSS del badge según el estado del pedido
@@ -140,10 +124,6 @@ if ($rs && $rs->num_rows > 0) {
             <h3 class='gestion-pedidos-empty-title'>No hay pedidos registrados en el sistema todavia.</h3>
         </div>
     EOS;
-}
-
-if ($rs) {
-    $rs->free();
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

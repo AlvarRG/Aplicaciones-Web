@@ -82,35 +82,22 @@ EOF;
         // Si no hay errores, comprobamos la BD
         if (count($this->errores) === 0) {
             // Comprobar si existe
-            $queryCheckUsuarioEmail = "SELECT id FROM usuarios WHERE nombreUsuario = ? OR email = ?";
-            $check = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheckUsuarioEmail, "ss", $nombreUsuario, $email)->get_result();
+            $disponible = Usuario::compruebaDisponibilidad($nombreUsuario, $email);
             
-            if ($check && $check->num_rows > 0) {
+            if (!$disponible) {
                 $this->errores[] = "El usuario o el email ya existen.";
             } else {
                 // Inserción en la BD
                 $passHash = password_hash($password, PASSWORD_DEFAULT);
-                $queryInsertUsuario = "INSERT INTO usuarios(nombreUsuario, nombre, apellidos, email, password, avatar, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                Aplicacion::getInstance()->ejecutarConsultaBd(
-                    $queryInsertUsuario,
-                    "ssssssi",
-                    $nombreUsuario,
-                    $nombre,
-                    $apellidos,
-                    $email,
-                    $passHash,
-                    'default.png',
-                    1
-                );
-
-                $_SESSION['login'] = true;
-                $_SESSION['nombre'] = $nombre;
-                $_SESSION['nombreUsuario'] = $nombreUsuario;
-                $_SESSION['esAdmin'] = false;
-            }
-
-            if ($check) {
-                $check->free();
+                $usuarioCreado = Usuario::crea($nombreUsuario, $password, $nombre, Usuario::USER_ROLE);
+                if (!$usuarioCreado) {
+                    $this->errores[] = "Error al registrar en la base de datos.";
+                } else {
+                    $_SESSION['login'] = true;
+                    $_SESSION['nombre'] = $nombre;
+                    $_SESSION['nombreUsuario'] = $nombreUsuario;
+                    $_SESSION['esAdmin'] = false;
+                }
             }
         }
     }

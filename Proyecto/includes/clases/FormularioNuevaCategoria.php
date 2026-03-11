@@ -61,9 +61,8 @@ class FormularioNuevaCategoria extends Formulario
                     $imagen = $nombreImg;
                 }
             }
-            
-            $queryInsertCategoria = "INSERT INTO categorias (nombre, descripcion, imagen) VALUES (?, ?, ?)";
-            Aplicacion::getInstance()->ejecutarConsultaBd($queryInsertCategoria, "sss", $nombre, $descripcion, $imagen);
+
+            Categoria::crear($nombre, $descripcion, $imagen);
         }
     }
 }

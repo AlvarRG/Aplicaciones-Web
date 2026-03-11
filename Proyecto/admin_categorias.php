@@ -1,7 +1,6 @@
 <?php
-use es\ucm\fdi\aw\Aplicacion;
-
 require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Categoria;
 
 // Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
@@ -9,12 +8,11 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
     // Consulta para obtener todas las categorías
-    $queryCategoriasAdmin = "SELECT * FROM Categorias";
-    $categorias = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategoriasAdmin)->get_result();
+    $categorias = Categoria::todas();
 
     // Si la consulta anterior ha devuelto algo, recorremos las categorías devueltas y construimos las filas de la tabla
     $filas = "";
-    if($categorias && $categorias->num_rows > 0) {
+    if(!empty($categorias)) {
         foreach ($categorias as $fila) {
             $filas .= <<<EOS
                 <tr>
@@ -28,9 +26,6 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                 </tr>
             EOS;
         }
-    }
-    if ($categorias) {
-        $categorias->free();
     }
 
     //Parametros para la plantilla

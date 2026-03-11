@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Producto;
+use es\ucm\fdi\aw\Pedido;
 
 $estilosExtra = ['pago.css'];
 
@@ -22,19 +23,19 @@ if (isset($_POST['tipo_pedido'])) {
 $tipoPedido = $_SESSION['tipo_pedido'] ?? 'Local';
 
 $idsProductos = array_map('intval', array_keys($_SESSION['carrito']));
-$placeholders = implode(',', array_fill(0, count($idsProductos), '?'));
-$queryProductosCarrito = "SELECT * FROM Productos WHERE id IN ($placeholders)";
-$tiposIdsProductos = str_repeat('i', count($idsProductos));
-$rsTotal = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosCarrito, $tiposIdsProductos, ...$idsProductos)->get_result();
+$productosCarrito = Producto::porIds($idsProductos);
 
 $totalPedido = 0;
 $productosDetalle = [];
 
-while ($fila = $rsTotal->fetch_assoc()) {
+foreach ($productosCarrito as $fila) {
     $idProd = $fila['id'];
-    $cantidad = $_SESSION['carrito'][$idProd];
+    $cantidad = $_SESSION['carrito'][$idProd] ?? 0;
+    if ($cantidad <= 0) {
+        continue;
+    }
     
-    $precioUdConIva = $fila['precio_base'] * (1 + ($fila['iva'] / 100));
+    $precioUdConIva = Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']);
     $totalPedido += ($precioUdConIva * $cantidad);
     
     $productosDetalle[] = [
@@ -44,51 +45,12 @@ while ($fila = $rsTotal->fetch_assoc()) {
         'iva' => $fila['iva']
     ];
 }
-if ($rsTotal) {
-    $rsTotal->free();
-}
 
 if (isset($_POST['metodo_pago'])) {
     $metodoPago = $_POST['metodo_pago'];
     
-    $estadoInicial = ($metodoPago === 'tarjeta') ? 'En preparacion' : 'Recibido';
-    
-    $queryNuevoNumeroPedido = "SELECT IFNULL(MAX(numero_pedido), 0) + 1 AS nuevo_num 
-                 FROM Pedidos 
-                 WHERE DATE(fecha) = CURDATE()";
-    $rsNum = Aplicacion::getInstance()->ejecutarConsultaBd($queryNuevoNumeroPedido)->get_result();
-    $filaNum = $rsNum->fetch_assoc();
-    $numeroPedidoDiario = $filaNum['nuevo_num'];
-    if ($rsNum) {
-        $rsNum->free();
-    }
-    
-    $queryInsertPedido = "INSERT INTO Pedidos (id_usuario, numero_pedido, estado, tipo, total) VALUES (?, ?, ?, ?, ?)";
-    Aplicacion::getInstance()->ejecutarConsultaBd(
-        $queryInsertPedido,
-        "iissd",
-        (int)$idUsuario,
-        (int)$numeroPedidoDiario,
-        (string)$estadoInicial,
-        (string)$tipoPedido,
-        (float)$totalPedido
-    );
-
-    $idNuevoPedido = Aplicacion::getInstance()->getConexionBd()->insert_id;
+    $idNuevoPedido = Pedido::crearConLineas((int)$idUsuario, (string)$tipoPedido, (string)$metodoPago, $productosDetalle);
     if ($idNuevoPedido) {
-        
-        foreach ($productosDetalle as $prod) {
-            $queryInsertDetallePedido = "INSERT INTO Pedidos_Productos (id_pedido, id_producto, cantidad, precio_unitario, iva) VALUES (?, ?, ?, ?, ?)";
-            Aplicacion::getInstance()->ejecutarConsultaBd(
-                $queryInsertDetallePedido,
-                "iiidi",
-                (int)$idNuevoPedido,
-                (int)$prod['id'],
-                (int)$prod['cantidad'],
-                (float)$prod['precio_unitario'],
-                (int)$prod['iva']
-            );
-        }
         
         unset($_SESSION['carrito']);
         unset($_SESSION['tipo_pedido']);

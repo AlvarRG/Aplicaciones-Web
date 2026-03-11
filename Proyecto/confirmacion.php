@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Pedido;
 
 // 1. SEGURIDAD: Usuario logueado
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -19,20 +19,15 @@ if ($idPedido === 0) {
 
 // 3. CONSULTAR LOS DATOS DEL PEDIDO (Para mostrar el número diario y el estado)
 // Aseguramos que el pedido pertenece a este usuario por privacidad
-$queryPedidoConfirmacion = "SELECT numero_pedido, estado FROM Pedidos WHERE id = ? AND id_usuario = ?";
-$rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidoConfirmacion, "ii", $idPedido, (int)$idUsuario)->get_result();
+$pedido = Pedido::porIdYUsuario($idPedido, (int)$idUsuario);
 
-if ($rs && $rs->num_rows > 0) {
-    $fila = $rs->fetch_assoc();
-    $numeroPedido = $fila['numero_pedido'];
-    $estado = $fila['estado'];
+if ($pedido) {
+    $numeroPedido = $pedido['numero_pedido'];
+    $estado = $pedido['estado'];
 } else {
     // Si intentan poner un ID que no existe o no es suyo
     header('Location: index.php');
     exit();
-}
-if ($rs) {
-    $rs->free();
 }
 
 $estilosExtra = ['confirmacion.css'];

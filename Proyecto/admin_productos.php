@@ -1,7 +1,6 @@
 <?php
-use es\ucm\fdi\aw\Aplicacion;
-
 require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\Producto;
 
 // Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
@@ -9,14 +8,11 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
     // Consulta para obtener todos los productos
-    $queryProductosAdmin = "SELECT P.*, C.nombre AS nombre_cat
-              FROM Productos P
-              JOIN Categorias C ON P.id_categoria = C.id";
-    $productos = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosAdmin)->get_result();
+    $productos = Producto::todosConCategoria();
 
     // Si la consulta anterior ha devuelto algo, recorremos los productos devueltos y construimos las filas de la tabla
     $filas = "";
-    if($productos && $productos->num_rows > 0) {
+    if(!empty($productos)) {
         foreach ($productos as $fila) {
             $precioBase  = number_format($fila['precio_base'], 2, ',', '');
             $precioFinal = number_format($fila['precio_base'] * (1 + $fila['iva'] / 100), 2, ',', '');
@@ -40,9 +36,6 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                 </tr>
             EOS;
         }
-    }
-    if ($productos) {
-        $productos->free();
     }
 
     // Parámetros para la plantilla

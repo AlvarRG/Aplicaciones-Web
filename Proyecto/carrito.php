@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Producto;
 
 $estilosExtra = ['carrito.css'];
 
@@ -31,24 +31,19 @@ if (empty($carrito)) {
         <p><a href="carta.php" class="carrito-empty-link">Volver a la Carta</a></p>
     EOS;
 } else {
-    // Prepared statement con un placeholder ? por cada producto del carrito
-    $ids          = array_keys($carrito);
-    $placeholders = str_repeat('?,', count($ids) - 1) . '?';
-    $tipos        = str_repeat('i', count($ids)); // 'i' = integer por cada id
-
-    $queryProductosCarrito = "SELECT * FROM Productos WHERE id IN ($placeholders)";
-    $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductosCarrito, $tipos, ...$ids)->get_result();
+    $ids = array_keys($carrito);
+    $productos = Producto::porIds($ids);
 
     // Construimos las filas y el total acumulado
     $filasTabla  = "";
     $totalPedido = 0;
 
-    foreach ($rs as $fila) {
+    foreach ($productos as $fila) {
         $id       = $fila['id'];
         $cantidad = $carrito[$id];
 
         // Precio unitario con IVA y subtotal para esta línea
-        $precioUd     = $fila['precio_base'] * (1 + ($fila['iva'] / 100));
+        $precioUd     = Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']);
         $subtotal     = $precioUd * $cantidad;
         $totalPedido += $subtotal;
 
@@ -126,10 +121,6 @@ if (empty($carrito)) {
 
     // Montamos el contenido final: tabla de artículos + formulario de entrega
     $contenidoPrincipal = "<h1>Revisar Pedido</h1>" . $htmlArticulos . $htmlFormulario;
-
-    if ($rs) {
-        $rs->free();
-    }
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

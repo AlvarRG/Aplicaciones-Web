@@ -16,12 +16,7 @@ class FormularioEditarProducto extends Formulario
     protected function generaCamposFormulario(&$datos)
     {
         // 1. Obtener datos del producto
-        $queryProductoPorId = "SELECT * FROM productos WHERE id = ?";
-        $rsProducto = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductoPorId, "i", (int)$this->idProducto)->get_result();
-        $product = $rsProducto ? $rsProducto->fetch_assoc() : null;
-        if ($rsProducto) {
-            $rsProducto->free();
-        }
+        $product = Producto::porId((int)$this->idProducto);
 
         // 2. Preparar los datos (Recordar lo escrito si hay error, si no, usar DB)
         $nombre = $datos['nombre'] ?? $product['nombre'];
@@ -40,17 +35,13 @@ class FormularioEditarProducto extends Formulario
         }
 
         // 3. Generar el selector de categorías dinámico
-        $queryCategorias = "SELECT id, nombre FROM categorias";
-        $resCat = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategorias)->get_result();
+        $categorias = Categoria::todas();
         $selectorCategorias = '<select name="id_categoria" required>';
-        while($cat = $resCat->fetch_assoc()) {
+        foreach ($categorias as $cat) {
             $selected = ($cat['id'] == $id_categoria_actual) ? 'selected' : '';
             $selectorCategorias .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
         }
         $selectorCategorias .= '</select>';
-        if ($resCat) {
-            $resCat->free();
-        }
 
         // Atributos de IVA
         $sel4  = ($iva_actual == 4) ? 'selected' : '';
@@ -131,13 +122,8 @@ class FormularioEditarProducto extends Formulario
 
         if (count($this->errores) === 0) {
             // Recuperar imagen actual
-            $queryImagenProducto = "SELECT imagen FROM productos WHERE id = ?";
-            $rsImagen = Aplicacion::getInstance()->ejecutarConsultaBd($queryImagenProducto, "i", $id)->get_result();
-            $fila = $rsImagen ? $rsImagen->fetch_assoc() : null;
-            $imagenFinal = $fila['imagen'] ?? 'prod_default.png';
-            if ($rsImagen) {
-                $rsImagen->free();
-            }
+            $productoActual = Producto::porId($id);
+            $imagenFinal = $productoActual['imagen'] ?? 'prod_default.png';
 
             // Gestión de nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -150,19 +136,16 @@ class FormularioEditarProducto extends Formulario
                 }
             }
 
-            $queryUpdateProducto = "UPDATE productos SET nombre = ?, id_categoria = ?, descripcion = ?, precio_base = ?, iva = ?, disponible = ?, ofertado = ?, imagen = ? WHERE id = ?";
-            Aplicacion::getInstance()->ejecutarConsultaBd(
-                $queryUpdateProducto,
-                "sisdiiisi",
-                $nombre,
+            Producto::actualizar(
+                $id,
                 $id_categoria,
+                $nombre,
                 $descripcion,
                 $precio_base,
                 $iva,
                 $disponible,
                 $ofertado,
-                $imagenFinal,
-                $id
+                $imagenFinal
             );
         }
     }

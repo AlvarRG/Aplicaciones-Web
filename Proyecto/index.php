@@ -1,15 +1,14 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\Categoria;
 
 // Obtenemos las categorías para mostrarlas como tarjetas en la portada
-$queryCategorias = "SELECT id, nombre, imagen FROM Categorias ORDER BY nombre";
-$rsCategorias = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategorias)->get_result();
+$categorias = Categoria::todas();
 
 // Construimos las tarjetas de categorías
 $tarjetas = "";
-if ($rsCategorias && $rsCategorias->num_rows > 0) {
-    foreach ($rsCategorias as $cat) {
+if (!empty($categorias)) {
+    foreach ($categorias as $cat) {
         $tarjetas .= <<<EOS
             <a href="carta.php" class="index-categoria-card">
                 <img src="img/categorias/{$cat['imagen']}" class="index-categoria-img" alt="{$cat['nombre']}">

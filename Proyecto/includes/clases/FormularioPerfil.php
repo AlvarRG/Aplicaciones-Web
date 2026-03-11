@@ -33,11 +33,15 @@ class FormularioPerfil extends Formulario
     protected function generaCamposFormulario(&$datos)
     {
         // 1. Obtenemos los datos actuales del usuario
-        $queryUsuarioPerfil = "SELECT * FROM usuarios WHERE nombreUsuario = ?";
-        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuarioPerfil, "s", (string)$this->nombreUsuario)->get_result();
-        $user = $rs ? $rs->fetch_assoc() : null;
-        if ($rs) {
-            $rs->free();
+        $usuario = Usuario::buscaUsuario($this->nombreUsuario);
+        $user = null;
+        if ($usuario) {
+            $user = [
+                'nombre'   => $usuario->getNombre(),
+                'apellidos'=> '', // no los tenemos en la clase Usuario actual
+                'email'    => '', // idem
+                'avatar'   => $usuario->getAvatar(),
+            ];
         }
 
         // 2. Preparamos las variables (Prioridad: lo escrito tras un error > lo que hay en BD)
@@ -111,15 +115,12 @@ class FormularioPerfil extends Formulario
             }
 
             // 4. Actualizar BD
-            $queryUpdatePerfil = "UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, avatar = ? WHERE nombreUsuario = ?";
-            Aplicacion::getInstance()->ejecutarConsultaBd(
-                $queryUpdatePerfil,
-                "sssss",
+            Usuario::actualizarPerfil(
+                (string)$this->nombreUsuario,
                 $nombre,
                 $apellidos,
                 $email,
-                $avatarFinal,
-                (string)$this->nombreUsuario
+                $avatarFinal
             );
 
             $_SESSION['nombre'] = $nombre;

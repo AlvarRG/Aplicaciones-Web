@@ -17,12 +17,7 @@ class FormularioEditarCategoria extends Formulario
 
     protected function generaCamposFormulario(&$datos)
     {
-        $queryCategoriaPorId = "SELECT * FROM categorias WHERE id = ?";
-        $rsCategoria = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategoriaPorId, "i", (int)$this->idCategoria)->get_result();
-        $cat = $rsCategoria ? $rsCategoria->fetch_assoc() : null;
-        if ($rsCategoria) {
-            $rsCategoria->free();
-        }
+        $cat = Categoria::porId((int)$this->idCategoria);
 
         $nombre = $datos['nombre'] ?? $cat['nombre'];
         $descripcion = $datos['descripcion'] ?? $cat['descripcion'];
@@ -75,13 +70,8 @@ class FormularioEditarCategoria extends Formulario
 
         if (count($this->errores) === 0) {
             // Recuperar imagen actual por si no se cambia
-            $queryImagenCategoria = "SELECT imagen FROM categorias WHERE id = ?";
-            $rsImagen = Aplicacion::getInstance()->ejecutarConsultaBd($queryImagenCategoria, "i", $id)->get_result();
-            $fila = $rsImagen ? $rsImagen->fetch_assoc() : null;
-            $imagenFinal = $fila['imagen'] ?? 'cat_default.png';
-            if ($rsImagen) {
-                $rsImagen->free();
-            }
+            $categoriaActual = Categoria::porId($id);
+            $imagenFinal = $categoriaActual['imagen'] ?? 'cat_default.png';
 
             // Si se sube una nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -95,8 +85,7 @@ class FormularioEditarCategoria extends Formulario
             }
 
             // Actualizamos en BD
-            $queryUpdateCategoria = "UPDATE categorias SET nombre = ?, descripcion = ?, imagen = ? WHERE id = ?";
-            Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateCategoria, "sssi", $nombre, $descripcion, $imagenFinal, $id);
+            Categoria::actualizar($id, $nombre, $descripcion, $imagenFinal);
         }
     }
 }

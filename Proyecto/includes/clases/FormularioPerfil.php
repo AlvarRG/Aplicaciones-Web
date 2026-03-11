@@ -6,6 +6,11 @@ class FormularioPerfil extends Formulario
 {
     private $nombreUsuario;
 
+    /**
+     * Constructor de la clase
+     *
+     * @param string $nombreUsuario
+     */
     public function __construct($nombreUsuario)
     {
 		//Página a la que puede redirigir cuando tiene éxito
@@ -19,6 +24,12 @@ class FormularioPerfil extends Formulario
 
 
 
+    /**
+     * Genera los campos del formulario
+     *
+     * @param array $datos
+     * @return string
+     */
     protected function generaCamposFormulario(&$datos)
     {
         //Cogemos el usuario
@@ -66,6 +77,12 @@ class FormularioPerfil extends Formulario
         EOF;
     }
 
+    /**
+     * Procesa los datos del formulario
+     *
+     * @param array $datos
+     * @return void
+     */
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];

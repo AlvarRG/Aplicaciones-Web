@@ -4,7 +4,11 @@ namespace es\ucm\fdi\aw;
 
 class Categoria
 {
-    //Devuelve todas las categorías
+    /**
+     * Devuelve todas las categorías
+     *
+     * @return array
+     */
     public static function todas(): array
     {
         $queryCategorias = "SELECT * FROM categorias";
@@ -21,7 +25,12 @@ class Categoria
         return $categorias;
     }
 
-    //Devuelve una categoría por id o null si no existe.
+    /**
+     * Devuelve una categoría por id o null si no existe
+     *
+     * @param int $id
+     * @return array|null
+     */
     public static function porId(int $id): ?array
     {
         $queryCategoriaPorId = "SELECT * FROM categorias WHERE id = ?";
@@ -36,7 +45,14 @@ class Categoria
         return $categoria;
     }
 
-    //Crea una nueva categoría
+    /**
+     * Crea una nueva categoría
+     *
+     * @param string $nombre
+     * @param string|null $descripcion
+     * @param string $imagen
+     * @return bool
+     */
     public static function crear(string $nombre, ?string $descripcion, string $imagen): bool
     {
         $queryInsertCategoria = "INSERT INTO categorias (nombre, descripcion, imagen) VALUES (?, ?, ?)";
@@ -45,7 +61,15 @@ class Categoria
         return $stmt->affected_rows === 1;
     }
 
-    //Actualiza una categoría existente
+    /**
+     * Actualiza una categoría existente
+     *
+     * @param int $id
+     * @param string $nombre
+     * @param string|null $descripcion
+     * @param string $imagen
+     * @return bool
+     */
     public static function actualizar(int $id, string $nombre, ?string $descripcion, string $imagen): bool
     {
         $queryUpdateCategoria = "UPDATE categorias SET nombre = ?, descripcion = ?, imagen = ? WHERE id = ?";
@@ -54,7 +78,12 @@ class Categoria
         return $stmt->affected_rows >= 0;
     }
 
-    //Borra una categoría dado su id
+    /**
+     * Borra una categoría dado su id
+     *
+     * @param int $id
+     * @return bool
+     */
     public static function borrar(int $id): bool
     {
         $queryBorrarCategoria = "DELETE FROM categorias WHERE id = ?";

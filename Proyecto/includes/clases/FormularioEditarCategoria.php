@@ -6,6 +6,11 @@ class FormularioEditarCategoria extends Formulario
 {
     private $idCategoria;
 
+    /**
+     * Constructor de la clase
+     *
+     * @param int $idCategoria
+     */
     public function __construct($idCategoria)
     {
 		//Página a la que redirige cuando tiene éxito
@@ -16,6 +21,12 @@ class FormularioEditarCategoria extends Formulario
         $this->idCategoria = $idCategoria;
     }
 
+    /**
+     * Genera los campos del formulario
+     *
+     * @param array $datos
+     * @return string
+     */
     protected function generaCamposFormulario(&$datos)
     {
 		//Cogemos la categoría
@@ -59,6 +70,12 @@ class FormularioEditarCategoria extends Formulario
         EOF;
     }
 
+    /**
+     * Procesa los datos del formulario
+     *
+     * @param array $datos
+     * @return void
+     */
     protected function procesaFormulario(&$datos)
     {
 		//Tomamos los datos

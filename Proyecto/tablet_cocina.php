@@ -58,7 +58,15 @@ if (!empty($idsPedidos)) {
     }
 }
 
-//Genera la vista de las tarjetas en la tablet con la información necesaria
+/**
+ * Genera la vista de las tarjetas en la tablet con la información necesaria
+ *
+ * @param array $pedido
+ * @param string $botonTexto
+ * @param string $claseBoton
+ * @param string $siguienteEstado
+ * @return string
+ */
 function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstado) {
     $htmlProductos = "";
     foreach ($pedido['productos'] as $prod) {

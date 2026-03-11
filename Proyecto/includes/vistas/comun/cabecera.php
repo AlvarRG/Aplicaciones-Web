@@ -1,5 +1,9 @@
 <?php
-//Crea una cadena personalizada cuando hay un usuario con sesión iniciada, que se muestra en la cabecera junto al logo (que funciona como botón de inicio)
+/**
+ * Crea una cadena personalizada cuando hay un usuario con sesión iniciada, que se muestra en la cabecera junto al logo (que funciona como botón de inicio)
+ *
+ * @return string
+ */
 function mostrarSaludo() {
     if (isset($_SESSION['login']) && ($_SESSION['login']===true)) {
         //Añadimos el enlace a perfil.php justo antes del de salir

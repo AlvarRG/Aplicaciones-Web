@@ -138,7 +138,14 @@ class Aplicacion
 		return $this->conn;
 	}
 
-	//Función para ejecutar consultas de forma segura
+	/**
+	 * Función para ejecutar consultas de forma segura
+	 *
+	 * @param string $sql
+	 * @param string|null $tipos
+	 * @param mixed ...$parametros
+	 * @return \mysqli_stmt
+	 */
 	public function ejecutarConsultaBd($sql, $tipos = null, ...$parametros)
 	{
 		$this->compruebaInstanciaInicializada();

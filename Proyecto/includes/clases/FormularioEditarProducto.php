@@ -5,6 +5,11 @@ class FormularioEditarProducto extends Formulario
 {
     private $idProducto;
 
+    /**
+     * Constructor de la clase
+     *
+     * @param int $idProducto
+     */
     public function __construct($idProducto) {
 		//Página a la que redirige cuando tiene éxito
         parent::__construct('formEditarProducto', [
@@ -14,6 +19,12 @@ class FormularioEditarProducto extends Formulario
         $this->idProducto = $idProducto;
     }
 
+    /**
+     * Genera los campos del formulario
+     *
+     * @param array $datos
+     * @return string
+     */
     protected function generaCamposFormulario(&$datos)
     {
         //Cogemos el producto
@@ -98,6 +109,12 @@ class FormularioEditarProducto extends Formulario
     EOF;
     }
 
+    /**
+     * Procesa los datos del formulario
+     *
+     * @param array $datos
+     * @return void
+     */
     protected function procesaFormulario(&$datos)
     {
 		//Tomamos los datos

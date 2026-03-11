@@ -5,7 +5,7 @@ namespace es\ucm\fdi\aw;
 class Producto
 {
     /**
-     * Devuelve todos los productos ofertados (ofertado = 1) junto con el nombre de su categoría.
+     * Devuelve todos los productos ofertados (ofertado = 1) junto con el nombre de su categoría
      * Se utiliza principalmente en la carta pública.
      *
      * @return array<int,array<string,mixed>>
@@ -32,7 +32,7 @@ class Producto
     }
 
     /**
-     * Devuelve todos los productos correspondientes a la lista de ids dada.
+     * Devuelve todos los productos correspondientes a la lista de ids dada
      * Se utiliza en el carrito y en el pago.
      *
      * @param int[] $ids
@@ -63,7 +63,10 @@ class Producto
     }
 
     /**
-     * Devuelve un solo producto por id o null si no existe.
+     * Devuelve un solo producto por id o null si no existe
+     *
+     * @param int $id
+     * @return array|null
      */
     public static function porId(int $id): ?array
     {
@@ -80,7 +83,7 @@ class Producto
     }
 
     /**
-     * Devuelve todos los productos con el nombre de su categoría.
+     * Devuelve todos los productos con el nombre de su categoría
      * Pensado para panel de administración.
      *
      * @return array<int,array<string,mixed>>
@@ -105,7 +108,17 @@ class Producto
     }
 
     /**
-     * Inserta un nuevo producto y devuelve true/false según éxito.
+     * Inserta un nuevo producto y devuelve true/false según éxito
+     *
+     * @param int $idCategoria
+     * @param string $nombre
+     * @param string|null $descripcion
+     * @param float $precioBase
+     * @param int $iva
+     * @param int $disponible
+     * @param int $ofertado
+     * @param string $imagen
+     * @return bool
      */
     public static function crear(
         int $idCategoria,
@@ -138,7 +151,18 @@ class Producto
     }
 
     /**
-     * Actualiza un producto existente.
+     * Actualiza un producto existente
+     *
+     * @param int $id
+     * @param int $idCategoria
+     * @param string $nombre
+     * @param string|null $descripcion
+     * @param float $precioBase
+     * @param int $iva
+     * @param int $disponible
+     * @param int $ofertado
+     * @param string $imagen
+     * @return bool
      */
     public static function actualizar(
         int $id,
@@ -174,7 +198,10 @@ class Producto
     }
 
     /**
-     * Marca un producto como no ofertado y no disponible (retirado de la carta).
+     * Marca un producto como no ofertado y no disponible (retirado de la carta)
+     *
+     * @param int $id
+     * @return bool
      */
     public static function retirarDeCarta(int $id): bool
     {
@@ -185,7 +212,10 @@ class Producto
     }
 
     /**
-     * Borra un producto definitivamente.
+     * Borra un producto definitivamente
+     *
+     * @param int $id
+     * @return bool
      */
     public static function borrar(int $id): bool
     {
@@ -196,7 +226,11 @@ class Producto
     }
 
     /**
-     * Helper de cálculo de precio final con IVA.
+     * Helper de cálculo de precio final con IVA
+     *
+     * @param float $precioBase
+     * @param int $iva
+     * @return float
      */
     public static function calcularPrecioConIva(float $precioBase, int $iva): float
     {

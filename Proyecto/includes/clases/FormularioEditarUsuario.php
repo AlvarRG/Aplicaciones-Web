@@ -5,6 +5,11 @@ class FormularioEditarUsuario extends Formulario
 {
     private $idUsuario;
 
+    /**
+     * Constructor de la clase
+     *
+     * @param int $idUsuario
+     */
     public function __construct($idUsuario) {
         //Página a la que redirige cuando tiene éxito
         parent::__construct('formEditarUsuario', [
@@ -13,6 +18,12 @@ class FormularioEditarUsuario extends Formulario
         $this->idUsuario = $idUsuario;
     }
 
+    /**
+     * Genera los campos del formulario
+     *
+     * @param array $datos
+     * @return string
+     */
     protected function generaCamposFormulario(&$datos)
     {
         //Cogemos el rol
@@ -55,6 +66,12 @@ class FormularioEditarUsuario extends Formulario
 EOF;
     }
 
+    /**
+     * Procesa los datos del formulario
+     *
+     * @param array $datos
+     * @return void
+     */
     protected function procesaFormulario(&$datos)
     {
 		//Tomamos los datos

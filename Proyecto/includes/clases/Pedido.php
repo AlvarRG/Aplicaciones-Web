@@ -5,8 +5,9 @@ namespace es\ucm\fdi\aw;
 class Pedido
 {
     /**
-     * Devuelve todos los pedidos de un usuario.
+     * Devuelve todos los pedidos de un usuario
      *
+     * @param int $idUsuario
      * @return array<int,array<string,mixed>>
      */
     public static function porUsuario(int $idUsuario): array
@@ -25,7 +26,10 @@ class Pedido
     }
 
     /**
-     * Devuelve los pedidos activos para un usuario, según una lista fija de estados activos.
+     * Devuelve los pedidos activos para un usuario, según una lista fija de estados activos
+     *
+     * @param int $idUsuario
+     * @return array
      */
     public static function activosPorUsuario(int $idUsuario): array
     {
@@ -34,7 +38,10 @@ class Pedido
     }
 
     /**
-     * Devuelve el historial (no activos) de un usuario.
+     * Devuelve el historial (no activos) de un usuario
+     *
+     * @param int $idUsuario
+     * @return array
      */
     public static function historialPorUsuario(int $idUsuario): array
     {
@@ -65,7 +72,10 @@ class Pedido
     }
 
     /**
-     * Devuelve pedidos filtrados por estados (sin filtrar por usuario).
+     * Devuelve pedidos filtrados por estados (sin filtrar por usuario)
+     *
+     * @param array $estados
+     * @return array
      */
     public static function porEstados(array $estados): array
     {
@@ -92,7 +102,9 @@ class Pedido
     }
 
     /**
-     * Devuelve pedidos con datos del cliente para gestión global.
+     * Devuelve pedidos con datos del cliente para gestión global
+     *
+     * @return array
      */
     public static function todosConCliente(): array
     {
@@ -114,7 +126,7 @@ class Pedido
     }
 
     /**
-     * Devuelve las líneas de pedido (pedidos_productos + productos) agrupadas por id_pedido.
+     * Devuelve las líneas de pedido (pedidos_productos + productos) agrupadas por id_pedido
      *
      * @param int[] $idsPedidos
      * @return array<int,array<int,array<string,mixed>>>  [id_pedido => [lineas...]]
@@ -150,7 +162,11 @@ class Pedido
     }
 
     /**
-     * Devuelve un pedido por id asegurando que pertenece a un usuario concreto.
+     * Devuelve un pedido por id asegurando que pertenece a un usuario concreto
+     *
+     * @param int $idPedido
+     * @param int $idUsuario
+     * @return array|null
      */
     public static function porIdYUsuario(int $idPedido, int $idUsuario): ?array
     {
@@ -166,7 +182,12 @@ class Pedido
     }
 
     /**
-     * Cambia el estado de un pedido, opcionalmente restringiendo por usuario.
+     * Cambia el estado de un pedido, opcionalmente restringiendo por usuario
+     *
+     * @param int $idPedido
+     * @param string $nuevoEstado
+     * @param int|null $idUsuario
+     * @return bool
      */
     public static function cambiarEstado(int $idPedido, string $nuevoEstado, ?int $idUsuario = null): bool
     {
@@ -182,7 +203,11 @@ class Pedido
     }
 
     /**
-     * Lógica específica de cancelación por parte del cliente.
+     * Lógica específica de cancelación por parte del cliente
+     *
+     * @param int $idPedido
+     * @param int $idUsuario
+     * @return bool
      */
     public static function cancelarCliente(int $idPedido, int $idUsuario): bool
     {
@@ -206,7 +231,7 @@ class Pedido
     }
 
     /**
-     * Crea un pedido y sus líneas en base a las líneas de carrito.
+     * Crea un pedido y sus líneas en base a las líneas de carrito
      *
      * @param int    $idUsuario
      * @param string $tipoPedido  'Local' o 'Llevar'
@@ -277,7 +302,7 @@ class Pedido
     }
 
     /**
-     * Helper interno: pedidos de un usuario filtrando por un conjunto de estados (IN).
+     * Helper interno: pedidos de un usuario filtrando por un conjunto de estados (IN)
      *
      * @param int   $idUsuario
      * @param array<int,string> $estados

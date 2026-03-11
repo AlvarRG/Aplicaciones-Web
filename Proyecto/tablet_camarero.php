@@ -76,7 +76,15 @@ $contenidoPrincipal = <<<EOS
     <div class="tablet-camarero-layout">
 EOS;
 
-//Genera la vista de las tarjetas en la tablet con la información necesaria
+/**
+ * Genera la vista de las tarjetas en la tablet con la información necesaria
+ *
+ * @param array $pedido
+ * @param string $botonTexto
+ * @param string $botonClase
+ * @param string $siguienteEstado
+ * @return string
+ */
 function generarTarjetaPedido($pedido, $botonTexto, $botonClase, $siguienteEstado) {
     $totalFmt = number_format($pedido['total'], 2, '.', '');
     $htmlProductos = '<div class="tablet-camarero-productos">';

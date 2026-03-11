@@ -3,6 +3,9 @@ namespace es\ucm\fdi\aw;
 
 class FormularioNuevoProducto extends Formulario
 {
+    /**
+     * Constructor de la clase
+     */
     public function __construct() {
 		
 		//Página a la que redirige cuando tiene éxito
@@ -12,6 +15,12 @@ class FormularioNuevoProducto extends Formulario
         ]);
     }
 
+    /**
+     * Genera los campos del formulario
+     *
+     * @param array $datos
+     * @return string
+     */
     protected function generaCamposFormulario(&$datos)
     {
 		//Cogemos los datos
@@ -75,6 +84,12 @@ class FormularioNuevoProducto extends Formulario
 EOF;
     }
 
+    /**
+     * Procesa los datos del formulario
+     *
+     * @param array $datos
+     * @return void
+     */
     protected function procesaFormulario(&$datos)
     {
         $this->errores = [];

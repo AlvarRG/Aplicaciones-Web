@@ -4,11 +4,20 @@ namespace es\ucm\fdi\aw;
 
 class FormularioLogin extends Formulario
 {
+    /**
+     * Constructor de la clase
+     */
     public function __construct() {
 		//Página a la que redirige cuando tiene éxito
         parent::__construct('formLogin', ['urlRedireccion' => 'index.php']);
     }
     
+    /**
+     * Genera los campos del formulario
+     *
+     * @param array $datos
+     * @return string
+     */
     protected function generaCamposFormulario(&$datos)
     {
         //Se reutiliza el nombre de usuario introducido previamente o se deja en blanco
@@ -41,6 +50,12 @@ class FormularioLogin extends Formulario
         return $html;
     }
 
+    /**
+     * Procesa los datos del formulario
+     *
+     * @param array $datos
+     * @return void
+     */
     protected function procesaFormulario(&$datos)
     {
 		//Tomamos los datos filtrando su contenido

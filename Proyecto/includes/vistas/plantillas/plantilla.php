@@ -3,11 +3,11 @@
 	<head>
 		<meta charset="UTF-8">
 		<title><?= $tituloPagina //El título de la página, que cada una rellena?></title>
-		<link rel="stylesheet" type="text/css" href="css/estilo.css?v=1.1">
+		<link rel="stylesheet" type="text/css" href="<?= RUTA_CSS ?>/estilo.css?v=1.1">
 		<?php //Si la página tiene estilos extra se los pone
             if (isset($estilosExtra)) {
                 foreach ($estilosExtra as $estilo) {
-                    echo '<link rel="stylesheet" type="text/css" href="css/' . htmlspecialchars($estilo, ENT_QUOTES, 'UTF-8') . '" />';
+                    echo '<link rel="stylesheet" type="text/css" href="' . RUTA_CSS . '/' . htmlspecialchars($estilo, ENT_QUOTES, 'UTF-8') . '" />';
                 }
             }
 		?>
@@ -24,7 +24,7 @@
 				</article>
 			</main>
 		<?php //Barra derecha y pie de página
-			require('includes/vistas/comun/sidebarDer.php');
+			require('includes/vistas/comun/sideBarDer.php');
 			require('includes/vistas/comun/pie.php');
 		?>
 		</div>

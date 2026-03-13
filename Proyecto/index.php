@@ -9,9 +9,10 @@ $categorias = Categoria::todas();
 $tarjetas = "";
 if (!empty($categorias)) {
     $rutaImgs = RUTA_IMGS;
+    $rutaApp = RUTA_APP;
     foreach ($categorias as $cat) {
         $tarjetas .= <<<EOS
-            <a href="<?= RUTA_APP ?>/carta.php" class="index-categoria-card">
+            <a href="{$rutaApp}/carta.php" class="index-categoria-card">
                 <img src="{$rutaImgs}/categorias/{$cat['imagen']}" class="index-categoria-img" alt="{$cat['nombre']}">
                 <p class="index-categoria-nombre">{$cat['nombre']}</p>
             </a>

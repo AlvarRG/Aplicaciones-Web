@@ -19,11 +19,12 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $htmlFormEditarUsuario = $form->gestiona();
 
     //Parametros para la plantilla
+    $rutaApp = RUTA_APP;
     $tituloPagina = "Editar Usuario";
 
     $contenidoPrincipal = <<<EOS
         <h1>Editar Rol de: {$usuario['nombreUsuario']}</h1>
-        <p><a href="admin_usuarios.php">⬅ Volver al listado</a></p>
+        <p><a href="$rutaApp/admin_usuarios.php">⬅ Volver al listado</a></p>
         $htmlFormEditarUsuario
     EOS;
 }

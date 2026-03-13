@@ -20,11 +20,14 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     //Parametros para la plantilla
     $tituloPagina = "Editar Producto";
     
+    $rutaApp = RUTA_APP;
+    $rutaJs = RUTA_JS;
+
     $contenidoPrincipal = <<<EOS
         <h1>Editar Producto: {$product['nombre']}</h1>
-        <p><a href="admin_productos.php">⬅ Volver al listado</a></p>
+        <p><a href="$rutaApp/admin_productos.php">⬅ Volver al listado</a></p>
         $htmlFormulario
-        <script src="js/productos.js"></script>
+        <script src="$rutaJs/productos.js"></script>
     EOS;
 }
 

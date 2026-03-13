@@ -95,10 +95,12 @@ $htmlFormPerfil = $formPerfil->gestiona();
 //Parámetros para la plantilla
 $tituloPagina = 'Mi Perfil';
 
+$rutaImgs = RUTA_IMGS;
+
 $contenidoPrincipal = <<<EOS
     <div class="perfil-header">
         <h1 class="perfil-header-title">Perfil de {$usuario['nombreUsuario']}</h1>
-        <img src="img/avatares/{$usuario['avatar']}" class="perfil-header-avatar">
+        <img src="{$rutaImgs}/avatares/{$usuario['avatar']}" class="perfil-header-avatar">
     </div>
 
     <div class="perfil-layout">

@@ -27,14 +27,17 @@ if (!empty($productosCarta)) {
 
         //Calculamos el precio final aplicando el IVA al precio base
         $precioFinal = number_format(Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']), 2, ',', '');
+        
+        $rutaImgs = RUTA_IMGS;
+        $rutaApp = RUTA_APP;
 
         //Tarjeta del producto con su formulario para añadir al carrito
         $cartaHTML .= <<<EOS
             <div class="carta-producto">
-                <img src="img/productos/{$fila['imagen']}" class="carta-producto-imagen">
+                <img src="{$rutaImgs}/productos/{$fila['imagen']}" class="carta-producto-imagen">
                 <h3 class="carta-producto-nombre">{$fila['nombre']}</h3>
                 <p class="carta-producto-precio">{$precioFinal} €</p>
-                <form action="includes/procesar_carrito.php" method="POST">
+                <form action="$rutaApp/includes/procesar_carrito.php" method="POST">
                     <input type="hidden" name="id_producto" value="{$fila['id']}">
                     <input type="hidden" name="accion" value="add">
                     <label>Cant: <input type="number" name="cantidad" value="1" min="1" max="10" class="carta-producto-cantidad"></label>

@@ -10,6 +10,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     //Consulta para obtener todos los productos
     $productos = Producto::todosConCategoria();
 
+    $rutaApp = RUTA_APP;
+    $rutaJs = RUTA_JS;
+    $rutaImgs = RUTA_IMGS;
+
     //Si la consulta anterior ha devuelto algo, recorremos los productos devueltos y construimos las filas de la tabla
     $filas = "";
     if(!empty($productos)) {
@@ -21,7 +25,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 
             $filas .= <<<EOS
                 <tr>
-                    <td><img src="img/productos/{$fila['imagen']}" width="100"></td>
+                    <td><img src="{$rutaImgs}/productos/{$fila['imagen']}" width="100"></td>
                     <td>{$fila['nombre']}</td>
                     <td>{$fila['nombre_cat']}</td>
                     <td>$precioBase €</td>
@@ -30,8 +34,8 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td>$disponible</td>
                     <td>$ofertado</td>
                     <td>
-                        <a href="editar_producto.php?id={$fila['id']}">[Editar]</a>
-                        <a href="includes/borrar_producto.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente.">[Eliminar]</a>
+                        <a href="$rutaApp/editar_producto.php?id={$fila['id']}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_producto.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente.">[Eliminar]</a>
                     </td>
                 </tr>
             EOS;
@@ -45,7 +49,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 
     $contenidoPrincipal = <<<EOS
         <h1>Gestión de la Carta</h1>
-        <p><a href="nuevo_producto.php">Añadir Producto</a></p>
+        <p><a href="$rutaApp/nuevo_producto.php">Añadir Producto</a></p>
         <table>
             <thead>
                 <tr>
@@ -62,7 +66,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
             </thead>
             <tbody>$filas</tbody>
         </table>
-        <script src="js/confirmacion_borrado.js"></script>
+        <script src="$rutaJs/confirmacion_borrado.js"></script>
     EOS;
 }
 

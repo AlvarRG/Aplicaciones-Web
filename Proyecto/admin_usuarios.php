@@ -13,6 +13,9 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     //Obtener todos los usuarios haciendo uso de la función buscaTodos() de la clase Usuario
     $usuarios = Usuario::buscaTodos();
     
+    $rutaApp = RUTA_APP;
+    $rutaJs = RUTA_JS;
+
     //Si la consulta anterior ha devuelto algo, recorremos los usuarios devueltos y construimos las filas de la tabla
     $filas = "";
     if(!empty($usuarios)) {
@@ -24,8 +27,8 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td>{$fila['email']}</td>
                     <td>{$fila['nombreRol']}</td>
                     <td>
-                        <a href="editar_usuario.php?id={$fila['id']}">[Cambiar Rol]</a> 
-                        <a href="includes/borrar_usuario.php?id={$fila['id']}" class="boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?">[Borrar]</a>
+                        <a href="$rutaApp/editar_usuario.php?id={$fila['id']}">[Cambiar Rol]</a> 
+                        <a href="$rutaApp/includes/borrar_usuario.php?id={$fila['id']}" class="boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?">[Borrar]</a>
                     </td>
                 </tr>
             EOS;
@@ -36,7 +39,6 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $estilosExtra = ['admin_usuarios.css'];
 
     $tituloPagina = 'Gestión de Usuarios';
-
     $contenidoPrincipal = <<<EOS
         <h1>Panel de Administración</h1>
         <table>
@@ -53,7 +55,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                 $filas
             </tbody>
         </table>
-        <script src="js/confirmacion_borrado.js"></script>
+        <script src="$rutaJs/confirmacion_borrado.js"></script>
     EOS;
 }
 

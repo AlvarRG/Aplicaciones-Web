@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['
     $idPed = (int)$_POST['id_pedido'];
     $nuevoEst = (string)$_POST['nuevo_estado'];
     Pedido::cambiarEstado($idPed, $nuevoEst);
-    header('Location: tablet_camarero.php');
+    header('Location: ' . RUTA_APP . '/tablet_camarero.php');
     exit();
 }
 
@@ -63,13 +63,15 @@ if (!empty($idsPedidos)) {
 $nombreCamarero = $_SESSION['nombreUsuario'] ?? 'Camarero';
 $avatarCamarero = $_SESSION['avatar'] ?? 'default.png'; 
 
+$rutaImgs = RUTA_IMGS;
+
 //Contenido principal de la página
 $contenidoPrincipal = <<<EOS
     <div class="tablet-camarero-header">
         <h2>Panel Camarero</h2>
         <div class="tablet-camarero-user">
             <span><strong>{$nombreCamarero}</strong></span>
-            <img src="img/avatares/{$avatarCamarero}" alt="Avatar" class="tablet-camarero-avatar">
+            <img src="{$rutaImgs}/avatares/{$avatarCamarero}" alt="Avatar" class="tablet-camarero-avatar">
         </div>
     </div>
 
@@ -96,6 +98,8 @@ function generarTarjetaPedido($pedido, $botonTexto, $botonClase, $siguienteEstad
     }
     $htmlProductos .= '</div>';
     
+    $rutaApp = RUTA_APP;
+
     return <<<HTML
     <div class="tablet-camarero-card">
         <div class="tablet-camarero-card-header">
@@ -104,7 +108,7 @@ function generarTarjetaPedido($pedido, $botonTexto, $botonClase, $siguienteEstad
         </div>
         {$htmlProductos}
         <div class="tablet-camarero-total">Total: {$totalFmt}€</div>
-        <form action="tablet_camarero.php" method="POST">
+        <form action="$rutaApp/tablet_camarero.php" method="POST">
             <input type="hidden" name="id_pedido" value="{$pedido['id']}">
             <input type="hidden" name="nuevo_estado" value="{$siguienteEstado}">
             <button type="submit" class="tablet-camarero-btn {$botonClase}">

@@ -34,6 +34,8 @@ $estilosExtra = ['confirmacion.css'];
 
 $tituloPagina = 'Pedido Confirmado';
 
+$rutaApp = RUTA_APP;
+
 $contenidoPrincipal = <<<EOS
     <div class="confirmacion-wrapper">
         
@@ -58,7 +60,7 @@ $contenidoPrincipal = <<<EOS
             Puedes consultar el estado de tu pedido en cualquier momento desde tu perfil de usuario.
         </p>
 
-        <a href="carta.php" class="confirmacion-boton">
+        <a href="$rutaApp/carta.php" class="confirmacion-boton">
             Volver al Inicio (Nueva Compra)
         </a>
         

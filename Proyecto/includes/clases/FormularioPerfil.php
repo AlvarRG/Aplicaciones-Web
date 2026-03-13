@@ -54,7 +54,7 @@ class FormularioPerfil extends Formulario
         $htmlAvatares = "";
         foreach ($avatares as $av) {
             $checked = ($avatarActual == $av) ? "checked" : "";
-            $htmlAvatares .= "<label class='perfil-avatar-opcion'><img src='img/avatares/$av'><input type='radio' name='avatar_pre' value='$av' $checked></label>";
+            $htmlAvatares .= "<label class='perfil-avatar-opcion'><img src='" . RUTA_IMGS . "/avatares/$av'><input type='radio' name='avatar_pre' value='$av' $checked></label>";
         }
 
         $htmlErrores = self::generaListaErroresGlobales($this->errores);
@@ -106,7 +106,7 @@ class FormularioPerfil extends Formulario
             if (isset($datos['borrar_foto'])) {
                 $avatarFinal = 'default.png';
             } elseif (isset($_FILES['nueva_foto']) && $_FILES['nueva_foto']['error'] === UPLOAD_ERR_OK) {
-                $directorio  = "img/avatares/";
+                $directorio  = RAIZ_APP . "/img/avatares/";
                 $extension   = pathinfo($_FILES['nueva_foto']['name'], PATHINFO_EXTENSION);
                 $nombreArchivo = $this->nombreUsuario . "_" . time() . "." . $extension;
                 $rutaDestino = $directorio . $nombreArchivo;

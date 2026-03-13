@@ -4,6 +4,8 @@ use es\ucm\fdi\aw\Producto;
 
 $estilosExtra = ['carrito.css'];
 
+$rutaApp = RUTA_APP;
+
 //Si el usuario no ha iniciado sesión, mostramos un mensaje para que haga login antes de pedir
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     $tituloPagina       = 'Inicia Sesión';
@@ -11,7 +13,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
         <div class="carrito-login-wrapper">
             <h2 class="carrito-login-title">Necesitas iniciar sesión</h2>
             <p>Para poder realizar un pedido en Bistro FDI, debes identificarte primero.</p>
-            <a href="login.php" class="carrito-login-link">Ir al Login</a>
+            <a href="$rutaApp/login.php" class="carrito-login-link">Ir al Login</a>
         </div>
     EOS;
     require __DIR__.'/includes/vistas/plantillas/plantilla.php';
@@ -28,7 +30,7 @@ if (empty($carrito)) {
     $contenidoPrincipal = <<<EOS
         <h1>Tu Pedido</h1>
         <p>Tu carrito está vacío ahora mismo.</p>
-        <p><a href="carta.php" class="carrito-empty-link">Volver a la Carta</a></p>
+        <p><a href="$rutaApp/carta.php" class="carrito-empty-link">Volver a la Carta</a></p>
     EOS;
 } else {
     $ids = array_keys($carrito);
@@ -57,7 +59,7 @@ if (empty($carrito)) {
                 <td><strong>{$cantidad}</strong></td>
                 <td><strong>{$subtotalFmt} €</strong></td>
                 <td>
-                    <form action='includes/procesar_carrito.php' method='POST'>
+                    <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
                         <input type='hidden' name='id_producto' value='{$id}'>
                         <input type='hidden' name='accion' value='remove'>
                         <button type='submit' class='carrito-boton-quitar'>Quitar</button>
@@ -91,7 +93,7 @@ if (empty($carrito)) {
         <div class="carrito-resumen">
             <h3>Opciones de entrega</h3>
 
-            <form action="pago.php" method="POST">
+            <form action="$rutaApp/pago.php" method="POST">
                 <div>
                     <label class="carrito-opciones-label">
                         <input type="radio" name="tipo_pedido" value="Local" required>
@@ -105,14 +107,14 @@ if (empty($carrito)) {
                 </div>
 
                 <div class="carrito-acciones">
-                    <a href="carta.php">Seguir comprando</a>
+                    <a href="$rutaApp/carta.php">Seguir comprando</a>
                     <button type="submit" class="carrito-boton-pago">Ir al Pago</button>
                 </div>
             </form>
         </div>
 
         <div class="carrito-cancelar-wrapper">
-            <form action="includes/procesar_carrito.php" method="POST">
+            <form action="$rutaApp/includes/procesar_carrito.php" method="POST">
                 <input type="hidden" name="accion" value="vaciar">
                 <button type="submit" class="carrito-boton-cancelar">Cancelar Pedido (Vaciar carrito)</button>
             </form>

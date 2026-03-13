@@ -46,29 +46,9 @@ class Pedido
     public static function historialPorUsuario(int $idUsuario): array
     {
         $estadosActivos = ['En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'];
-
-        $placeholders = implode(',', array_fill(0, count($estadosActivos), '?'));
-        $tipos = str_repeat('s', count($estadosActivos)) . 'i';
-
-        $queryHistorial = "SELECT * FROM pedidos
-                           WHERE id_usuario = ?
-                           AND estado NOT IN ($placeholders)
-                           ORDER BY fecha DESC";
-
-        $params = array_merge([(int)$idUsuario], $estadosActivos);
-        //Reordenamos porque hemos puesto el usuario el primero en la query
-        $paramsOrdenados = array_merge($estadosActivos, [(int)$idUsuario]);
-
-        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryHistorial, $tipos, ...$paramsOrdenados)->get_result();
-
-        $pedidos = [];
-        if ($rs) {
-            while ($fila = $rs->fetch_assoc()) {
-                $pedidos[] = $fila;
-            }
-            $rs->free();
-        }
-        return $pedidos;
+        
+        //Devuelve los pedidos que no están en la lista de estados activos
+        return self::porUsuarioYEstados($idUsuario, $estadosActivos, false);
     }
 
     /**

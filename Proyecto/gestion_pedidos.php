@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
     Pedido::cambiarEstado($idPed, 'Cancelado');
 
     //Redirigimos para evitar reenvío del formulario al refrescar
-    header('Location: gestion_pedidos.php');
+    header('Location: ' . RUTA_APP . '/gestion_pedidos.php');
     exit();
 }
 
@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
 $estilosExtra = ['gestion_pedidos.css'];
 
 $tituloPagina = 'Gestion Global de Pedidos';
+$rutaApp = RUTA_APP;
 
 //Obtenemos todos los pedidos junto con el nombre del cliente, ordenados por fecha
 $listaPedidos = Pedido::todosConCliente();
@@ -78,7 +79,7 @@ if (!empty($listaPedidos)) {
         //Columna de acciones: solo los pedidos 'Recibido' se pueden cancelar
         if ($fila['estado'] === 'Recibido') {
             $accion = "
-                <form action='gestion_pedidos.php' method='POST' class='form-inline'>
+                <form action='$rutaApp/gestion_pedidos.php' method='POST' class='form-inline'>
                     <input type='hidden' name='id_pedido' value='{$fila['id']}'>
                     <input type='hidden' name='accion' value='cancelar'>
                     <button type='submit' class='btn-cancelar-pedido-admin'>Cancelar</button>

@@ -31,7 +31,7 @@
         <?php  //Si la página tiene scripts extra los incluye
             if (isset($scriptsExtra)) {
                 foreach ($scriptsExtra as $script) {
-                    echo '<script src="js/' . htmlspecialchars($script, ENT_QUOTES, 'UTF-8') . '"></script>';
+                    echo '<script src="' . RUTA_JS . '/' . htmlspecialchars($script, ENT_QUOTES, 'UTF-8') . '"></script>';
                 }
             }
         ?>

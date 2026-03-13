@@ -8,10 +8,11 @@ $categorias = Categoria::todas();
 //Construimos las tarjetas de categorías
 $tarjetas = "";
 if (!empty($categorias)) {
+    $rutaImgs = RUTA_IMGS;
     foreach ($categorias as $cat) {
         $tarjetas .= <<<EOS
-            <a href="carta.php" class="index-categoria-card">
-                <img src="img/categorias/{$cat['imagen']}" class="index-categoria-img" alt="{$cat['nombre']}">
+            <a href="<?= RUTA_APP ?>/carta.php" class="index-categoria-card">
+                <img src="{$rutaImgs}/categorias/{$cat['imagen']}" class="index-categoria-img" alt="{$cat['nombre']}">
                 <p class="index-categoria-nombre">{$cat['nombre']}</p>
             </a>
         EOS;
@@ -22,14 +23,17 @@ if (!empty($categorias)) {
 $tituloPagina = 'Bistro FDI';
 $estilosExtra = ['index.css'];
 
+$rutaImgs = RUTA_IMGS;
+$rutaApp = RUTA_APP;
+
 $contenidoPrincipal = <<<EOS
     <!-- Hero Banner -->
     <div class="index-hero">
-        <img src="img/Banner.jpg" class="index-hero-img" alt="Bistro FDI">
+        <img src="{$rutaImgs}/Banner.jpg" class="index-hero-img" alt="Bistro FDI">
         <div class="index-hero-overlay">
             <h1 class="index-hero-titulo">Bienvenido a Bistro FDI</h1>
             <p class="index-hero-subtitulo">Cocina de autor en el corazón de la facultad</p>
-            <a href="carta.php" class="index-hero-cta">Ver la Carta</a>
+            <a href="$rutaApp/carta.php" class="index-hero-cta">Ver la Carta</a>
         </div>
     </div>
 

@@ -9,11 +9,11 @@
         
         echo "<p>Tienes <strong>$totalArticulos</strong> artículos.</p>";
         
-        echo '<a href="carrito.php" class="mini-carrito-boton">';
+        echo '<a href="' . RUTA_APP . '/carrito.php" class="mini-carrito-boton">';
         echo 'Revisar y Pagar';
         echo '</a>';
         
-        echo '<form action="includes/procesar_carrito.php" method="POST" class="mini-carrito-form">';
+        echo '<form action="' . RUTA_APP . '/includes/procesar_carrito.php" method="POST" class="mini-carrito-form">';
         echo '<input type="hidden" name="accion" value="vaciar">';
         echo '<button type="submit" class="mini-carrito-vaciar">Vaciar carrito</button>';
         echo '</form>';

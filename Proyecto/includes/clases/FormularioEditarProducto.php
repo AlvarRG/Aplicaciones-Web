@@ -61,6 +61,7 @@ class FormularioEditarProducto extends Formulario
         $sel21 = ($iva_actual == 21) ? 'selected' : '';
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
+        $rutaImgs = RUTA_IMGS;
 
         return <<<EOF
         $htmlErroresGlobales
@@ -95,7 +96,7 @@ class FormularioEditarProducto extends Formulario
         <fieldset>
             <legend>Imagen y Disponibilidad</legend>
             <p>Imagen actual:<br>
-               <img src="img/productos/{$product['imagen']}" width="100" class="form-imagen-actual">
+               <img src="{$rutaImgs}/productos/{$product['imagen']}" width="100" class="form-imagen-actual">
             </p>
             <p>Cambiar imagen: <input type="file" name="imagen" accept="image/*"></p>
             
@@ -144,7 +145,7 @@ class FormularioEditarProducto extends Formulario
 
             //Gestión de nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                $dir = "img/productos/";
+                $dir = RAIZ_APP . "/img/productos/";
                 $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
                 $nombreImg = "prod_" . $id . "_" . time() . "." . $ext;
                 

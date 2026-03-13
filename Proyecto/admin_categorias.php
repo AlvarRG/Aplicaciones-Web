@@ -10,18 +10,22 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     //Consulta para obtener todas las categorías
     $categorias = Categoria::todas();
 
+    $rutaApp = RUTA_APP;
+    $rutaJs = RUTA_JS;
+    $rutaImgs = RUTA_IMGS;
+
     //Si la consulta anterior ha devuelto algo, recorremos las categorías devueltas y construimos las filas de la tabla
     $filas = "";
     if(!empty($categorias)) {
         foreach ($categorias as $fila) {
             $filas .= <<<EOS
                 <tr>
-                    <td><img src="img/categorias/{$fila['imagen']}" width="100"></td>
+                    <td><img src="{$rutaImgs}/categorias/{$fila['imagen']}" width="100"></td>
                     <td>{$fila['nombre']}</td>
                     <td>{$fila['descripcion']}</td>
                     <td>
-                        <a href="editar_categoria.php?id={$fila['id']}">[Editar]</a>
-                        <a href="includes/borrar_categoria.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?">[Borrar]</a>
+                        <a href="$rutaApp/editar_categoria.php?id={$fila['id']}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_categoria.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?">[Borrar]</a>
                     </td>
                 </tr>
             EOS;
@@ -35,7 +39,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 
     $contenidoPrincipal = <<<EOS
         <h1>Categorías de Productos</h1>
-        <p><a href="nueva_categoria.php">Añadir Categoría</a></p>
+        <p><a href="$rutaApp/nueva_categoria.php">Añadir Categoría</a></p>
         <table>
             <thead>
                 <tr>
@@ -47,7 +51,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
             </thead>
             <tbody>$filas</tbody>
         </table>
-        <script src="js/confirmacion_borrado.js"></script>
+        <script src="$rutaJs/confirmacion_borrado.js"></script>
     EOS;
 }
 

@@ -77,6 +77,8 @@ if (isset($errorDB)) {
     $contenidoPrincipal .= "<p class='pago-error'>$errorDB</p>";
 }
 
+$rutaApp = RUTA_APP;
+
 $contenidoPrincipal .= <<<EOS
     <div class="pago-tarjetas-wrapper">
         
@@ -84,7 +86,7 @@ $contenidoPrincipal .= <<<EOS
             <h3>Pagar con Tarjeta</h3>
             <p><small>Simulación: No se realizarán cargos reales.</small></p>
             
-            <form action="pago.php" method="POST">
+            <form action="$rutaApp/pago.php" method="POST">
                 <input type="hidden" name="metodo_pago" value="tarjeta">
                 
                 <label>Número de Tarjeta</label>
@@ -111,7 +113,7 @@ $contenidoPrincipal .= <<<EOS
             <h3>Pagar al Camarero</h3>
             <p>Prepararemos tu pedido y podrás abonarlo en efectivo o tarjeta cuando te atienda nuestro personal.</p>
             
-            <form action="pago.php" method="POST">
+            <form action="$rutaApp/pago.php" method="POST">
                 <input type="hidden" name="metodo_pago" value="camarero">
                 <button type="submit" class="pago-boton-camarero">
                     Pedir y Pagar al Camarero

@@ -18,11 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
     
     Pedido::cancelarCliente($idPed, $idUsuario);
     
-    header('Location: mis_pedidos.php');
+    header('Location: ' . RUTA_APP . '/mis_pedidos.php');
     exit();
 }
 
 $tituloPagina = 'Mis Pedidos';
+$rutaApp = RUTA_APP;
 $estilosExtra = $estilosExtra ?? [];
 $scriptsExtra = $scriptsExtra ?? [];
 $scriptsExtra[] = 'confirmacion_cancelar_pedido.js';
@@ -74,7 +75,7 @@ if (!empty($pedidosUsuario)) {
         //Cancelar el pedido, solo si está en estado 'Recibido'
         if ($fila['estado'] === 'Recibido') {
             $contenidoPrincipal .= "
-                <form action='mis_pedidos.php' method='POST' class='form-inline form-cancelar-pedido-cliente' data-mensaje='¿Seguro que deseas cancelar tu pedido?'>
+                <form action='$rutaApp/mis_pedidos.php' method='POST' class='form-inline form-cancelar-pedido-cliente' data-mensaje='¿Seguro que deseas cancelar tu pedido?'>
                     <input type='hidden' name='id_pedido' value='{$fila['id']}'>
                     <input type='hidden' name='accion' value='cancelar'>
                     <button type='submit' class='btn-cancelar-pedido-cliente'>Cancelar</button>
@@ -91,7 +92,7 @@ if (!empty($pedidosUsuario)) {
 } else {
     $contenidoPrincipal .= "<div class='mis-pedidos-empty'>
         <p>Aún no has realizado ningún pedido con nosotros.</p>
-        <a href='carta.php' class='mis-pedidos-empty-link'>Ir a la Carta</a>
+        <a href='$rutaApp/carta.php' class='mis-pedidos-empty-link'>Ir a la Carta</a>
     </div>";
 }
 

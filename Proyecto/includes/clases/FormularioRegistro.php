@@ -113,9 +113,12 @@ EOF;
                 }
                 else {
                     $_SESSION['login'] = true;
+                    $_SESSION['id'] = $usuarioCreado->getId();
                     $_SESSION['nombre'] = $nombre;
                     $_SESSION['nombreUsuario'] = $nombreUsuario;
-                    $_SESSION['esAdmin'] = false;
+                    $_SESSION['esAdmin'] = $usuarioCreado->tieneRol(Usuario::ADMIN_ROLE);
+                    $_SESSION['esCamarero'] = $usuarioCreado->tieneRol(Usuario::CAMARERO_ROLE);
+                    $_SESSION['esCocinero'] = $usuarioCreado->tieneRol(Usuario::COCINERO_ROLE);
                 }
             }
         }

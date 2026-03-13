@@ -13,11 +13,12 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $htmlFormNuevaCategoria = $form->gestiona();
 
     //Parametros para la plantilla
+    $rutaApp = RUTA_APP;
     $tituloPagina = "Nueva Categoría";
 
     $contenidoPrincipal = <<<EOS
         <h1>Crear Categoría</h1>
-        <p><a href="admin_categorias.php">⬅ Volver al listado</a></p>
+        <p><a href="$rutaApp/admin_categorias.php">⬅ Volver al listado</a></p>
         $htmlFormNuevaCategoria
     EOS;
 }

@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['
     $idPed = (int)$_POST['id_pedido'];
     $nuevoEst = (string)$_POST['nuevo_estado'];
     Pedido::cambiarEstado($idPed, $nuevoEst);
-    header('Location: tablet_cocina.php');
+    header('Location: ' . RUTA_APP . '/tablet_cocina.php');
     exit();
 }
 
@@ -75,6 +75,8 @@ function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstad
                            </div>";
     }
 
+    $rutaApp = RUTA_APP;
+
     return <<<HTML
     <div class="tablet-cocinero-card">
         <div class="tablet-cocinero-card-header">
@@ -84,7 +86,7 @@ function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstad
         <div class="tablet-cocinero-productos">
             $htmlProductos
         </div>
-        <form action="tablet_cocina.php" method="POST">
+        <form action="$rutaApp/tablet_cocina.php" method="POST">
             <input type="hidden" name="id_pedido" value="{$pedido['id']}">
             <input type="hidden" name="nuevo_estado" value="{$siguienteEstado}">
             <button type="submit" class="tablet-cocinero-btn {$claseBoton}">
@@ -111,13 +113,15 @@ foreach ($pedidos as $p) {
 $nombreCocinero = $_SESSION['nombreUsuario'] ?? 'Chef';
 $avatar = $_SESSION['avatar'] ?? 'default.png';
 
+$rutaImgs = RUTA_IMGS;
+
 //Contenido principal de la página
 $contenidoPrincipal = <<<EOS
 <div class="tablet-cocinero-header">
     <h2>Panel Cocina</h2>
     <div class="tablet-camarero-user">
         <span>Chef: <strong>{$nombreCocinero}</strong></span>
-        <img src="img/avatares/{$avatar}" alt="Avatar" class="tablet-camarero-avatar">
+        <img src="{$rutaImgs}/avatares/{$avatar}" alt="Avatar" class="tablet-camarero-avatar">
     </div>
 </div>
 

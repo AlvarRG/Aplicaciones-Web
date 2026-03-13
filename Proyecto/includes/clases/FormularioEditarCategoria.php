@@ -37,6 +37,7 @@ class FormularioEditarCategoria extends Formulario
         $descripcion = $datos['descripcion'] ?? $cat['descripcion'];
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
+        $rutaImgs = RUTA_IMGS;
 
         return <<<EOF
         $htmlErroresGlobales
@@ -57,7 +58,7 @@ class FormularioEditarCategoria extends Formulario
             
             <div>
                 <p>Imagen actual:</p>
-                <img src="img/categorias/{$cat['imagen']}" width="80" class="form-imagen-categoria">
+                <img src="{$rutaImgs}/categorias/{$cat['imagen']}" width="80" class="form-imagen-categoria">
             </div>
             
             <div>
@@ -97,7 +98,7 @@ class FormularioEditarCategoria extends Formulario
 
             //Si se sube una nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                $dir = "img/categorias/";
+                $dir = RAIZ_APP . "/img/categorias/";
                 $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
                 $nombreImg = "cat_" . $id . "_" . time() . "." . $ext;
 

@@ -67,9 +67,12 @@ CREATE TABLE `pedidos` (
   `estado` enum('Recibido','En preparacion','Cocinando','Listo cocina','Terminado','Entregado','Cancelado') NOT NULL DEFAULT 'Recibido',
   `tipo` enum('Local','Llevar') NOT NULL,
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `id_cocinero` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`),
-  CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
+  KEY `id_cocinero` (`id_cocinero`),
+  CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`id_cocinero`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Estructura de tabla para la tabla `pedidos_productos`
@@ -79,6 +82,7 @@ CREATE TABLE `pedidos_productos` (
   `cantidad` int(11) NOT NULL DEFAULT 1,
   `precio_unitario` decimal(10,2) NOT NULL,
   `iva` int(11) NOT NULL,
+  `estado` enum('Recibido','En preparacion','Cocinando','Listo cocina','Terminado','Entregado','Cancelado') NOT NULL DEFAULT 'En preparacion',
   PRIMARY KEY (`id_pedido`,`id_producto`),
   KEY `id_producto` (`id_producto`),
   CONSTRAINT `pedidos_productos_ibfk_1` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE,

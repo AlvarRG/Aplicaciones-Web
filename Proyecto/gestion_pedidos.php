@@ -48,6 +48,25 @@ $rutaApp = RUTA_APP;
 //Obtenemos todos los pedidos junto con el nombre del cliente, ordenados por fecha
 $listaPedidos = Pedido::todosConCliente();
 
+$idsPedidos = [];
+if (!empty($listaPedidos)) {
+    foreach ($listaPedidos as &$fila) {
+        $fila['productos'] = [];
+        $idsPedidos[] = $fila['id'];
+    }
+    unset($fila);
+}
+
+if (!empty($idsPedidos)) {
+    $detalles = Pedido::detallesPedidos($idsPedidos);
+    foreach ($listaPedidos as &$fila) {
+        if (isset($detalles[$fila['id']])) {
+            $fila['productos'] = $detalles[$fila['id']];
+        }
+    }
+    unset($fila);
+}
+
 //Cabecera de la página con el rol del usuario actual
 $contenidoPrincipal = <<<EOS
     <div class="gestion-header">
@@ -64,17 +83,36 @@ if (!empty($listaPedidos)) {
 
         //Clase CSS del badge según el estado del pedido
         $claseEstado = 'badge-estado--generico';
+        $textoBadgeGlobal = $fila['estado'];
+
         switch ($fila['estado']) {
-            case 'Recibido':        $claseEstado = 'badge-estado--recibido';     break;
+            case 'Recibido':        
+                $claseEstado = 'badge-estado--recibido';     
+                break;
             case 'En preparacion':
-            case 'Cocinando':       $claseEstado = 'badge-estado--preparacion';  break;
-            case 'Listo cocina':    $claseEstado = 'badge-estado--listo-cocina'; break;
+            case 'Cocinando':       
+                $claseEstado = 'badge-estado--preparacion';  
+                $textoBadgeGlobal = 'Preparando';
+                if ($fila['estado'] === 'Cocinando') $textoBadgeGlobal = 'Cocinando';
+                break;
+            case 'Listo cocina':    
+                $claseEstado = 'badge-estado--terminado'; // Verde
+                $textoBadgeGlobal = 'Listo';
+                break;
             case 'Terminado':
-            case 'Entregado':       $claseEstado = 'badge-estado--terminado';    break;
-            case 'Cancelado':       $claseEstado = 'badge-estado--cancelado';    break;
+            case 'Entregado':       
+                $claseEstado = 'badge-estado--terminado';    
+                $textoBadgeGlobal = 'Listo';
+                break;
+            case 'Cancelado':       
+                $claseEstado = 'badge-estado--cancelado';    
+                break;
         }
 
-        $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$fila['estado']}</span>";
+        $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$textoBadgeGlobal}</span>";
+        if (!empty($fila['avatar_cocinero']) && in_array($fila['estado'], ['En preparacion', 'Cocinando', 'Listo cocina'])) {
+            $badgeEstado .= "<div class='gestion-pedidos-avatar-wrapper'><img src='{$rutaApp}/img/avatares/{$fila['avatar_cocinero']}' class='gestion-pedidos-avatar' title='Preparado por Chef'></div>";
+        }
 
         //Columna de acciones: solo los pedidos 'Recibido' se pueden cancelar
         if ($fila['estado'] === 'Recibido') {
@@ -88,9 +126,53 @@ if (!empty($listaPedidos)) {
             $accion = "<span class='gestion-pedidos-sin-acciones'>Sin acciones</span>";
         }
 
+        // Listado de productos interno (Details HTML5)
+        $htmlProductos = "<table class='gestion-productos-interna'>";
+        foreach ($fila['productos'] as $prod) {
+            $estadoP = $prod['estado'] ?? 'En preparacion';
+            $badgeProd = 'badge-estado--generico';
+            $textoBadgeProd = $estadoP;
+            
+            switch ($estadoP) {
+                case 'Recibido':        
+                    $badgeProd = 'badge-estado--recibido';     
+                    break;
+                case 'En preparacion':
+                case 'Cocinando':       
+                    $badgeProd = 'badge-estado--preparacion';  
+                    $textoBadgeProd = 'Preparando';
+                    if ($estadoP === 'Cocinando') $textoBadgeProd = 'Cocinando';
+                    break;
+                case 'Listo cocina':    
+                    $badgeProd = 'badge-estado--terminado'; // Verde
+                    $textoBadgeProd = 'Listo';
+                    break;
+                case 'Terminado':
+                case 'Entregado':       
+                    $badgeProd = 'badge-estado--terminado';    
+                    $textoBadgeProd = 'Listo';
+                    break;
+                case 'Cancelado':       
+                    $badgeProd = 'badge-estado--cancelado';    
+                    break;
+            }
+            $htmlProductos .= "<tr>
+                <td style='text-align:left; padding:4px;'>{$prod['cantidad']}x {$prod['nombre']}</td>
+                <td style='text-align:right; padding:4px;'><span class='badge-estado {$badgeProd}' style='font-size:0.7em;'>{$textoBadgeProd}</span></td>
+            </tr>";
+        }
+        $htmlProductos .= "</table>";
+
         $filasTabla .= <<<EOS
             <tr class='gestion-pedidos-row'>
-                <td class='gestion-pedidos-cell gestion-pedidos-cell--numero'>#{$fila['numero_pedido']}</td>
+                <td class='gestion-pedidos-cell gestion-pedidos-cell--numero'>
+                    <details>
+                        <summary class="gestion-pedidos-summary">#{$fila['numero_pedido']}</summary>
+                        <div class="gestion-pedidos-details">
+                            $htmlProductos
+                        </div>
+                    </details>
+                </td>
                 <td class='gestion-pedidos-cell'>{$fila['fecha']}</td>
                 <td class='gestion-pedidos-cell'>{$fila['nombre_cliente']}</td>
                 <td class='gestion-pedidos-cell'>{$fila['tipo']}</td>

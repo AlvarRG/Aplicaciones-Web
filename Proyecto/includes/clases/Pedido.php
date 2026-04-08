@@ -88,9 +88,10 @@ class Pedido
      */
     public static function todosConCliente(): array
     {
-        $queryPedidosGestion = "SELECT p.id, p.numero_pedido, p.fecha, p.estado, p.tipo, p.total, u.nombre AS nombre_cliente
+        $queryPedidosGestion = "SELECT p.id, p.numero_pedido, p.fecha, p.estado, p.tipo, p.total, u.nombre AS nombre_cliente, c.avatar AS avatar_cocinero
                                 FROM pedidos p
                                 JOIN usuarios u ON p.id_usuario = u.id
+                                LEFT JOIN usuarios c ON p.id_cocinero = c.id
                                 ORDER BY p.fecha DESC";
 
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidosGestion)->get_result();
@@ -120,7 +121,7 @@ class Pedido
         $placeholders = implode(',', array_fill(0, count($idsPedidos), '?'));
         $tipos = str_repeat('i', count($idsPedidos));
 
-        $queryProductosPedidos = "SELECT pp.id_pedido, pp.id_producto, pp.cantidad, pp.precio_unitario, pp.iva, p.nombre, p.imagen
+        $queryProductosPedidos = "SELECT pp.id_pedido, pp.id_producto, pp.cantidad, pp.precio_unitario, pp.iva, pp.estado, p.nombre, p.imagen
                                   FROM pedidos_productos pp
                                   JOIN productos p ON pp.id_producto = p.id
                                   WHERE pp.id_pedido IN ($placeholders)";
@@ -211,6 +212,44 @@ class Pedido
     }
 
     /**
+     * Asigna un cocinero a un pedido y actualiza su estado, y el estado de todos sus productos
+     */
+    public static function asignarCocineroYEstado(int $idPedido, int $idCocinero, string $nuevoEstado): bool
+    {
+        $queryUpdatePedido = "UPDATE pedidos SET estado = ?, id_cocinero = ? WHERE id = ?";
+        Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdatePedido, "sii", $nuevoEstado, $idCocinero, $idPedido);
+        
+        $queryUpdateProductos = "UPDATE pedidos_productos SET estado = ? WHERE id_pedido = ?";
+        Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateProductos, "si", $nuevoEstado, $idPedido);
+        
+        return true;
+    }
+
+    /**
+     * Cambia el estado de un producto concreto dentro de un pedido
+     */
+    public static function cambiarEstadoProducto(int $idPedido, int $idProducto, string $nuevoEstado): bool
+    {
+        $query = "UPDATE pedidos_productos SET estado = ? WHERE id_pedido = ? AND id_producto = ?";
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd($query, "sii", $nuevoEstado, $idPedido, $idProducto);
+        
+        // Comprobar si todos los productos están ya listos o más avanzados
+        if ($nuevoEstado === 'Listo cocina' || $nuevoEstado === 'Terminado') {
+            $queryCheck = "SELECT COUNT(*) as pendientes FROM pedidos_productos WHERE id_pedido = ? AND estado NOT IN ('Listo cocina', 'Terminado', 'Entregado')";
+            $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheck, "i", $idPedido)->get_result();
+            if ($rs) {
+                $fila = $rs->fetch_assoc();
+                if ((int)$fila['pendientes'] === 0) {
+                    // Todos listos, avanzamos el pedido general
+                    self::cambiarEstado($idPedido, 'Listo cocina');
+                }
+                $rs->free();
+            }
+        }
+        return $stmt->affected_rows >= 0;
+    }
+
+    /**
      * Crea un pedido y sus líneas en base a las líneas de carrito
      *
      * @param int    $idUsuario
@@ -263,18 +302,19 @@ class Pedido
         }
 
         //Insertar líneas
-        $queryInsertDetalle = "INSERT INTO pedidos_productos (id_pedido, id_producto, cantidad, precio_unitario, iva)
-                               VALUES (?, ?, ?, ?, ?)";
+        $queryInsertDetalle = "INSERT INTO pedidos_productos (id_pedido, id_producto, cantidad, precio_unitario, iva, estado)
+                               VALUES (?, ?, ?, ?, ?, ?)";
 
         foreach ($lineas as $lin) {
             Aplicacion::getInstance()->ejecutarConsultaBd(
                 $queryInsertDetalle,
-                "iiidi",
+                "iiidis",
                 (int)$idNuevoPedido,
                 (int)$lin['id'],
                 (int)$lin['cantidad'],
                 (float)$lin['precio_unitario'],
-                (int)$lin['iva']
+                (int)$lin['iva'],
+                $estadoInicial
             );
         }
 

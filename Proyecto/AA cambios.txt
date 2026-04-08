@@ -1,0 +1,5 @@
+Modificaciones en tablet_cocina.css, gestion_pedidos.css para vistas
+Modificación de gestion_pedidos.php para que muestre el estado de cada producto y la imagen del cocinero de los pedidos
+Actualización de tablet_cocina.php para que pueda preparar los productos individualmente
+Modificación de la clase Pedido.php para ajustarse a las nuevas funciones
+Modificación de BD para incluir id_cocinero en los pedidos

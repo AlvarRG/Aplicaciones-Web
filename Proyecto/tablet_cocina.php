@@ -19,12 +19,25 @@ if (!$esCocinero && !$esAdmin) {
 }
 
 //Gestionar cambio de estado en los pedidos
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pedido'], $_POST['nuevo_estado'])) {
-    $idPed = (int)$_POST['id_pedido'];
-    $nuevoEst = (string)$_POST['nuevo_estado'];
-    Pedido::cambiarEstado($idPed, $nuevoEst);
-    header('Location: ' . RUTA_APP . '/tablet_cocina.php');
-    exit();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['id_pedido'], $_POST['nuevo_estado']) && !isset($_POST['id_producto'])) {
+        $idPed = (int)$_POST['id_pedido'];
+        $nuevoEst = (string)$_POST['nuevo_estado'];
+        if ($nuevoEst === 'Cocinando') {
+            Pedido::asignarCocineroYEstado($idPed, $_SESSION['id'], $nuevoEst);
+        } else {
+            Pedido::cambiarEstado($idPed, $nuevoEst);
+        }
+        header('Location: ' . RUTA_APP . '/tablet_cocina.php');
+        exit();
+    } elseif (isset($_POST['id_pedido'], $_POST['id_producto'], $_POST['nuevo_estado_producto'])) {
+        $idPed = (int)$_POST['id_pedido'];
+        $idProd = (int)$_POST['id_producto'];
+        $nuevoEstProd = (string)$_POST['nuevo_estado_producto'];
+        Pedido::cambiarEstadoProducto($idPed, $idProd, $nuevoEstProd);
+        header('Location: ' . RUTA_APP . '/tablet_cocina.php');
+        exit();
+    }
 }
 
 //Título y estilos
@@ -69,13 +82,35 @@ if (!empty($idsPedidos)) {
  */
 function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstado) {
     $htmlProductos = "";
+    $esCocinando = ($pedido['estado'] === 'Cocinando');
+
     foreach ($pedido['productos'] as $prod) {
-        $htmlProductos .= "<div class='tablet-cocinero-producto-row'>
-                                <span><strong>{$prod['cantidad']}x</strong> {$prod['nombre']}</span>
+        $estadoP = $prod['estado'] ?? 'En preparacion';
+        $tachado = ($estadoP === 'Listo cocina' || $estadoP === 'Terminado') ? 'text-decoration: line-through; color: #aaa;' : '';
+        
+        $formProducto = "";
+        $rutaApp = RUTA_APP;
+        if ($esCocinando && $estadoP !== 'Listo cocina' && $estadoP !== 'Terminado') {
+            $formProducto = "
+                <form action='{$rutaApp}/tablet_cocina.php' method='POST' style='display:inline; margin:0;'>
+                    <input type='hidden' name='id_pedido' value='{$pedido['id']}'>
+                    <input type='hidden' name='id_producto' value='{$prod['id_producto']}'>
+                    <input type='hidden' name='nuevo_estado_producto' value='Listo cocina'>
+                    <button type='submit' class='tablet-cocinero-btn--mini'>Listo</button>
+                </form>
+            ";
+        } else if ($estadoP === 'Listo cocina' || $estadoP === 'Terminado') {
+            $formProducto = " <span style='color:#28a745; font-weight:bold;'>✔</span>";
+        }
+
+        $htmlProductos .= "<div class='tablet-cocinero-producto-row' style='display:flex; justify-content:space-between; align-items:center;'>
+                                <span style='flex:1; margin-right:10px; {$tachado}'><strong>{$prod['cantidad']}x</strong> {$prod['nombre']}</span>
+                                <div>{$formProducto}</div>
                            </div>";
     }
 
     $rutaApp = RUTA_APP;
+    $textoFooterBoton = $esCocinando ? "$botonTexto TODO" : $botonTexto;
 
     return <<<HTML
     <div class="tablet-cocinero-card">
@@ -90,7 +125,7 @@ function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstad
             <input type="hidden" name="id_pedido" value="{$pedido['id']}">
             <input type="hidden" name="nuevo_estado" value="{$siguienteEstado}">
             <button type="submit" class="tablet-cocinero-btn {$claseBoton}">
-                $botonTexto
+                $textoFooterBoton
             </button>
         </form>
     </div>

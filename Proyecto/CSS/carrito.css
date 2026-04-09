@@ -1,12 +1,15 @@
+/* Contenedor principal del mensaje que solicita al usuario a iniciar sesión para ver el carrito. Centra el contenido y le da espacio */
 .carrito-login-wrapper {
     text-align: center;
     padding: 50px;
 }
 
+/* Título del mensaje. Separa el título del enlace */
 .carrito-login-title {
     margin-bottom: 10px;
 }
 
+/* Enlace para iniciar sesión. Le da un estilo oscuro al botón */
 .carrito-login-link {
     background: #303030;
     color: white;
@@ -15,15 +18,18 @@
     border-radius: 5px;
 }
 
+/* Efecto al pasar el ratón por encima del botón */
 .carrito-login-link:hover {
     filter: brightness(1.05);
 }
 
+/* Enlace para vaciar el carrito. Le da un estilo rojo */
 .carrito-empty-link {
     color: red;
     font-weight: bold;
 }
 
+/* Tabla del carrito. Centra el contenido y le da espacio */
 .carrito-tabla {
     width: 100%;
     text-align: center;
@@ -31,25 +37,30 @@
     margin-bottom: 20px;
 }
 
+/* Encabezado de la tabla */
 .carrito-tabla thead {
     background: #eee;
 }
 
+/* Celdas de la tabla */
 .carrito-tabla th,
 .carrito-tabla td {
     padding: 10px;
 }
 
+/* Celda de la tabla que contiene el producto. Alinea el contenido a la izquierda */
 .carrito-tabla td-producto {
     text-align: left;
 }
 
+/* Celda de la tabla que contiene el total. Alinea el contenido a la derecha */
 .carrito-total {
     text-align: right;
     border-top: 2px solid #ccc;
     padding-top: 10px;
 }
 
+/* Resumen del carrito. Centra el contenido y le da espacio */
 .carrito-resumen {
     background-color: #f9f9f9;
     padding: 20px;
@@ -58,18 +69,21 @@
     border-radius: 8px;
 }
 
+/* Etiqueta de las opciones del carrito. Cambia el cursor a una mano y le da un estilo negrita */
 .carrito-opciones-label {
     cursor: pointer;
     font-size: 1.1em;
     font-weight: normal;
 }
 
+/* Acciones del carrito. Centra el contenido y le da espacio */
 .carrito-acciones {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* Botón de pago. Le da un estilo verde al botón */
 .carrito-boton-pago {
     background-color: #28a745;
     color: white;
@@ -81,15 +95,18 @@
     font-weight: bold;
 }
 
+/* Efecto al pasar el ratón por encima del botón */
 .carrito-boton-pago:hover {
     filter: brightness(1.05);
 }
 
+/* Envoltorio del botón de cancelar. Centra el contenido y le da espacio */
 .carrito-cancelar-wrapper {
     margin-top: 30px;
     text-align: center;
 }
 
+/* Botón de cancelar. Le da un estilo rojo al botón */
 .carrito-boton-cancelar {
     background: none;
     border: none;
@@ -99,6 +116,7 @@
     font-size: 1em;
 }
 
+/* Botón de quitar. Le da un estilo rojo al botón */
 .carrito-boton-quitar {
     background: none;
     border: none;
@@ -106,4 +124,3 @@
     cursor: pointer;
     text-decoration: underline;
 }
-

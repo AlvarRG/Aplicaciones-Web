@@ -4,6 +4,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Contenedor principal de toda la web. Usa Flexbox para organizar el menú y el contenido */
 div#contenedor {
     width: 100%;       /* Cambiado de 95% a 100% */
     max-width: 100%;    /* Eliminamos el tope de 1400px */
@@ -13,6 +14,7 @@ div#contenedor {
     background-color: #303030;
 }
 
+/* Cabecera global de la página. Contiene el logo y elementos de navegación superior */
 header {
     width: 100%;
     padding: 20px;
@@ -28,6 +30,7 @@ header img {
     height: 80px;
 }
 
+/* Barra de saludo secundaria con información del usuario o mensajes cortos */
 div.saludo {
     width: 100%;
     text-align: right;
@@ -38,6 +41,7 @@ div.saludo {
     box-sizing: border-box;
 }
 
+/* Menú de navegación lateral (izquierda) */
 nav {
     width: 200px;
     padding: 20px;
@@ -46,6 +50,7 @@ nav {
     flex-shrink: 0; /* No se encoge */
 }
 
+/* Área de contenido principal de cada página */
 main {
     flex: 1; 
     padding: 40px;
@@ -54,6 +59,7 @@ main {
     box-sizing: border-box;
 }
 
+/* Barra lateral derecha opcional (Aside) */
 aside {
     width: 180px;
     padding: 20px;
@@ -62,6 +68,7 @@ aside {
     flex-shrink: 0;
 }
 
+/* Pie de página global */
 footer {
     width: 100%;
     padding: 15px;
@@ -282,6 +289,7 @@ nav a:hover {
     cursor: pointer;
 }
 
+/* Estilo base para los distintivos (badges) de estado de los pedidos */
 .badge-estado {
     color: white;
     padding: 5px 10px;

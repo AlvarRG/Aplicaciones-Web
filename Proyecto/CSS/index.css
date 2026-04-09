@@ -2,6 +2,7 @@
    Hero Banner
    ============================ */
 
+/* Banner principal de la página de inicio. Contiene la imagen de fondo y el mensaje de bienvenida */
 .index-hero {
     position: relative;
     width: 100%;
@@ -19,6 +20,7 @@
     filter: brightness(0.55);
 }
 
+/* Capa sobre la imagen del banner que permite centrar el texto y mejorar la visibilidad */
 .index-hero-overlay {
     position: absolute;
     inset: 0;
@@ -44,6 +46,7 @@
     opacity: 0.9;
 }
 
+/* Botón de llamada a la acción en el banner (ej. "Ver Carta") */
 .index-hero-cta {
     background: #e63946;
     color: white;
@@ -73,6 +76,7 @@
     display: inline-block;
 }
 
+/* Cuadrícula que organiza las categorías de productos destacados */
 .index-categorias-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -114,6 +118,7 @@
    Sección "Cómo funciona"
    ============================ */
 
+/* Contenedor de los pasos de "Cómo funciona" usando Flexbox */
 .index-pasos {
     display: flex;
     gap: 20px;

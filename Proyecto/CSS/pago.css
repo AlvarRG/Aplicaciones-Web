@@ -1,3 +1,4 @@
+/* Caja superior con el resumen del total a pagar en color verde suave */
 .pago-resumen {
     background: #eef9f0;
     padding: 15px;
@@ -14,6 +15,7 @@
     justify-content: center;
 }
 
+/* Formulario contenedor para los datos de la tarjeta bancaria */
 .pago-tarjeta-form {
     border: 1px solid #ccc;
     padding: 20px;
@@ -43,6 +45,7 @@
     flex: 1;
 }
 
+/* Botón verde para confirmar el pago con tarjeta */
 .pago-boton-confirmar {
     background-color: #28a745;
     color: white;
@@ -58,6 +61,7 @@
     filter: brightness(1.05);
 }
 
+/* Sección para la opción de pagar directamente al camarero */
 .pago-camarero {
     border: 1px solid #ccc;
     padding: 20px;
@@ -70,6 +74,7 @@
     justify-content: center;
 }
 
+/* Botón negro para la opción de pagar en el local */
 .pago-boton-camarero {
     background-color: #303030;
     color: white;

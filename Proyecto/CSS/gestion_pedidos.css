@@ -1,3 +1,4 @@
+/* Cabecera del panel de gestión. Separa el título del indicador de rol */
 .gestion-header {
     display: flex;
     justify-content: space-between;
@@ -11,6 +12,7 @@
     margin: 0;
 }
 
+/* Indicador visual del rol actual (Gerente, Camarero, Cocinero) */
 .gestion-header-rol {
     background: #303030;
     color: white;
@@ -20,6 +22,7 @@
 }
 
 /* Tabla de gestion de pedidos */
+/* Tabla general de pedidos en el panel de administración */
 .gestion-pedidos-tabla {
     width: 100%;
     text-align: center;
@@ -50,6 +53,7 @@
     border: 1px solid #ddd;
 }
 
+/* Celda que muestra el número de pedido con un tamaño destacado */
 .gestion-pedidos-cell--numero {
     padding: 15px;
     font-weight: bold;
@@ -61,6 +65,7 @@
     font-weight: bold;
 }
 
+/* Botón rojo para que el admin pueda cancelar un pedido recibido */
 .btn-cancelar-pedido-admin {
     background: #dc3545;
     color: white;
@@ -92,6 +97,7 @@
     margin-top: 8px;
 }
 
+/* Pequeña imagen circular del cocinero asignado al pedido */
 .gestion-pedidos-avatar {
     width: 40px;
     height: 40px;
@@ -100,6 +106,7 @@
     object-fit: cover;
 }
 
+/* Título interactivo (#Número) que despliega los detalles del pedido */
 .gestion-pedidos-summary {
     cursor: pointer;
     font-weight: bold;

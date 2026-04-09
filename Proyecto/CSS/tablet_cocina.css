@@ -1,3 +1,4 @@
+/* Cabecera del panel de cocina. Muestra el título y el nombre del chef logueado */
 .tablet-cocinero-header {
     display: flex;
     justify-content: space-between;
@@ -34,6 +35,7 @@
     object-fit: cover;
 }
 
+/* Disposición en dos columnas para cocina (Nuevas y En proceso) */
 .tablet-cocinero-layout {
     display: flex;
     gap: 10px;
@@ -42,6 +44,7 @@
     box-sizing: border-box;
 }
 
+/* Estilo base para cada columna de la tablet de cocina */
 .tablet-cocinero-column {
     flex: 1;
     padding: 10px;
@@ -78,6 +81,7 @@
     border-bottom-color: #b3e5fc;
 }
 
+/* Tarjeta de pedido individual con lista de productos a preparar */
 .tablet-cocinero-card {
     background: #ffffff;
     border: 1px solid #dddddd;
@@ -118,10 +122,12 @@
 }
 
 /* Botones específicos de cocina */
+/* Botón naranja para aceptar el pedido y pasar a cocinarlo */
 .tablet-cocinero-btn--cocinar {
     background-color: #fd7e14; /* Naranja */
 }
 
+/* Botón verde para marcar todo el pedido como listo */
 .tablet-cocinero-btn--listo {
     background-color: #28a745; /* Verde */
 }
@@ -130,6 +136,7 @@
     filter: brightness(90%);
 }
 
+/* Botón pequeño para marcar productos individuales como listos */
 .tablet-cocinero-btn--mini {
     background-color: #28a745;
     color: white;

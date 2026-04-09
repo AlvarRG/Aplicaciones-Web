@@ -1,3 +1,4 @@
+/* Cabecera del panel del camarero. Separa el título del avatar circular */
 .tablet-camarero-header {
     display: flex;
     justify-content: space-between;
@@ -25,6 +26,7 @@
     font-size: 0.9em;
 }
 
+/* Imagen circular del avatar del camarero logueado */
 .tablet-camarero-avatar {
     width: 35px;
     height: 35px;
@@ -33,6 +35,7 @@
     object-fit: cover;
 }
 
+/* Disposición en tres columnas (Cobros, Cocina, Entrega) usando Flexbox */
 .tablet-camarero-layout {
     display: flex;
     gap: 10px;
@@ -41,6 +44,7 @@
     box-sizing: border-box;
 }
 
+/* Estilo base para cada una de las columnas de trabajo */
 .tablet-camarero-column {
     flex: 1;
     padding: 8px;
@@ -85,6 +89,7 @@
     border-bottom-color: #c3e6cb;
 }
 
+/* Tarjeta individual de pedido dentro de las columnas del camarero */
 .tablet-camarero-card {
     background: #ffffff;
     border: 1px solid #dddddd;
@@ -102,6 +107,7 @@
     font-size: 0.9em;
 }
 
+/* Pequeña etiqueta que indica el tipo de consumo (Local o Llevar) */
 .tablet-camarero-card-type {
     font-size: 0.75em;
     background: #f0f0f0;
@@ -129,6 +135,7 @@
     text-overflow: ellipsis;
 }
 
+/* El precio total del pedido resaltado en la tarjeta */
 .tablet-camarero-total {
     text-align: right;
     font-weight: bold;
@@ -147,14 +154,17 @@
     cursor: pointer;
 }
 
+/* Botón amarillo para la acción de cobrar el pedido */
 .tablet-camarero-btn--cobrar {
     background-color: #ffc107;
 }
 
+/* Botón azul para indicar que el pedido pasa a preparación en cocina */
 .tablet-camarero-btn--preparar {
     background-color: #17a2b8;
 }
 
+/* Botón verde para confirmar la entrega final al cliente */
 .tablet-camarero-btn--entregar {
     background-color: #28a745;
 }

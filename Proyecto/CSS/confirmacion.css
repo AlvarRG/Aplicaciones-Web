@@ -1,3 +1,4 @@
+/* Recuadro principal que contiene el mensaje de confirmación. Centrado y con sombra */
 .confirmacion-wrapper {
     max-width: 600px;
     margin: 50px auto;
@@ -9,17 +10,20 @@
     border-top: 5px solid #28a745;
 }
 
+/* Título principal de éxito en color verde */
 .confirmacion-title {
     color: #28a745;
     font-size: 2.5em;
     margin-bottom: 10px;
 }
 
+/* Subtítulo informativo debajo del nombre de éxito */
 .confirmacion-subtitle {
     font-size: 1.2em;
     color: #555;
 }
 
+/* Caja destacada que encierra el número de pedido */
 .confirmacion-box {
     background: #f8f9fa;
     padding: 20px;
@@ -27,6 +31,7 @@
     margin: 30px 0;
 }
 
+/* El número de pedido mostrado en grande y negrita */
 .confirmacion-numero {
     font-size: 4em;
     font-weight: bold;
@@ -39,6 +44,7 @@
     margin-top: 15px;
 }
 
+/* Pequeño distintivo para mostrar el estado actual del pedido */
 .confirmacion-estado-badge {
     background: #e1f5fe;
     color: #0288d1;
@@ -51,6 +57,7 @@
     color: #777;
 }
 
+/* Botón de acción principal para volver a la carta y seguir comprando */
 .confirmacion-boton {
     background-color: #303030;
     color: white;

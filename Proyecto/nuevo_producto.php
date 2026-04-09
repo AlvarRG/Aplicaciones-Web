@@ -1,5 +1,6 @@
 <?php
-use es\ucm\fdi\aw\FormularioNuevoProducto;
+use es\ucm\fdi\aw\productos\FormularioNuevoProducto;
+
 
 require_once __DIR__.'/includes/config.php';
 

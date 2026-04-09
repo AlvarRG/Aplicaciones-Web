@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Producto;
-use es\ucm\fdi\aw\Pedido;
+use es\ucm\fdi\aw\productos\Producto;
+use es\ucm\fdi\aw\pedidos\Pedido;
+use es\ucm\fdi\aw\usuarios\Usuario;
+
 
 $estilosExtra = ['pago.css'];
 

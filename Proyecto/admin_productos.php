@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Producto;
+use es\ucm\fdi\aw\productos\Producto;
+
 
 //Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {

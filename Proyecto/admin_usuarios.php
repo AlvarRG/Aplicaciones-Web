@@ -1,5 +1,6 @@
 <?php
-use es\ucm\fdi\aw\Usuario;
+use es\ucm\fdi\aw\usuarios\Usuario;
+
 
 require_once __DIR__.'/includes/config.php';
 

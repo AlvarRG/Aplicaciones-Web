@@ -1,6 +1,9 @@
 <?php
 
-namespace es\ucm\fdi\aw;
+namespace es\ucm\fdi\aw\productos;
+
+use es\ucm\fdi\aw\Aplicacion;
+
 
 class Producto
 {

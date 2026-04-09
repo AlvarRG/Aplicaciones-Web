@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Usuario;
-use es\ucm\fdi\aw\Pedido;
+use es\ucm\fdi\aw\usuarios\Usuario;
+use es\ucm\fdi\aw\pedidos\Pedido;
+
 
 //Si el usuario no está logeado lo mandamos a login
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {

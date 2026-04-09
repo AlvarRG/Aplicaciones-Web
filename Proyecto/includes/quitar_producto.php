@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/config.php';
-use es\ucm\fdi\aw\Producto;
+use es\ucm\fdi\aw\productos\Producto;
+
 
 //Si no eres admin no hace nada
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Pedido;
+use es\ucm\fdi\aw\pedidos\Pedido;
+
 
 //Redirigimos si el usuario no ha iniciado sesión
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {

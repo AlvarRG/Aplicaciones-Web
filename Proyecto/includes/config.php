@@ -3,17 +3,17 @@
 /**
  * Parámetros de conexión a la BD
  */
-define('BD_HOST', 'localhost');
+define('BD_HOST', 'vm010.db.swarm.test');
 //define('BD_HOST', '172.17.0.2');
-define('BD_NAME', 'bistro_fdi');
-define('BD_USER', 'bistro_fdi');
-define('BD_PASS', 'bistro_fdi');
+define('BD_NAME', 'p3');
+define('BD_USER', 'p3');
+define('BD_PASS', 'p3');
 
 /**
  * Parámetros de configuración utilizados para generar las URLs y las rutas a ficheros en la aplicación
  */
 define('RAIZ_APP', dirname(__DIR__));
-define('RUTA_APP', '/Aplicaciones-Web/Proyecto');
+define('RUTA_APP', '');
 define('RUTA_IMGS', RUTA_APP.'/img');
 define('RUTA_CSS', RUTA_APP.'/CSS');
 define('RUTA_JS', RUTA_APP.'/js');

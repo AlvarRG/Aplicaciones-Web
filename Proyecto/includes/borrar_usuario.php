@@ -11,7 +11,7 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 //Si tenemos un id válido
 if ($id) {
 	//Borramos el usuario con ese id
-    es\ucm\fdi\aw\Usuario::borraPorId((int)$id);
+    es\ucm\fdi\aw\usuarios\Usuario::borraPorId((int)$id);
 }
 
 header('Location: ../admin_usuarios.php');

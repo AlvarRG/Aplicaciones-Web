@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Usuario;
-use es\ucm\fdi\aw\Pedido;
-use es\ucm\fdi\aw\FormularioPerfil;
+use es\ucm\fdi\aw\usuarios\Usuario;
+use es\ucm\fdi\aw\pedidos\Pedido;
+
+use es\ucm\fdi\aw\usuarios\FormularioPerfil;
 
 if (!isset($_SESSION['login']) || !isset($_SESSION['nombreUsuario'])) {
     header('Location: login.php');

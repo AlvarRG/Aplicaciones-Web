@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\Categoria;
+use es\ucm\fdi\aw\categorias\Categoria;
+
 
 //Obtenemos las categorías para mostrarlas como tarjetas en la portada
 $categorias = Categoria::todas();

@@ -1,6 +1,12 @@
 <?php
 
-namespace es\ucm\fdi\aw;
+namespace es\ucm\fdi\aw\pedidos;
+
+use es\ucm\fdi\aw\Aplicacion;
+use es\ucm\fdi\aw\usuarios\Usuario;
+use es\ucm\fdi\aw\productos\Producto;
+
+
 
 class Pedido
 {

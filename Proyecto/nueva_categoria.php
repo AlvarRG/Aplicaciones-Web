@@ -1,5 +1,6 @@
 <?php
-use es\ucm\fdi\aw\FormularioNuevaCategoria;
+use es\ucm\fdi\aw\categorias\FormularioNuevaCategoria;
+
 
 require_once __DIR__.'/includes/config.php';
 

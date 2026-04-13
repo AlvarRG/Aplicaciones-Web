@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
-use es\ucm\fdi\aw\productos\Producto;
+use es\ucm\fdi\aw\ofertas\Oferta;
 
 
 //Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
@@ -8,35 +8,59 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $tituloPagina = 'Acceso Denegado';
     $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
 } else {
-    //Consulta para obtener todos los productos
-    $productos = Producto::todosConCategoria();
+    //Consulta para obtener todas las ofertas
+    $ofertas = Oferta::todasLasOfertas();
 
     $rutaApp = RUTA_APP;
     $rutaJs = RUTA_JS;
     $rutaImgs = RUTA_IMGS;
 
-    //Si la consulta anterior ha devuelto algo, recorremos los productos devueltos y construimos las filas de la tabla
+    //Si la consulta anterior ha devuelto algo, recorremos las ofertas devueltas y construimos las filas de la tabla
     $filas = "";
-    if(!empty($productos)) {
-        foreach ($productos as $fila) {
-            $precioBase  = number_format($fila['precio_base'], 2, ',', '');
-            $precioFinal = number_format($fila['precio_base'] * (1 + $fila['iva'] / 100), 2, ',', '');
-            $disponible = $fila['disponible'] ? "SI" : "NO";
-            $ofertado   = $fila['ofertado']   ? "Carta" : "Retirado";
+    if(!empty($ofertas)) {
+        foreach ($ofertas as $fila) {
+			$nombre = $fila['nombre'];
+			$descripcion = $fila['descripcion'];
+			
+			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila['id']);
+            $textosProductos = [];
+            $precioOriginalLote = 0;
+            foreach ($productosDeLaOferta as $prod) {
+                $textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
+                $precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
+                $precioOriginalLote += ($precioConIva * $prod['cantidad']);
+            }
+			$productosIncluidos = implode(', <br>', $textosProductos);
+			
+            $fechaActual = new DateTime();
+            $fechaInicio = new DateTime($fila['fecha_inicio']);
+            $fechaFin = new DateTime($fila['fecha_fin']);
+			
+			$descuento = $fila['descuento'];
+			$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
+            $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
+            $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
+			
+			$estado = "Inactiva";
+            if ($fechaActual >= $fechaInicio && $fechaActual <= $fechaFin) {
+                $estado = "Activa";
+            } elseif ($fechaActual > $fechaFin) {
+                $estado = "Caducada";
+            }
 
             $filas .= <<<EOS
                 <tr>
-                    <td><img src="{$rutaImgs}/productos/{$fila['imagen']}" width="100"></td>
-                    <td>{$fila['nombre']}</td>
-                    <td>{$fila['nombre_cat']}</td>
-                    <td>$precioBase €</td>
-                    <td>{$fila['iva']}%</td>
-                    <td><strong>$precioFinal €</strong></td>
-                    <td>$disponible</td>
-                    <td>$ofertado</td>
+                    <td>{$nombre}</td>
+                    <td>{$descripcion}</td>
+                    <td>{$productosIncluidos}</td>
+                    <td>{$fechaInicio->format('d/m/Y')}</td>
+                    <td>{$fechaFin->format('d/m/Y')}</td>
+                    <td>{$descuento}%</td>
+                    <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
+                    <td>{$estado}</td>
                     <td>
-                        <a href="$rutaApp/editar_producto.php?id={$fila['id']}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_producto.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente.">[Eliminar]</a>
+                        <a href="$rutaApp/editar_oferta.php?id={$fila['id']}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
                     </td>
                 </tr>
             EOS;
@@ -46,7 +70,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     //Parámetros para la plantilla
     $estilosExtra = ['admin_productos.css'];
 
-    $tituloPagina = 'Gestión de Productos';
+    $tituloPagina = 'Gestión de ofertas';
 
     $contenidoPrincipal = <<<EOS
         <h1>Gestión de ofertas</h1>
@@ -54,13 +78,13 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
         <table>
             <thead>
                 <tr>
-                    <th>Imagen</th>
                     <th>Nombre</th>
-                    <th>Productos</th>
-                    <th>Precio base</th>
+                    <th>Descripción</th>
+                    <th>Productos (Cant.)</th>
+                    <th>Comienzo</th>
+                    <th>Fin</th>
                     <th>Descuento</th>
-                    <th>Total descontado</th>
-                    <th>Precio final</th>
+                    <th>Precio de lote</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>

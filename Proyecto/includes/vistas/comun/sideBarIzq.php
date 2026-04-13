@@ -39,6 +39,7 @@
             <li><a href="<?= $rutaApp ?>/admin_usuarios.php">Usuarios</a></li>
             <li><a href="<?= $rutaApp ?>/admin_categorias.php">Categorias</a></li>
             <li><a href="<?= $rutaApp ?>/admin_productos.php">Productos (Carta)</a></li>
+			<li><a href="<?= $rutaApp ?>/admin_ofertas.php">Ofertas</a></li>
         </ul>
     <?php endif; ?>
 </nav>

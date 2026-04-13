@@ -1,0 +1,74 @@
+<?php
+require_once __DIR__.'/includes/config.php';
+use es\ucm\fdi\aw\productos\Producto;
+
+
+//Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
+if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
+    $tituloPagina = 'Acceso Denegado';
+    $contenidoPrincipal = "<h1>Acceso Denegado</h1><p>Solo el Gerente puede ver esto.</p>";
+} else {
+    //Consulta para obtener todos los productos
+    $productos = Producto::todosConCategoria();
+
+    $rutaApp = RUTA_APP;
+    $rutaJs = RUTA_JS;
+    $rutaImgs = RUTA_IMGS;
+
+    //Si la consulta anterior ha devuelto algo, recorremos los productos devueltos y construimos las filas de la tabla
+    $filas = "";
+    if(!empty($productos)) {
+        foreach ($productos as $fila) {
+            $precioBase  = number_format($fila['precio_base'], 2, ',', '');
+            $precioFinal = number_format($fila['precio_base'] * (1 + $fila['iva'] / 100), 2, ',', '');
+            $disponible = $fila['disponible'] ? "SI" : "NO";
+            $ofertado   = $fila['ofertado']   ? "Carta" : "Retirado";
+
+            $filas .= <<<EOS
+                <tr>
+                    <td><img src="{$rutaImgs}/productos/{$fila['imagen']}" width="100"></td>
+                    <td>{$fila['nombre']}</td>
+                    <td>{$fila['nombre_cat']}</td>
+                    <td>$precioBase €</td>
+                    <td>{$fila['iva']}%</td>
+                    <td><strong>$precioFinal €</strong></td>
+                    <td>$disponible</td>
+                    <td>$ofertado</td>
+                    <td>
+                        <a href="$rutaApp/editar_producto.php?id={$fila['id']}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_producto.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente.">[Eliminar]</a>
+                    </td>
+                </tr>
+            EOS;
+        }
+    }
+
+    //Parámetros para la plantilla
+    $estilosExtra = ['admin_productos.css'];
+
+    $tituloPagina = 'Gestión de Productos';
+
+    $contenidoPrincipal = <<<EOS
+        <h1>Gestión de ofertas</h1>
+        <p><a href="$rutaApp/nueva_oferta.php">Añadir Oferta</a></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Productos</th>
+                    <th>Precio base</th>
+                    <th>Descuento</th>
+                    <th>Total descontado</th>
+                    <th>Precio final</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>$filas</tbody>
+        </table>
+        <script src="$rutaJs/confirmacion_borrado.js"></script>
+    EOS;
+}
+
+require __DIR__.'/includes/vistas/plantillas/plantilla.php';

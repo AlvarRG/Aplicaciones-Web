@@ -47,4 +47,70 @@ class Oferta
         return $productos;
     }
 
+	/**
+     * Inserta una nueva oferta y devuelve true/false según éxito
+     *
+     * @param string $nombre
+     * @param string|null $descripcion
+     * @param string $fecha_inicio
+     * @param string $fecha_fin
+     * @param int $descuento
+	 * @param array productos
+     * @return bool
+     */
+    public static function crear(
+        string $nombre,
+        ?string $descripcion,
+        string $fecha_inicio,
+        string $fecha_fin,
+        int $descuento,
+		array $productos,
+		array $cantidades
+        ): bool
+    {
+        $queryInsertOferta = "INSERT INTO ofertas (nombre, descripcion, fecha_inicio, fecha_fin, descuento)
+                                VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd(
+            $queryInsertOferta,
+            "ssssi",
+            $nombre,
+            $descripcion,
+            $fecha_inicio,
+			$fecha_fin,
+            $descuento
+        );
+
+        if ($stmt->affected_rows === 1) {
+            $id_oferta = $stmt->insert_id;
+            foreach ($productos as $indice => $id_producto) {
+                $cantidad = isset($cantidades[$indice]) ? (int)$cantidades[$indice] : 1;
+                $queryInsertProd = "INSERT INTO ofertas_productos (id_oferta, id_producto, cantidad) VALUES (?, ?, ?)";
+                Aplicacion::getInstance()->ejecutarConsultaBd($queryInsertProd, "iii", $id_oferta, $id_producto, $cantidad);
+            }
+            
+            return true;
+        }
+        return false;
+    }
+	
+	/**
+     * Borra una oferta definitivamente
+     *
+     * @param int $id
+     * @return bool
+     */
+    public static function borrar(int $id): bool
+    {
+		$queryBorrarProductos = "DELETE FROM ofertas_productos WHERE id_oferta = ?";
+		$stmtAsociada  = Aplicacion::getInstance()->ejecutarConsultaBd($queryBorrarProductos, "i", $id);
+		if ($stmtAsociada ->affected_rows >= 0) {
+			$queryBorrarOferta = "DELETE FROM ofertas WHERE id = ?";
+			$stmtOferta  = Aplicacion::getInstance()->ejecutarConsultaBd($queryBorrarOferta, "i", $id);
+			
+			return $stmtOferta ->affected_rows === 1;
+		}
+
+        return false;
+    }
 }

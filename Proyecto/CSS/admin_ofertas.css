@@ -1,0 +1,26 @@
+.admin-ofertas-tabla {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 600px;
+    font-family: Arial, sans-serif;
+}
+
+.admin-ofertas-tabla thead {
+    background-color: #eee;
+}
+
+.admin-ofertas-numero {
+    text-align: right;
+}
+
+.admin-ofertas-centro {
+    text-align: center;
+}
+
+.admin-ofertas-acciones {
+    white-space: nowrap;
+}
+
+.admin-ofertas-eliminar {
+    color: red;
+}

@@ -26,40 +26,75 @@ class FormularioNuevaOferta extends Formulario
      * @param array $datos
      * @return string
      */
-    protected function generaCamposFormulario(&$datos)
+        protected function generaCamposFormulario(&$datos)
     {
-		//Cogemos los datos
         $nombre = $datos['nombre'] ?? '';
         $descripcion = $datos['descripcion'] ?? '';
+        $fecha_inicio = $datos['fecha_inicio'] ?? '';
+        $fecha_fin = $datos['fecha_fin'] ?? '';
+        $descuento = $datos['descuento'] ?? '';
+        $id_producto_seleccionado = $datos['id_producto'] ?? '';
+
         $productos = Producto::todosConCategoria();
-		$selectorProductos = '<select name="id_producto" required>';
+		
+		$selectorProductos = '<select multiple class="select-multiple">';
 		foreach ($productos as $prod) {
-			$selected = ($prod['id'] == id_producto_seleccionado) ? 'selected' : '';
-			$selectorProductos .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
-        }
-		$precioFinal = $datos['precioFinal'] ?? '';
+            $precioIva = Producto::calcularPrecioConIva($prod['precio_base'], $prod['iva']);
+			$selectorProductos .= "<option value='{$prod['id']}' data-precio='{$precioIva}' data-nombre='{$prod['nombre']}'>{$prod['nombre']} ({$precioIva}€)</option>";
+		}
+        $selectorProductos .= '</select>';
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
 
         return <<<EOF
-        $htmlErroresGlobales
-        <fieldset>
-            <legend>Información General</legend>
-            <p>Nombre: <input type="text" name="nombre" value="$nombre" required></p>
-            <p>Productos: $selectorProductos</p>
-            <p>Descripción:<br><textarea name="descripcion" rows="4" cols="50">$descripcion</textarea></p>
-        </fieldset>
-
-        <fieldset>
-            <legend>Precio y Tasas</legend>
-            <p>Precio Final (€): 
-               <input type="number" step="0.01" id="p_final" name="precio_final" value="$precioFinal" required>
-            </p>
-        </fieldset>
-		
-        <button type="submit">Dar de alta producto</button>
+$htmlErroresGlobales
+<fieldset>
+    <legend>Información General e Inclusión de Productos</legend>
+    <p>Título de la Oferta: <input type="text" name="nombre" value="$nombre" required></p>
+    <p>Descripción:<br><textarea name="descripcion" rows="4" cols="50">$descripcion</textarea></p>
+    
+    <p><em>Haz un doble click en los productos de la izquierda para añadirlos a la oferta:</em></p>
+    <div style="display: flex; gap: 30px; align-items: flex-start; margin-bottom: 20px;">
+        <div>$selectorProductos</div>
+        
+        <div>
+            <table id="tablaProductosOferta" border="1" style="min-width: 300px; text-align: center;">
+                <thead style="background: #eee;">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cant.</th>
+                        <th>Subtotal</th>
+                        <th>Quitar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+            <p style="text-align: right;"><strong>Precio Normal Total: <span id="precioTotalNormal">0.00</span>€</strong></p>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <legend>Condiciones de la Oferta</legend>
+    <p>Precio Final (€): 
+       <input type="number" step="0.01" min="0" id="precio_final" name="precio_final" value="">
+    </p>
+    <p>Porcentaje de Descuento (%): 
+       <input type="number" step="0.01" min="0" max="100" id="descuento" name="descuento" value="$descuento" required>
+    </p>
+    <p>Fecha de Inicio: 
+       <input type="date" id="fecha_inicio" name="fecha_inicio" value="$fecha_inicio" required>
+    </p>
+    <p>Fecha de Fin: 
+       <input type="date" id="fecha_fin" name="fecha_fin" value="$fecha_fin" required>
+    </p>
+</fieldset>
+<button type="submit">Dar de alta oferta</button>
+<script defer src="js/nueva_oferta.js"></script>
 EOF;
     }
+
 
     /**
      * Procesa los datos del formulario
@@ -73,51 +108,38 @@ EOF;
 
         //Tomamos las variables filtrando su contenido
         $nombre = (string)($datos['nombre'] ?? '');
-        $id_categoria = (int)($datos['id_categoria'] ?? 0);
         $descripcion = (string)($datos['descripcion'] ?? '');
-        $precio_base = (float)($datos['precio_base'] ?? 0);
-        $iva = (int)($datos['iva'] ?? 10);
-        
-        //Checkbox: si no se marca, no llega en el POST
-        $disponible = isset($datos['disponible']) ? 1 : 0;
-        $ofertado = 1; //Por defecto al crearlo está en la carta
+		$fecha_inicio = (string)($datos['fecha_inicio'] ?? '');
+		$fecha_fin = (string)($datos['fecha_fin'] ?? '');
+        $descuento = (int)($datos['descuento'] ?? 10);
+		$id_productos = $datos['id_productos'] ?? [];
+		$cantidades = $datos['cantidades'] ?? [];
 
         //Validaciones básicas
         if (empty($nombre)) {
             $this->errores['nombre'] = "El nombre es obligatorio.";
         }
-        if ($precio_base < 0) {
-            $this->errores['precio_base'] = "El precio no puede ser negativo.";
-        }
-
-        //Si no hay errores, subimos foto y guardamos
+		if (empty($id_productos)) {
+			$this->errores['id_productos'] = "Debes seleccionar al menos un producto.";
+		}
+		if ($fecha_fin < $fecha_inicio) {
+			$this->errores['fecha'] = "La fecha de fin debe ser mayor a la fecha de inicio";
+		}
+        //Si no hay errores, guardamos
         if (count($this->errores) === 0) {
-            $imagen = 'prod_default.png';
-            
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                $dir = "img/productos/";
-                  //Creamos la carpeta si no existe (por seguridad)
-                if (!file_exists($dir)) { mkdir($dir, 0777, true); }
-                
-                $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-                $nombreImg = "prod_" . time() . "." . $ext;
-                
-                if (move_uploaded_file($_FILES['imagen']['tmp_name'], $dir . $nombreImg)) {
-                    $imagen = $nombreImg;
-                }
-            }
-
             //Inserción en la BD
-            Producto::crear(
-                $id_categoria,
+            $exito = Oferta::crear(
                 $nombre,
                 $descripcion,
-                $precio_base,
-                $iva,
-                $disponible,
-                $ofertado,
-                $imagen
+				$fecha_inicio,
+				$fecha_fin,
+                $descuento,
+				$id_productos,
+				$cantidades
             );
+			if (!$exito) {
+				$this->errores[] = "Error al guardar la oferta en la base de datos.";
+			}
         }
     }
 }

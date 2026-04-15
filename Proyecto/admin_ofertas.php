@@ -68,7 +68,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     }
 
     //Parámetros para la plantilla
-    $estilosExtra = ['admin_productos.css'];
+    $estilosExtra = ['admin_ofertas.css'];
 
     $tituloPagina = 'Gestión de ofertas';
 

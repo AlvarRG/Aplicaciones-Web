@@ -23,7 +23,6 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
         <h1>Añadir Oferta</h1>
         <p><a href="$rutaApp/admin_ofertas.php">⬅ Volver al listado</a></p>
         $htmlFormNuevaOferta
-        <script src="$rutaJs/productos.js"></script>
     EOS;
 }
 

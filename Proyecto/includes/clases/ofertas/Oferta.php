@@ -29,7 +29,7 @@ class Oferta
 	// Función que nos devuelve todos los productos de una oferta dada su id
 	public static function obtenerProductosOferta(int $id_oferta): array 
 	{
-        $query = "SELECT P.nombre, OP.cantidad, P.precio_base, P.iva 
+        $query = "SELECT P.id, P.nombre, OP.cantidad, P.precio_base, P.iva 
                   FROM ofertas_productos OP
                   JOIN productos P ON OP.id_producto = P.id
                   WHERE OP.id_oferta = ?";
@@ -112,5 +112,61 @@ class Oferta
 		}
 
         return false;
+    }
+	
+	public static function porID(int $id): ?array
+	{
+		$queryOfertaPorId = "SELECT * FROM ofertas WHERE id = ?";
+        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryOfertaPorId, "i", $id)->get_result();
+
+        $oferta = null;
+        if ($rs) {
+            $oferta = $rs->fetch_assoc() ?: null;
+            $rs->free();
+        }
+
+        return $oferta;
+	}
+	
+	public static function actualizar(
+		int $id,
+        string $nombre,
+        ?string $descripcion,
+        string $fecha_inicio,
+        string $fecha_fin,
+        int $descuento,
+		array $productos,
+		array $cantidades
+        ): bool
+    {
+        $queryInsertOferta = "UPDATE ofertas 
+							  SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, descuento = ?
+                              WHERE id = ?";
+
+        $stmt = Aplicacion::getInstance()->ejecutarConsultaBd(
+            $queryInsertOferta,
+            "ssssii",
+            $nombre,
+            $descripcion,
+            $fecha_inicio,
+			$fecha_fin,
+            $descuento,
+			$id
+        );
+
+        if ($stmt !== false) {
+			$queryBorrarViejos = "DELETE FROM ofertas_productos WHERE id_oferta = ?";
+			$stmtBorrar = Aplicacion::getInstance()->ejecutarConsultaBd($queryBorrarViejos, "i", $id);
+
+			foreach ($productos as $indice => $id_producto) {
+				$cantidad = isset($cantidades[$indice]) ? (int)$cantidades[$indice] : 1;
+				$queryInsertProd = "INSERT INTO ofertas_productos (id_oferta, id_producto, cantidad) VALUES (?, ?, ?)";
+				$stmtReinsertar = Aplicacion::getInstance()->ejecutarConsultaBd($queryInsertProd, "iii", $id, $id_producto, $cantidad);
+			}
+
+			return true;
+		}
+    
+		return false;
     }
 }

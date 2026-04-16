@@ -1,5 +1,5 @@
 <?php
-namespace es\ucm\fdi\aw\productos;
+namespace es\ucm\fdi\aw\ofertas;
 
 use es\ucm\fdi\aw\Formulario;
 use es\ucm\fdi\aw\productos\Producto;
@@ -33,23 +33,39 @@ class FormularioEditarOferta extends Formulario
     protected function generaCamposFormulario(&$datos)
     {
         //Cogemos la oferta
-        $oferta = Oferta::todasLasOfertas((int)$this->idOferta);
+        $oferta = Oferta::porId((int)$this->idOferta);
 
 		//Preparamos las variables, si tenemos datos usamos esos, si no los que hemos consultado
         $nombre = $datos['nombre'] ?? $oferta['nombre'];
         $descripcion = $datos['descripcion'] ?? $oferta['descripcion'];
         $fecha_inicio = $datos['fecha_inicio'] ?? $oferta['fecha_inicio'];
-        $fecha_fin = $datos['fecha_fin'] ?? $product['fecha_fin'];
-        $descuento = $datos['descuento'] ?? $product['descuento'];
+        $fecha_fin = $datos['fecha_fin'] ?? $oferta['fecha_fin'];
+        $descuento = $datos['descuento'] ?? $oferta['descuento'];
 		
 		$id_producto_seleccionado = $datos['id_producto'] ?? '';
+        $productosEnOfertaBD = Oferta::obtenerProductosOferta($this->idOferta);
+        $cantidadesAntiguas = []; // Guardamos [ID_Producto => Cantidad]
+        foreach ($productosEnOfertaBD as $poBD) {
+            $cantidadesAntiguas[$poBD['id']] = $poBD['cantidad'];
+        }
+
         $productos = Producto::todosConCategoria();
-		$selectorProductos = '<select multiple class="select-multiple">';
+		$selectorProductos = '<select multiple class="select-multiple" style="height: 200px; min-width: 200px;">';
+		
 		foreach ($productos as $prod) {
+            $idProd = $prod['id'];
             $precioIva = Producto::calcularPrecioConIva($prod['precio_base'], $prod['iva']);
-			$selectorProductos .= "<option value='{$prod['id']}' data-precio='{$precioIva}' data-nombre='{$prod['nombre']}'>{$prod['nombre']} ({$precioIva}€)</option>";
+            
+            // Si el producto estaba ya en la oferta, lo marcamos Selected y le ponemos su data-cantidad
+            if (isset($cantidadesAntiguas[$idProd])) {
+                $c = $cantidadesAntiguas[$idProd];
+                $selectorProductos .= "<option value='{$idProd}' selected data-cantidad='{$c}' data-precio='{$precioIva}' data-nombre='{$prod['nombre']}'>{$prod['nombre']} ({$precioIva}€)</option>";
+            } else {
+                $selectorProductos .= "<option value='{$idProd}' data-precio='{$precioIva}' data-nombre='{$prod['nombre']}'>{$prod['nombre']} ({$precioIva}€)</option>";
+            }
 		}
         $selectorProductos .= '</select>';
+
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
 
@@ -105,7 +121,8 @@ class FormularioEditarOferta extends Formulario
         <div class="form-editar-oferta-acciones">
             <button type="submit">Actualizar Oferta</button>
         </div>
-    EOF;
+		<script defer src="js/nueva_oferta.js"></script>
+EOF;
     }
 
     /**
@@ -116,54 +133,44 @@ class FormularioEditarOferta extends Formulario
      */
     protected function procesaFormulario(&$datos)
     {
-		//Tomamos los datos
         $this->errores = [];
-        $id = (int)$datos['id'];
+
+        //Tomamos las variables filtrando su contenido
+		$id = (int)$datos['id'];
         $nombre = (string)($datos['nombre'] ?? '');
         $descripcion = (string)($datos['descripcion'] ?? '');
-        $id_categoria = (int)($datos['id_categoria'] ?? 0);
-        $precio_base = (float)($datos['precio_base'] ?? 0);
-        $iva = (int)($datos['iva'] ?? 10);
-        
-        $disponible = isset($datos['disponible']) ? 1 : 0;
-        $ofertado = isset($datos['ofertado']) ? 1 : 0;
+		$fecha_inicio = (string)($datos['fecha_inicio'] ?? '');
+		$fecha_fin = (string)($datos['fecha_fin'] ?? '');
+        $descuento = (int)($datos['descuento'] ?? 10);
+		$id_productos = $datos['id_productos'] ?? [];
+		$cantidades = $datos['cantidades'] ?? [];
 
-        //Validaciones
+        //Validaciones básicas
         if (empty($nombre)) {
-            $this->errores['nombre'] = "El nombre del producto no puede estar vacío.";
+            $this->errores['nombre'] = "El nombre es obligatorio.";
         }
-        if ($precio_base < 0) {
-            $this->errores['precio_base'] = "El precio no puede ser negativo.";
-        }
-
+		if (empty($id_productos)) {
+			$this->errores['id_productos'] = "Debes seleccionar al menos un producto.";
+		}
+		if ($fecha_fin < $fecha_inicio) {
+			$this->errores['fecha'] = "La fecha de fin debe ser mayor a la fecha de inicio";
+		}
+        //Si no hay errores, guardamos
         if (count($this->errores) === 0) {
-            //Recuperar imagen actual
-            $productoActual = Producto::porId($id);
-            $imagenFinal = $productoActual['imagen'] ?? 'prod_default.png';
-
-            //Gestión de nueva imagen
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                $dir = RAIZ_APP . "/img/productos/";
-                $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-                $nombreImg = "prod_" . $id . "_" . time() . "." . $ext;
-                
-                if (move_uploaded_file($_FILES['imagen']['tmp_name'], $dir . $nombreImg)) {
-                    $imagenFinal = $nombreImg;
-                }
-            }
-
-			//Actualizar la BD
-            Producto::actualizar(
-                $id,
-                $id_categoria,
+            //Inserción en la BD
+            $exito = Oferta::actualizar(
+				$id,
                 $nombre,
                 $descripcion,
-                $precio_base,
-                $iva,
-                $disponible,
-                $ofertado,
-                $imagenFinal
+				$fecha_inicio,
+				$fecha_fin,
+                $descuento,
+				$id_productos,
+				$cantidades
             );
+			if (!$exito) {
+				$this->errores[] = "Error al guardar la oferta en la base de datos.";
+			}
         }
     }
 }

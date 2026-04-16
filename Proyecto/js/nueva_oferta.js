@@ -6,6 +6,17 @@ document.addEventListener("DOMContentLoaded", function() {
     const inputPrecioFinal = document.getElementById("precio_final");
 
     let productosSeleccionados = {};
+	let preseleccionados = selectProductos.querySelectorAll('option[selected]');
+    preseleccionados.forEach(function(opt) {
+        let id = opt.value;
+        let precio = parseFloat(opt.getAttribute("data-precio"));
+        let nombre = opt.getAttribute("data-nombre");
+        let cantidad = parseInt(opt.getAttribute("data-cantidad")) || 1;
+        
+        productosSeleccionados[id] = { nombre: nombre, precio: precio, cantidad: cantidad };
+    });
+	
+    renderTabla();
 
     function actualizarTotal() {
         let total = 0;

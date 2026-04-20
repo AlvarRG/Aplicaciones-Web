@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-04-2026 a las 12:33:44
+-- Tiempo de generación: 20-04-2026 a las 11:51:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -52,12 +52,21 @@ INSERT INTO `categorias` (`id`, `nombre`, `descripcion`, `imagen`) VALUES
 
 CREATE TABLE `ofertas` (
   `id` int(11) NOT NULL,
-  `Nombre` varchar(100) NOT NULL,
-  `Descripcion` text NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `descripcion` text NOT NULL,
   `fecha_inicio` datetime NOT NULL,
   `fecha_fin` datetime NOT NULL,
   `descuento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ofertas`
+--
+
+INSERT INTO `ofertas` (`id`, `nombre`, `descripcion`, `fecha_inicio`, `fecha_fin`, `descuento`) VALUES
+(1, 'Desayuno Andaluz', 'Empieza bien la mañana con nuestro clásico café y tostada de aceite y tomate.', '2026-01-01 00:00:00', '2026-12-31 00:00:00', 22),
+(2, 'Menú San Valentín', 'Oferta especial y romántica para nuestra semana de enamorados.', '2024-02-10 00:00:00', '2024-02-15 00:00:00', 15),
+(13, 'Oferta entrantes', 'Degusta una selección de todos nuestros mejores entrantes.', '2026-04-13 00:00:00', '2026-04-27 00:00:00', 15);
 
 -- --------------------------------------------------------
 
@@ -70,6 +79,20 @@ CREATE TABLE `ofertas_productos` (
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ofertas_productos`
+--
+
+INSERT INTO `ofertas_productos` (`id_oferta`, `id_producto`, `cantidad`) VALUES
+(1, 1, 1),
+(1, 2, 1),
+(2, 5, 2),
+(2, 8, 1),
+(13, 2, 1),
+(13, 5, 1),
+(13, 10, 1),
+(13, 11, 1);
 
 -- --------------------------------------------------------
 
@@ -264,6 +287,12 @@ ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `ofertas`
+--
+ALTER TABLE `ofertas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
@@ -310,6 +339,12 @@ ALTER TABLE `categorias`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT de la tabla `ofertas`
+--
+ALTER TABLE `ofertas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
@@ -319,7 +354,7 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`

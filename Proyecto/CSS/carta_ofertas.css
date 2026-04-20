@@ -1,0 +1,84 @@
+/* Contenedor principal de la cabecera de la carta. Alinea el título y el enlace al carrito */
+.carta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.carta-header h1 {
+    margin: 0;
+}
+
+/* Contenedor de la rejilla de ofertas. Permite que se envuelvan en varias filas */
+.carta-contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Tarjeta individual de cada oferta. Define el borde, sombra y fondo */
+.carta-oferta {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    width: 250px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+/* Nombre de la oferta */
+.carta-oferta-nombre {
+    margin: 10px 0 5px 0;
+	border-bottom: 2px solid #303030;
+}
+
+/* Descripcion de la oferta */
+.carta-oferta-descripcion {
+    margin: 10px 0 5px 0;
+	border-bottom: 2px solid #303030;
+}
+
+.oferta-item-producto {
+    display: flex;
+    align-items: center;  /* Centra verticalmente la imagen con el texto */
+    text-align: left;     /* Alinea el texto a la izquierda para que sea legible */
+    margin-bottom: 0;   /* Quitamos el margen inferior individual */
+    padding: 2px 5px;
+    background: #fff;     /* Un fondo blanco hace que resalten sobre el gris */
+    border-radius: 5px;
+}
+
+/* Ajuste del tamaño de las imágenes de los productos */
+.mini-imagen-producto {
+    width: 30px;          
+    height: 30px;
+    object-fit: cover;    
+    border-radius: 4px;   
+    margin-right: 10px;   
+}
+
+/* Contenedor de la lista de productos */
+.carta-oferta-productos {
+    margin: 5px 0;
+    max-height: 200px;    
+    overflow-y: auto;     
+	gap: 4px;
+}
+
+/* Estilo del precio inicial tachado en rojo */
+.carta-oferta-precioInicial {
+    font-size: 1.2em;
+    font-weight: bold;
+	text-decoration: line-through;
+	text-decoration-color: red;
+    margin: 10px 0;
+}
+
+/* Estilo del precio final resaltado en verde y negrita */
+.carta-oferta-precioFinal {
+    font-size: 1.2em;
+    color: #28a745;
+    font-weight: bold;
+    margin: 10px 0;
+}

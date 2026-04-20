@@ -8,6 +8,7 @@
             <li><a href="<?= $rutaApp ?>/mis_pedidos.php">Mis Pedidos</a></li>
         <?php endif; ?>
         <li><a href="<?= $rutaApp ?>/carta.php">Ver la carta</a></li>
+		<li><a href="<?= $rutaApp ?>/carta_ofertas.php">Ver las ofertas</a></li>
     </ul>
     
     <?php  //Si el usuario es admin, camarero o cocinero, se toma a ese usuario como personal

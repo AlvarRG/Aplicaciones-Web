@@ -29,7 +29,7 @@ class Oferta
 	// Función que nos devuelve todos los productos de una oferta dada su id
 	public static function obtenerProductosOferta(int $id_oferta): array 
 	{
-        $query = "SELECT P.id, P.nombre, OP.cantidad, P.precio_base, P.iva 
+        $query = "SELECT P.id, P.nombre, OP.cantidad, P.precio_base, P.iva, P.imagen 
                   FROM ofertas_productos OP
                   JOIN productos P ON OP.id_producto = P.id
                   WHERE OP.id_oferta = ?";

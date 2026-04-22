@@ -7,11 +7,78 @@ use es\ucm\fdi\aw\Aplicacion;
 
 class Producto
 {
+    private $id;
+    private $id_categoria;
+    private $nombre;
+    private $descripcion;
+    private $precio_base;
+    private $iva;
+    private $disponible;
+    private $ofertado;
+    private $imagen;
+    private $nombre_cat;
+
+    public function __construct(
+        int $id_categoria,
+        string $nombre,
+        ?string $descripcion,
+        float $precio_base,
+        int $iva,
+        int $disponible,
+        int $ofertado,
+        string $imagen,
+        ?int $id = null,
+        ?string $nombre_cat = null
+    ) {
+        $this->id = $id;
+        $this->id_categoria = $id_categoria;
+        $this->nombre = $nombre;
+        $this->descripcion = $descripcion;
+        $this->precio_base = $precio_base;
+        $this->iva = $iva;
+        $this->disponible = $disponible;
+        $this->ofertado = $ofertado;
+        $this->imagen = $imagen;
+        $this->nombre_cat = $nombre_cat;
+    }
+
+    public function getId(): ?int { return $this->id; }
+    public function getIdCategoria(): int { return $this->id_categoria; }
+    public function getNombre(): string { return $this->nombre; }
+    public function getDescripcion(): ?string { return $this->descripcion; }
+    public function getPrecioBase(): float { return (float)$this->precio_base; }
+    public function getIva(): int { return (int)$this->iva; }
+    public function getDisponible(): int { return (int)$this->disponible; }
+    public function getOfertado(): int { return (int)$this->ofertado; }
+    public function getImagen(): string { return $this->imagen; }
+    public function getNombreCategoria(): ?string { return $this->nombre_cat; }
+
+    public function getPrecioConIva(): float 
+    {
+        return self::calcularPrecioConIva((float)$this->precio_base, (int)$this->iva);
+    }
+
+    private static function creaDesdeFila(array $fila): Producto
+    {
+        return new Producto(
+            (int)$fila['id_categoria'],
+            $fila['nombre'],
+            $fila['descripcion'] ?? null,
+            (float)$fila['precio_base'],
+            (int)$fila['iva'],
+            (int)$fila['disponible'],
+            (int)$fila['ofertado'],
+            $fila['imagen'] ?? 'prod_default.png',
+            isset($fila['id']) ? (int)$fila['id'] : null,
+            $fila['nombre_cat'] ?? null
+        );
+    }
+
     /**
      * Devuelve todos los productos ofertados (ofertado = 1) junto con el nombre de su categoría
      * Se utiliza principalmente en la carta pública.
      *
-     * @return array<int,array<string,mixed>>
+     * @return Producto[]
      */
     public static function todosOfertados(): array
     {
@@ -26,7 +93,7 @@ class Producto
 
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $productos[] = $fila;
+                $productos[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }
@@ -39,7 +106,7 @@ class Producto
      * Se utiliza en el carrito y en el pago.
      *
      * @param int[] $ids
-     * @return array<int,array<string,mixed>> indexados por id de producto
+     * @return Producto[] indexados por id de producto
      */
     public static function porIds(array $ids): array
     {
@@ -57,7 +124,7 @@ class Producto
         $productos = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $productos[(int)$fila['id']] = $fila;
+                $productos[(int)$fila['id']] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }
@@ -69,16 +136,19 @@ class Producto
      * Devuelve un solo producto por id o null si no existe
      *
      * @param int $id
-     * @return array|null
+     * @return Producto|null
      */
-    public static function porId(int $id): ?array
+    public static function porId(int $id): ?Producto
     {
         $queryProductoPorId = "SELECT * FROM productos WHERE id = ?";
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryProductoPorId, "i", $id)->get_result();
 
         $producto = null;
         if ($rs) {
-            $producto = $rs->fetch_assoc() ?: null;
+            $fila = $rs->fetch_assoc();
+            if ($fila) {
+                $producto = self::creaDesdeFila($fila);
+            }
             $rs->free();
         }
 
@@ -89,7 +159,7 @@ class Producto
      * Devuelve todos los productos con el nombre de su categoría
      * Pensado para panel de administración.
      *
-     * @return array<int,array<string,mixed>>
+     * @return Producto[]
      */
     public static function todosConCategoria(): array
     {
@@ -102,7 +172,7 @@ class Producto
 
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $productos[] = $fila;
+                $productos[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }

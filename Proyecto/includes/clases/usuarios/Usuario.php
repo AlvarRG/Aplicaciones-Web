@@ -80,7 +80,7 @@ class Usuario
      */
     public static function buscaTodos()
     {
-        $queryUsuarios = "SELECT U.id, U.nombreUsuario, U.nombre, U.apellidos, U.email, R.nombre AS nombreRol 
+        $queryUsuarios = "SELECT U.*, R.nombre AS nombreRol 
                   FROM usuarios U 
                   JOIN roles R ON U.rol = R.id";
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryUsuarios)->get_result();
@@ -88,7 +88,18 @@ class Usuario
         $usuarios = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $usuarios[] = $fila;
+                $u = new Usuario(
+                    $fila['nombreUsuario'], 
+                    $fila['password'], 
+                    $fila['nombre'], 
+                    $fila['id'], 
+                    $fila['rol'], 
+                    $fila['avatar'], 
+                    $fila['apellidos'], 
+                    $fila['email']
+                );
+                $u->setNombreRol($fila['nombreRol']);
+                $usuarios[] = $u;
             }
             $rs->free();
         }
@@ -265,6 +276,7 @@ class Usuario
     private $avatar;
     private $apellidos;
     private $email;
+    private $nombreRol;
 
     /**
      * Constructor de la clase
@@ -338,6 +350,21 @@ class Usuario
      * @return string|null
      */
     public function getEmail() { return $this->email; }
+
+    /**
+     * Devuelve nombre del rol
+     *
+     * @return string|null
+     */
+    public function getNombreRol() { return $this->nombreRol; }
+
+    /**
+     * Set nombre del rol
+     *
+     * @param string $nombreRol
+     * @return void
+     */
+    public function setNombreRol($nombreRol) { $this->nombreRol = $nombreRol; }
 
     /**
      * Devuelve si el usuario tiene el rol dado o no

@@ -43,11 +43,11 @@ $idsPedidos = [];
 if (!empty($listaPedidos)) {
     foreach ($listaPedidos as $fila) {
 		//Guardamos los pedidos con su id como clave
-        $pedidos[$fila['id']] = $fila;
+        $pedidos[$fila->getId()] = $fila;
 		//Creamos un array vacío en cada pedido para posteriormente almacenar ahí los productos
-        $pedidos[$fila['id']]['productos'] = [];
+        $pedidos[$fila->getId()]->setProductos([]);
 		//Guardamos los ids de los pedidos
-        $idsPedidos[] = $fila['id'];
+        $idsPedidos[] = $fila->getId();
     }
 }
 
@@ -57,7 +57,7 @@ if (!empty($idsPedidos)) {
     $detalles = Pedido::detallesPedidos($idsPedidos);
     foreach ($detalles as $idPedido => $lineas) {
         foreach ($lineas as $p) {
-            $pedidos[$idPedido]['productos'][] = $p;
+            $pedidos[$idPedido]->addProducto($p);
         }
     }
 }
@@ -91,9 +91,9 @@ EOS;
  * @return string
  */
 function generarTarjetaPedido($pedido, $botonTexto, $botonClase, $siguienteEstado) {
-    $totalFmt = number_format($pedido['total'], 2, '.', '');
+    $totalFmt = number_format($pedido->getTotal(), 2, '.', '');
     $htmlProductos = '<div class="tablet-camarero-productos">';
-    foreach ($pedido['productos'] as $prod) {
+    foreach ($pedido->getProductos() as $prod) {
         $htmlProductos .= "<div class='tablet-camarero-producto-row'>
             <span class='tablet-camarero-producto-nombre'>{$prod['cantidad']}x {$prod['nombre']}</span>
             <span class='tablet-camarero-producto-precio'>".number_format($prod['cantidad']*$prod['precio_unitario'],2)."€</span>
@@ -106,13 +106,13 @@ function generarTarjetaPedido($pedido, $botonTexto, $botonClase, $siguienteEstad
     return <<<HTML
     <div class="tablet-camarero-card">
         <div class="tablet-camarero-card-header">
-            <strong>#{$pedido['numero_pedido']}</strong>
-            <span class="tablet-camarero-card-type">{$pedido['tipo']}</span>
+            <strong>#{$pedido->getNumeroPedido()}</strong>
+            <span class="tablet-camarero-card-type">{$pedido->getTipo()}</span>
         </div>
         {$htmlProductos}
         <div class="tablet-camarero-total">Total: {$totalFmt}€</div>
         <form action="$rutaApp/tablet_camarero.php" method="POST">
-            <input type="hidden" name="id_pedido" value="{$pedido['id']}">
+            <input type="hidden" name="id_pedido" value="{$pedido->getId()}">
             <input type="hidden" name="nuevo_estado" value="{$siguienteEstado}">
             <button type="submit" class="tablet-camarero-btn {$botonClase}">
                 {$botonTexto}
@@ -125,9 +125,9 @@ HTML;
 //Recorre los pedidos con el array creado anteriormente y creamos las tarjetas de pedido dependiendo del estado del pedido
 $cols = ['Recibido' => '', 'Listo cocina' => '', 'Terminado' => ''];
 foreach ($pedidos as $p) {
-    if ($p['estado'] === 'Recibido') $cols['Recibido'] .= generarTarjetaPedido($p, 'Cobrar', 'tablet-camarero-btn--cobrar', 'En preparacion');
-    if ($p['estado'] === 'Listo cocina') $cols['Listo cocina'] .= generarTarjetaPedido($p, 'Preparar', 'tablet-camarero-btn--preparar', 'Terminado');
-    if ($p['estado'] === 'Terminado') $cols['Terminado'] .= generarTarjetaPedido($p, 'Entregar', 'tablet-camarero-btn--entregar', 'Entregado');
+    if ($p->getEstado() === 'Recibido') $cols['Recibido'] .= generarTarjetaPedido($p, 'Cobrar', 'tablet-camarero-btn--cobrar', 'En preparacion');
+    if ($p->getEstado() === 'Listo cocina') $cols['Listo cocina'] .= generarTarjetaPedido($p, 'Preparar', 'tablet-camarero-btn--preparar', 'Terminado');
+    if ($p->getEstado() === 'Terminado') $cols['Terminado'] .= generarTarjetaPedido($p, 'Entregar', 'tablet-camarero-btn--entregar', 'Entregado');
 }
 
 //Concatenamos las columnas al contenido principal creado previamente

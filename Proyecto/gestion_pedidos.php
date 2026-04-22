@@ -51,21 +51,19 @@ $listaPedidos = Pedido::todosConCliente();
 
 $idsPedidos = [];
 if (!empty($listaPedidos)) {
-    foreach ($listaPedidos as &$fila) {
-        $fila['productos'] = [];
-        $idsPedidos[] = $fila['id'];
+    foreach ($listaPedidos as $fila) {
+        $fila->setProductos([]);
+        $idsPedidos[] = $fila->getId();
     }
-    unset($fila);
 }
 
 if (!empty($idsPedidos)) {
     $detalles = Pedido::detallesPedidos($idsPedidos);
-    foreach ($listaPedidos as &$fila) {
-        if (isset($detalles[$fila['id']])) {
-            $fila['productos'] = $detalles[$fila['id']];
+    foreach ($listaPedidos as $fila) {
+        if (isset($detalles[$fila->getId()])) {
+            $fila->setProductos($detalles[$fila->getId()]);
         }
     }
-    unset($fila);
 }
 
 //Cabecera de la página con el rol del usuario actual
@@ -80,13 +78,13 @@ EOS;
 if (!empty($listaPedidos)) {
     $filasTabla = "";
     foreach ($listaPedidos as $fila) {
-        $totalFmt = number_format($fila['total'], 2, '.', '');
+        $totalFmt = number_format($fila->getTotal(), 2, '.', '');
 
         //Clase CSS del badge según el estado del pedido
         $claseEstado = 'badge-estado--generico';
-        $textoBadgeGlobal = $fila['estado'];
+        $textoBadgeGlobal = $fila->getEstado();
 
-        switch ($fila['estado']) {
+        switch ($fila->getEstado()) {
             case 'Recibido':        
                 $claseEstado = 'badge-estado--recibido';     
                 break;
@@ -94,7 +92,7 @@ if (!empty($listaPedidos)) {
             case 'Cocinando':       
                 $claseEstado = 'badge-estado--preparacion';  
                 $textoBadgeGlobal = 'Preparando';
-                if ($fila['estado'] === 'Cocinando') $textoBadgeGlobal = 'Cocinando';
+                if ($fila->getEstado() === 'Cocinando') $textoBadgeGlobal = 'Cocinando';
                 break;
             case 'Listo cocina':    
                 $claseEstado = 'badge-estado--terminado'; // Verde
@@ -111,15 +109,15 @@ if (!empty($listaPedidos)) {
         }
 
         $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$textoBadgeGlobal}</span>";
-        if (!empty($fila['avatar_cocinero']) && in_array($fila['estado'], ['En preparacion', 'Cocinando', 'Listo cocina'])) {
-            $badgeEstado .= "<div class='gestion-pedidos-avatar-wrapper'><img src='{$rutaApp}/img/avatares/{$fila['avatar_cocinero']}' class='gestion-pedidos-avatar' title='Preparado por Chef'></div>";
+        if ($fila->getAvatarCocinero() && in_array($fila->getEstado(), ['En preparacion', 'Cocinando', 'Listo cocina'])) {
+            $badgeEstado .= "<div class='gestion-pedidos-avatar-wrapper'><img src='{$rutaApp}/img/avatares/{$fila->getAvatarCocinero()}' class='gestion-pedidos-avatar' title='Preparado por Chef'></div>";
         }
 
         //Columna de acciones: solo los pedidos 'Recibido' se pueden cancelar
-        if ($fila['estado'] === 'Recibido') {
+        if ($fila->getEstado() === 'Recibido') {
             $accion = "
                 <form action='$rutaApp/gestion_pedidos.php' method='POST' class='form-inline'>
-                    <input type='hidden' name='id_pedido' value='{$fila['id']}'>
+                    <input type='hidden' name='id_pedido' value='{$fila->getId()}'>
                     <input type='hidden' name='accion' value='cancelar'>
                     <button type='submit' class='btn-cancelar-pedido-admin'>Cancelar</button>
                 </form>";
@@ -129,7 +127,7 @@ if (!empty($listaPedidos)) {
 
         // Listado de productos interno (Details HTML5)
         $htmlProductos = "<table class='gestion-productos-interna'>";
-        foreach ($fila['productos'] as $prod) {
+        foreach ($fila->getProductos() as $prod) {
             $estadoP = $prod['estado'] ?? 'En preparacion';
             $badgeProd = 'badge-estado--generico';
             $textoBadgeProd = $estadoP;
@@ -168,15 +166,15 @@ if (!empty($listaPedidos)) {
             <tr class='gestion-pedidos-row'>
                 <td class='gestion-pedidos-cell gestion-pedidos-cell--numero'>
                     <details>
-                        <summary class="gestion-pedidos-summary">#{$fila['numero_pedido']}</summary>
+                        <summary class="gestion-pedidos-summary">#{$fila->getNumeroPedido()}</summary>
                         <div class="gestion-pedidos-details">
                             $htmlProductos
                         </div>
                     </details>
                 </td>
-                <td class='gestion-pedidos-cell'>{$fila['fecha']}</td>
-                <td class='gestion-pedidos-cell'>{$fila['nombre_cliente']}</td>
-                <td class='gestion-pedidos-cell'>{$fila['tipo']}</td>
+                <td class='gestion-pedidos-cell'>{$fila->getFecha()}</td>
+                <td class='gestion-pedidos-cell'>{$fila->getNombreCliente()}</td>
+                <td class='gestion-pedidos-cell'>{$fila->getTipo()}</td>
                 <td class='gestion-pedidos-cell gestion-pedidos-total'><strong>{$totalFmt} euros</strong></td>
                 <td class='gestion-pedidos-cell'>{$badgeEstado}</td>
                 <td class='gestion-pedidos-cell'>{$accion}</td>

@@ -13,10 +13,10 @@ define('BD_PASS', 'bistro_fdi');
  * Parámetros de configuración utilizados para generar las URLs y las rutas a ficheros en la aplicación
  */
 define('RAIZ_APP', dirname(__DIR__));
-define('RUTA_APP', '/Bistro_FDI/Aplicaciones-Web/Proyecto');
-define('RUTA_IMGS', RUTA_APP.'/img');
-define('RUTA_CSS', RUTA_APP.'/CSS');
-define('RUTA_JS', RUTA_APP.'/js');
+define('RUTA_APP', '/Aplicaciones-Web/Proyecto');
+define('RUTA_IMGS', RUTA_APP . '/img');
+define('RUTA_CSS', RUTA_APP . '/CSS');
+define('RUTA_JS', RUTA_APP . '/js');
 
 /**
  * Autoload de clases siguiendo PSR-4 para el namespace es\ucm\fdi\aw
@@ -51,7 +51,7 @@ date_default_timezone_set('Europe/Madrid');
 use es\ucm\fdi\aw\Aplicacion;
 
 $app = Aplicacion::getInstance();
-$app->init(['host'=>BD_HOST, 'bd'=>BD_NAME, 'user'=>BD_USER, 'pass'=>BD_PASS]);
+$app->init(['host' => BD_HOST, 'bd' => BD_NAME, 'user' => BD_USER, 'pass' => BD_PASS]);
 
 /**
  * @see http://php.net/manual/en/function.register-shutdown-function.php

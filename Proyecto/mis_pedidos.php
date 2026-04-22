@@ -50,10 +50,10 @@ if (!empty($pedidosUsuario)) {
     </thead><tbody>";
     
     foreach ($pedidosUsuario as $fila) {
-        $totalFmt = number_format($fila['total'], 2, '.', '');
+        $totalFmt = number_format($fila->getTotal(), 2, '.', '');
         
         $claseEstado = 'badge-estado--generico'; 
-        switch ($fila['estado']) {
+        switch ($fila->getEstado()) {
             case 'Recibido': $claseEstado = 'badge-estado--recibido'; break; 
             case 'En preparacion':
             case 'Cocinando': $claseEstado = 'badge-estado--preparacion'; break; 
@@ -63,21 +63,21 @@ if (!empty($pedidosUsuario)) {
             case 'Cancelado': $claseEstado = 'badge-estado--cancelado'; break; 
         }
         
-        $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$fila['estado']}</span>";
+        $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$fila->getEstado()}</span>";
         
         $contenidoPrincipal .= "<tr class='mis-pedidos-row'>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-cell--numero'>#{$fila['numero_pedido']}</td>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila['fecha']}</td>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila['tipo']}</td>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-cell--numero'>#{$fila->getNumeroPedido()}</td>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila->getFecha()}</td>";
+        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila->getTipo()}</td>";
         $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-total'><strong>{$totalFmt} €</strong></td>";
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$badgeEstado}</td>";
         
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>";
         //Cancelar el pedido, solo si está en estado 'Recibido'
-        if ($fila['estado'] === 'Recibido') {
+        if ($fila->getEstado() === 'Recibido') {
             $contenidoPrincipal .= "
                 <form action='$rutaApp/mis_pedidos.php' method='POST' class='form-inline form-cancelar-pedido-cliente' data-mensaje='¿Seguro que deseas cancelar tu pedido?'>
-                    <input type='hidden' name='id_pedido' value='{$fila['id']}'>
+                    <input type='hidden' name='id_pedido' value='{$fila->getId()}'>
                     <input type='hidden' name='accion' value='cancelar'>
                     <button type='submit' class='btn-cancelar-pedido-cliente'>Cancelar</button>
                 </form>

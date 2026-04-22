@@ -7,6 +7,48 @@ use es\ucm\fdi\aw\Aplicacion;
 
 class Oferta
 {
+    private $id;
+    private $nombre;
+    private $descripcion;
+    private $fecha_inicio;
+    private $fecha_fin;
+    private $descuento;
+
+    public function __construct(
+        string $nombre,
+        ?string $descripcion,
+        string $fecha_inicio,
+        string $fecha_fin,
+        int $descuento,
+        ?int $id = null
+    ) {
+        $this->nombre = $nombre;
+        $this->descripcion = $descripcion;
+        $this->fecha_inicio = $fecha_inicio;
+        $this->fecha_fin = $fecha_fin;
+        $this->descuento = $descuento;
+        $this->id = $id;
+    }
+
+    public function getId(): ?int { return $this->id; }
+    public function getNombre(): string { return $this->nombre; }
+    public function getDescripcion(): ?string { return $this->descripcion; }
+    public function getFechaInicio(): string { return $this->fecha_inicio; }
+    public function getFechaFin(): string { return $this->fecha_fin; }
+    public function getDescuento(): int { return $this->descuento; }
+
+    private static function creaDesdeFila(array $fila): Oferta
+    {
+        return new Oferta(
+            $fila['nombre'],
+            $fila['descripcion'] ?? null,
+            $fila['fecha_inicio'],
+            $fila['fecha_fin'],
+            (int)$fila['descuento'],
+            isset($fila['id']) ? (int)$fila['id'] : null
+        );
+    }
+
 	// Función que nos permite obtener todas las ofertas
     public static function todasLasOfertas(): array
     {
@@ -18,7 +60,7 @@ class Oferta
 
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $ofertas[] = $fila;
+                $ofertas[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }
@@ -114,14 +156,17 @@ class Oferta
         return false;
     }
 	
-	public static function porID(int $id): ?array
+	public static function porID(int $id): ?Oferta
 	{
 		$queryOfertaPorId = "SELECT * FROM ofertas WHERE id = ?";
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryOfertaPorId, "i", $id)->get_result();
 
         $oferta = null;
         if ($rs) {
-            $oferta = $rs->fetch_assoc() ?: null;
+            $fila = $rs->fetch_assoc();
+            if ($fila) {
+                $oferta = self::creaDesdeFila($fila);
+            }
             $rs->free();
         }
 
@@ -181,7 +226,7 @@ class Oferta
 
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $ofertas[] = $fila;
+                $ofertas[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }

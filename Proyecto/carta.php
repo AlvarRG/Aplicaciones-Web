@@ -21,13 +21,13 @@ if (!empty($productosCarta)) {
     foreach ($productosCarta as $fila) {
 
         //Cada vez que cambia la categoría insertamos un título de sección
-        if ($categoriaActual !== $fila['nombre_cat']) {
-            $categoriaActual = $fila['nombre_cat'];
+        if ($categoriaActual !== $fila->getNombreCategoria()) {
+            $categoriaActual = $fila->getNombreCategoria();
             $cartaHTML .= "<h2 class='carta-categoria-titulo'>{$categoriaActual}</h2>";
         }
 
         //Calculamos el precio final aplicando el IVA al precio base
-        $precioFinal = number_format(Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']), 2, ',', '');
+        $precioFinal = number_format($fila->getPrecioConIva(), 2, ',', '');
         
         $rutaImgs = RUTA_IMGS;
         $rutaApp = RUTA_APP;
@@ -35,11 +35,11 @@ if (!empty($productosCarta)) {
         //Tarjeta del producto con su formulario para añadir al carrito
         $cartaHTML .= <<<EOS
             <div class="carta-producto">
-                <img src="{$rutaImgs}/productos/{$fila['imagen']}" class="carta-producto-imagen">
-                <h3 class="carta-producto-nombre">{$fila['nombre']}</h3>
+                <img src="{$rutaImgs}/productos/{$fila->getImagen()}" class="carta-producto-imagen">
+                <h3 class="carta-producto-nombre">{$fila->getNombre()}</h3>
                 <p class="carta-producto-precio">{$precioFinal} €</p>
                 <form action="$rutaApp/includes/procesar_carrito.php" method="POST">
-                    <input type="hidden" name="id_producto" value="{$fila['id']}">
+                    <input type="hidden" name="id_producto" value="{$fila->getId()}">
                     <input type="hidden" name="accion" value="add">
                     <label>Cant: <input type="number" name="cantidad" value="1" min="1" max="10" class="carta-producto-cantidad"></label>
                     <br>

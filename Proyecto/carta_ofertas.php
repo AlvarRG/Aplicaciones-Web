@@ -13,10 +13,10 @@ if (!empty($ofertasCarta)) {
 
     foreach ($ofertasCarta as $fila) {
 
-        $nombre = $fila['nombre'];
-			$descripcion = $fila['descripcion'];
+        $nombre = $fila->getNombre();
+			$descripcion = $fila->getDescripcion();
 			
-			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila['id']);
+			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
             $textosProductos = [];
             $precioOriginalLote = 0;
 			$rutaImgs = RUTA_IMGS;
@@ -34,10 +34,10 @@ if (!empty($ofertasCarta)) {
 			$productosIncluidos = implode('<br>', $textosProductos);
 			
             $fechaActual = new DateTime();
-            $fechaInicio = new DateTime($fila['fecha_inicio']);
-            $fechaFin = new DateTime($fila['fecha_fin']);
+            $fechaInicio = new DateTime($fila->getFechaInicio());
+            $fechaFin = new DateTime($fila->getFechaFin());
 			
-			$descuento = $fila['descuento'];
+			$descuento = $fila->getDescuento();
 			$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
             $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
             $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
@@ -52,7 +52,7 @@ if (!empty($ofertasCarta)) {
         //Tarjeta del producto con su formulario para añadir al carrito
         $cartaOfertasHTML .= <<<EOS
             <div class="carta-oferta">
-                <h3 class="carta-oferta-nombre">{$fila['nombre']}</h3>
+                <h3 class="carta-oferta-nombre">{$nombre}</h3>
 				<p class="carta-oferta-descripcion">{$descripcion}</p>
 				<p class="carta-oferta-productos">{$productosIncluidos}</p>
 				<p class="carta-oferta-precioInicial">{$pvpBaseHTML} €</p>

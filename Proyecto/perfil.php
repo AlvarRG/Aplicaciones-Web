@@ -38,13 +38,13 @@ if (!empty($pedidosActivos)) {
         $htmlActivos .= "
         <div class='perfil-pedido-activo'>
             <div class='perfil-pedido-activo-header'>
-                <strong class='perfil-pedido-activo-titulo'>Pedido #{$pedido['numero_pedido']}</strong>
-                <span class='perfil-pedido-activo-estado'>{$pedido['estado']}</span>
+                <strong class='perfil-pedido-activo-titulo'>Pedido #{$pedido->getNumeroPedido()}</strong>
+                <span class='perfil-pedido-activo-estado'>{$pedido->getEstado()}</span>
             </div>
             <div class='perfil-pedido-activo-detalle'>
-                <p><strong>Fecha:</strong> {$pedido['fecha']}</p>
-                <p><strong>Tipo:</strong> {$pedido['tipo']}</p>
-                <p class='perfil-pedido-activo-total'><strong>Total: " . number_format($pedido['total'], 2) . "€</strong></p>
+                <p><strong>Fecha:</strong> {$pedido->getFecha()}</p>
+                <p><strong>Tipo:</strong> {$pedido->getTipo()}</p>
+                <p class='perfil-pedido-activo-total'><strong>Total: " . number_format($pedido->getTotal(), 2) . "€</strong></p>
             </div>
         </div>";
     }
@@ -59,13 +59,13 @@ $pedidosHistorial = Pedido::historialPorUsuario((int)$usuario['id']);
 if (!empty($pedidosHistorial)) {
     $filasHistorial = "";
     foreach ($pedidosHistorial as $ped) {
-        $total = number_format($ped['total'], 2);
+        $total = number_format($ped->getTotal(), 2);
         $filasHistorial .= "
         <tr class='perfil-historial-row'>
-            <td class='perfil-historial-cell'>#{$ped['numero_pedido']}</td>
-            <td class='perfil-historial-cell'>{$ped['fecha']}</td>
-            <td class='perfil-historial-cell'>{$ped['tipo']}</td>
-            <td class='perfil-historial-cell'>{$ped['estado']}</td>
+            <td class='perfil-historial-cell'>#{$ped->getNumeroPedido()}</td>
+            <td class='perfil-historial-cell'>{$ped->getFecha()}</td>
+            <td class='perfil-historial-cell'>{$ped->getTipo()}</td>
+            <td class='perfil-historial-cell'>{$ped->getEstado()}</td>
             <td class='perfil-historial-cell perfil-historial-cell--total'>{$total}€</td>
         </tr>";
     }

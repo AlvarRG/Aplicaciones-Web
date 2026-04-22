@@ -24,8 +24,8 @@ if ($idPedido === 0) {
 $pedido = Pedido::porIdYUsuario($idPedido, (int)$idUsuario);
 
 if ($pedido) {
-    $numeroPedido = $pedido['numero_pedido'];
-    $estado = $pedido['estado'];
+    $numeroPedido = $pedido->getNumeroPedido();
+    $estado = $pedido->getEstado();
 }
 else {
     //Si intentan poner un ID que no existe o no es suyo

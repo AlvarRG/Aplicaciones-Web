@@ -19,24 +19,24 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $filas = "";
     if(!empty($productos)) {
         foreach ($productos as $fila) {
-            $precioBase  = number_format($fila['precio_base'], 2, ',', '');
-            $precioFinal = number_format($fila['precio_base'] * (1 + $fila['iva'] / 100), 2, ',', '');
-            $disponible = $fila['disponible'] ? "SI" : "NO";
-            $ofertado   = $fila['ofertado']   ? "Carta" : "Retirado";
+            $precioBase  = number_format($fila->getPrecioBase(), 2, ',', '');
+            $precioFinal = number_format($fila->getPrecioConIva(), 2, ',', '');
+            $disponible = $fila->getDisponible() ? "SI" : "NO";
+            $ofertado   = $fila->getOfertado()   ? "Carta" : "Retirado";
 
             $filas .= <<<EOS
                 <tr>
-                    <td><img src="{$rutaImgs}/productos/{$fila['imagen']}" width="100"></td>
-                    <td>{$fila['nombre']}</td>
-                    <td>{$fila['nombre_cat']}</td>
-                    <td>$precioBase €</td>
-                    <td>{$fila['iva']}%</td>
-                    <td><strong>$precioFinal €</strong></td>
-                    <td>$disponible</td>
-                    <td>$ofertado</td>
-                    <td>
-                        <a href="$rutaApp/editar_producto.php?id={$fila['id']}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_producto.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente.">[Eliminar]</a>
+                    <td class="admin-productos-img"><img src="{$rutaImgs}/productos/{$fila->getImagen()}" width="100"></td>
+                    <td>{$fila->getNombre()}</td>
+                    <td>{$fila->getNombreCategoria()}</td>
+                    <td class="admin-productos-numero">$precioBase €</td>
+                    <td class="admin-productos-numero">{$fila->getIva()}%</td>
+                    <td class="admin-productos-numero"><strong>$precioFinal €</strong></td>
+                    <td class="admin-productos-centro">$disponible</td>
+                    <td class="admin-productos-centro">$ofertado</td>
+                    <td class="admin-productos-acciones">
+                        <a href="$rutaApp/editar_producto.php?id={$fila->getId()}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_producto.php?id={$fila->getId()}" class="admin-productos-eliminar boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente.">[Eliminar]</a>
                     </td>
                 </tr>
             EOS;
@@ -51,7 +51,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = <<<EOS
         <h1>Gestión de la Carta</h1>
         <p><a href="$rutaApp/nuevo_producto.php">Añadir Producto</a></p>
-        <table>
+        <table class="admin-productos-tabla">
             <thead>
                 <tr>
                     <th>Imagen</th>

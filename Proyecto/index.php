@@ -14,8 +14,8 @@ if (!empty($categorias)) {
     foreach ($categorias as $cat) {
         $tarjetas .= <<<EOS
             <a href="{$rutaApp}/carta.php" class="index-categoria-card">
-                <img src="{$rutaImgs}/categorias/{$cat['imagen']}" class="index-categoria-img" alt="{$cat['nombre']}">
-                <p class="index-categoria-nombre">{$cat['nombre']}</p>
+                <img src="{$rutaImgs}/categorias/{$cat->getImagen()}" class="index-categoria-img" alt="{$cat->getNombre()}">
+                <p class="index-categoria-nombre">{$cat->getNombre()}</p>
             </a>
         EOS;
     }

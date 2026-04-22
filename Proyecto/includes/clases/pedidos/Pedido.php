@@ -10,11 +10,78 @@ use es\ucm\fdi\aw\productos\Producto;
 
 class Pedido
 {
+    private $id;
+    private $id_usuario;
+    private $id_cocinero;
+    private $numero_pedido;
+    private $estado;
+    private $tipo;
+    private $total;
+    private $fecha;
+    private $nombre_cliente;
+    private $avatar_cocinero;
+    private $productos = [];
+
+    public function __construct(
+        int $id_usuario,
+        int $numero_pedido,
+        string $estado,
+        string $tipo,
+        float $total,
+        string $fecha,
+        ?int $id_cocinero = null,
+        ?int $id = null,
+        ?string $nombre_cliente = null,
+        ?string $avatar_cocinero = null
+    ) {
+        $this->id_usuario = $id_usuario;
+        $this->numero_pedido = $numero_pedido;
+        $this->estado = $estado;
+        $this->tipo = $tipo;
+        $this->total = $total;
+        $this->fecha = $fecha;
+        $this->id_cocinero = $id_cocinero;
+        $this->id = $id;
+        $this->nombre_cliente = $nombre_cliente;
+        $this->avatar_cocinero = $avatar_cocinero;
+    }
+
+    public function getId(): ?int { return $this->id; }
+    public function getIdUsuario(): int { return $this->id_usuario; }
+    public function getIdCocinero(): ?int { return $this->id_cocinero; }
+    public function getNumeroPedido(): int { return $this->numero_pedido; }
+    public function getEstado(): string { return $this->estado; }
+    public function getTipo(): string { return $this->tipo; }
+    public function getTotal(): float { return (float)$this->total; }
+    public function getFecha(): string { return $this->fecha; }
+    public function getNombreCliente(): ?string { return $this->nombre_cliente; }
+    public function getAvatarCocinero(): ?string { return $this->avatar_cocinero; }
+
+    public function getProductos(): array { return $this->productos; }
+    public function setProductos(array $productos): void { $this->productos = $productos; }
+    public function addProducto(array $producto): void { $this->productos[] = $producto; }
+
+    private static function creaDesdeFila(array $fila): Pedido
+    {
+        return new Pedido(
+            (int)($fila['id_usuario'] ?? 0),
+            (int)($fila['numero_pedido'] ?? 0),
+            $fila['estado'] ?? '',
+            $fila['tipo'] ?? '',
+            (float)($fila['total'] ?? 0),
+            $fila['fecha'] ?? '',
+            isset($fila['id_cocinero']) ? (int)$fila['id_cocinero'] : null,
+            isset($fila['id']) ? (int)$fila['id'] : null,
+            $fila['nombre_cliente'] ?? null,
+            $fila['avatar_cocinero'] ?? null
+        );
+    }
+
     /**
      * Devuelve todos los pedidos de un usuario
      *
      * @param int $idUsuario
-     * @return array<int,array<string,mixed>>
+     * @return Pedido[]
      */
     public static function porUsuario(int $idUsuario): array
     {
@@ -24,7 +91,7 @@ class Pedido
         $pedidos = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $pedidos[] = $fila;
+                $pedidos[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }
@@ -80,7 +147,7 @@ class Pedido
         $pedidos = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $pedidos[] = $fila;
+                $pedidos[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }
@@ -94,7 +161,7 @@ class Pedido
      */
     public static function todosConCliente(): array
     {
-        $queryPedidosGestion = "SELECT p.id, p.numero_pedido, p.fecha, p.estado, p.tipo, p.total, u.nombre AS nombre_cliente, c.avatar AS avatar_cocinero
+        $queryPedidosGestion = "SELECT p.*, u.nombre AS nombre_cliente, c.avatar AS avatar_cocinero
                                 FROM pedidos p
                                 JOIN usuarios u ON p.id_usuario = u.id
                                 LEFT JOIN usuarios c ON p.id_cocinero = c.id
@@ -105,7 +172,7 @@ class Pedido
         $pedidos = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $pedidos[] = $fila;
+                $pedidos[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }
@@ -155,14 +222,17 @@ class Pedido
      * @param int $idUsuario
      * @return array|null
      */
-    public static function porIdYUsuario(int $idPedido, int $idUsuario): ?array
+    public static function porIdYUsuario(int $idPedido, int $idUsuario): ?Pedido
     {
         $queryPedidoConfirmacion = "SELECT * FROM pedidos WHERE id = ? AND id_usuario = ?";
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryPedidoConfirmacion, "ii", $idPedido, $idUsuario)->get_result();
 
         $pedido = null;
         if ($rs) {
-            $pedido = $rs->fetch_assoc() ?: null;
+            $fila = $rs->fetch_assoc();
+            if ($fila) {
+                $pedido = self::creaDesdeFila($fila);
+            }
             $rs->free();
         }
         return $pedido;
@@ -357,7 +427,7 @@ class Pedido
         $pedidos = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $pedidos[] = $fila;
+                $pedidos[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }

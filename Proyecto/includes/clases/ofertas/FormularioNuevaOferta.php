@@ -39,8 +39,8 @@ class FormularioNuevaOferta extends Formulario
 		
 		$selectorProductos = '<select multiple class="select-multiple">';
 		foreach ($productos as $prod) {
-            $precioIva = Producto::calcularPrecioConIva($prod['precio_base'], $prod['iva']);
-			$selectorProductos .= "<option value='{$prod['id']}' data-precio='{$precioIva}' data-nombre='{$prod['nombre']}'>{$prod['nombre']} ({$precioIva}€)</option>";
+            $precioIva = $prod->getPrecioConIva();
+			$selectorProductos .= "<option value='{$prod->getId()}' data-precio='{$precioIva}' data-nombre='{$prod->getNombre()}'>{$prod->getNombre()} ({$precioIva}€)</option>";
 		}
         $selectorProductos .= '</select>';
 

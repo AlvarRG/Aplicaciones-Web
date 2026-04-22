@@ -23,8 +23,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $rutaApp = RUTA_APP;
     $rutaJs = RUTA_JS;
 
+    $nombreOferta = $oferta ? $oferta->getNombre() : '';
+
     $contenidoPrincipal = <<<EOS
-        <h1>Editar Oferta: {$oferta['nombre']}</h1>
+        <h1>Editar Oferta: {$nombreOferta}</h1>
         <p><a href="$rutaApp/admin_ofertas.php">⬅ Volver al listado</a></p>
         $htmlFormulario
 		<script src="$rutaJs/nueva:oferta.js"></script>

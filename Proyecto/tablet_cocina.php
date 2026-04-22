@@ -56,11 +56,11 @@ $idsPedidos = [];
 if (!empty($listaPedidos)) {
     foreach ($listaPedidos as $fila) {
 		//Guardamos los pedidos con su id como clave
-        $pedidos[$fila['id']] = $fila;
+        $pedidos[$fila->getId()] = $fila;
 		//Creamos un array vacío en cada pedido para posteriormente almacenar ahí los productos
-        $pedidos[$fila['id']]['productos'] = [];
+        $pedidos[$fila->getId()]->setProductos([]);
 		//Guardamos los ids de los pedidos
-        $idsPedidos[] = $fila['id'];
+        $idsPedidos[] = $fila->getId();
     }
 }
 //Si hay algún pedido
@@ -69,7 +69,7 @@ if (!empty($idsPedidos)) {
     $detalles = Pedido::detallesPedidos($idsPedidos);
     foreach ($detalles as $idPedido => $lineas) {
         foreach ($lineas as $prod) {
-            $pedidos[$idPedido]['productos'][] = $prod;
+            $pedidos[$idPedido]->addProducto($prod);
         }
     }
 }
@@ -85,9 +85,9 @@ if (!empty($idsPedidos)) {
  */
 function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstado) {
     $htmlProductos = "";
-    $esCocinando = ($pedido['estado'] === 'Cocinando');
+    $esCocinando = ($pedido->getEstado() === 'Cocinando');
 
-    foreach ($pedido['productos'] as $prod) {
+    foreach ($pedido->getProductos() as $prod) {
         $estadoP = $prod['estado'] ?? 'En preparacion';
         $tachado = ($estadoP === 'Listo cocina' || $estadoP === 'Terminado') ? 'text-decoration: line-through; color: #aaa;' : '';
         
@@ -96,7 +96,7 @@ function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstad
         if ($esCocinando && $estadoP !== 'Listo cocina' && $estadoP !== 'Terminado') {
             $formProducto = "
                 <form action='{$rutaApp}/tablet_cocina.php' method='POST' style='display:inline; margin:0;'>
-                    <input type='hidden' name='id_pedido' value='{$pedido['id']}'>
+                    <input type='hidden' name='id_pedido' value='{$pedido->getId()}'>
                     <input type='hidden' name='id_producto' value='{$prod['id_producto']}'>
                     <input type='hidden' name='nuevo_estado_producto' value='Listo cocina'>
                     <button type='submit' class='tablet-cocinero-btn--mini'>Listo</button>
@@ -118,14 +118,14 @@ function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstad
     return <<<HTML
     <div class="tablet-cocinero-card">
         <div class="tablet-cocinero-card-header">
-            <span>#{$pedido['numero_pedido']}</span>
-            <span class="tablet-camarero-card-type">{$pedido['tipo']}</span>
+            <span>#{$pedido->getNumeroPedido()}</span>
+            <span class="tablet-camarero-card-type">{$pedido->getTipo()}</span>
         </div>
         <div class="tablet-cocinero-productos">
             $htmlProductos
         </div>
         <form action="$rutaApp/tablet_cocina.php" method="POST">
-            <input type="hidden" name="id_pedido" value="{$pedido['id']}">
+            <input type="hidden" name="id_pedido" value="{$pedido->getId()}">
             <input type="hidden" name="nuevo_estado" value="{$siguienteEstado}">
             <button type="submit" class="tablet-cocinero-btn {$claseBoton}">
                 $textoFooterBoton
@@ -140,9 +140,9 @@ $colProceso = "";
 
 //Recorre los pedidos con el array creado anteriormente y creamos las tarjetas de cocina dependiendo del estado del pedido
 foreach ($pedidos as $p) {
-    if ($p['estado'] === 'En preparacion') {
+    if ($p->getEstado() === 'En preparacion') {
         $colNuevas .= generarTarjetaCocina($p, 'COCINAR', 'tablet-cocinero-btn--cocinar', 'Cocinando');
-    } elseif ($p['estado'] === 'Cocinando') {
+    } elseif ($p->getEstado() === 'Cocinando') {
         $colProceso .= generarTarjetaCocina($p, 'LISTO', 'tablet-cocinero-btn--listo', 'Listo cocina');
     }
 }

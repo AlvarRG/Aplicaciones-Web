@@ -19,10 +19,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $filas = "";
     if(!empty($ofertas)) {
         foreach ($ofertas as $fila) {
-			$nombre = $fila['nombre'];
-			$descripcion = $fila['descripcion'];
+			$nombre = $fila->getNombre();
+			$descripcion = $fila->getDescripcion();
 			
-			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila['id']);
+			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
             $textosProductos = [];
             $precioOriginalLote = 0;
             foreach ($productosDeLaOferta as $prod) {
@@ -33,10 +33,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 			$productosIncluidos = implode(', <br>', $textosProductos);
 			
             $fechaActual = new DateTime();
-            $fechaInicio = new DateTime($fila['fecha_inicio']);
-            $fechaFin = new DateTime($fila['fecha_fin']);
+            $fechaInicio = new DateTime($fila->getFechaInicio());
+            $fechaFin = new DateTime($fila->getFechaFin());
 			
-			$descuento = $fila['descuento'];
+			$descuento = $fila->getDescuento();
 			$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
             $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
             $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
@@ -53,14 +53,14 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td>{$nombre}</td>
                     <td>{$descripcion}</td>
                     <td>{$productosIncluidos}</td>
-                    <td>{$fechaInicio->format('d/m/Y')}</td>
-                    <td>{$fechaFin->format('d/m/Y')}</td>
-                    <td>{$descuento}%</td>
-                    <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
-                    <td>{$estado}</td>
-                    <td>
-                        <a href="$rutaApp/editar_oferta.php?id={$fila['id']}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
+                    <td class="admin-ofertas-centro">{$fechaInicio->format('d/m/Y')}</td>
+                    <td class="admin-ofertas-centro">{$fechaFin->format('d/m/Y')}</td>
+                    <td class="admin-ofertas-numero">{$descuento}%</td>
+                    <td class="admin-ofertas-numero"><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
+                    <td class="admin-ofertas-centro">{$estado}</td>
+                    <td class="admin-ofertas-acciones">
+                        <a href="$rutaApp/editar_oferta.php?id={$fila->getId()}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila->getId()}" class="admin-ofertas-eliminar boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
                     </td>
                 </tr>
             EOS;
@@ -75,7 +75,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = <<<EOS
         <h1>Gestión de ofertas</h1>
         <p><a href="$rutaApp/nueva_oferta.php">Añadir Oferta</a></p>
-        <table>
+        <table class="admin-ofertas-tabla">
             <thead>
                 <tr>
                     <th>Nombre</th>

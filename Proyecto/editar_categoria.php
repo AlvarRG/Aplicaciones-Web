@@ -20,8 +20,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     //Parametros para la plantilla
     $tituloPagina = "Editar Categoría";
 
+    $nombreCategoria = $cat ? $cat->getNombre() : '';
+
     $contenidoPrincipal = <<<EOS
-        <h1>Editar Categoría: {$cat['nombre']}</h1>
+        <h1>Editar Categoría: {$nombreCategoria}</h1>
         $htmlFormEditarCategoria
     EOS;
 }

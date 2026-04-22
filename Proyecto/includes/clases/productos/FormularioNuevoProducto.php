@@ -41,8 +41,8 @@ class FormularioNuevoProducto extends Formulario
         $categorias = Categoria::todas();
         $selectorCategorias = '<select name="id_categoria" required>';
         foreach ($categorias as $cat) {
-            $selected = ($cat['id'] == $id_categoria_seleccionada) ? 'selected' : '';
-            $selectorCategorias .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
+            $selected = ($cat->getId() == $id_categoria_seleccionada) ? 'selected' : '';
+            $selectorCategorias .= "<option value='{$cat->getId()}' $selected>{$cat->getNombre()}</option>";
         }
         $selectorCategorias .= '</select>';
 		

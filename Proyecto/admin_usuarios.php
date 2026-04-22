@@ -23,13 +23,13 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
         foreach ($usuarios as $fila) {
             $filas .= <<<EOS
                 <tr>
-                    <td>{$fila['nombreUsuario']}</td>
-                    <td>{$fila['nombre']} {$fila['apellidos']}</td>
-                    <td>{$fila['email']}</td>
-                    <td>{$fila['nombreRol']}</td>
-                    <td>
-                        <a href="$rutaApp/editar_usuario.php?id={$fila['id']}">[Cambiar Rol]</a> 
-                        <a href="$rutaApp/includes/borrar_usuario.php?id={$fila['id']}" class="boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?">[Borrar]</a>
+                    <td>{$fila->getNombreUsuario()}</td>
+                    <td>{$fila->getNombre()} {$fila->getApellidos()}</td>
+                    <td>{$fila->getEmail()}</td>
+                    <td>{$fila->getNombreRol()}</td>
+                    <td class="admin-usuarios-acciones">
+                        <a href="$rutaApp/editar_usuario.php?id={$fila->getId()}">[Cambiar Rol]</a> 
+                        <a href="$rutaApp/includes/borrar_usuario.php?id={$fila->getId()}" class="admin-usuarios-eliminar boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?">[Borrar]</a>
                     </td>
                 </tr>
             EOS;
@@ -42,7 +42,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $tituloPagina = 'Gestión de Usuarios';
     $contenidoPrincipal = <<<EOS
         <h1>Panel de Administración</h1>
-        <table>
+        <table class="admin-usuarios-tabla">
             <thead>
                 <tr>
                     <th>Usuario</th>

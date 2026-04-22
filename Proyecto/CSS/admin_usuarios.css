@@ -1,0 +1,24 @@
+.admin-usuarios-tabla {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 600px;
+    font-family: Arial, sans-serif;
+}
+
+.admin-usuarios-tabla thead {
+    background-color: #eee;
+}
+
+.admin-usuarios-tabla th,
+.admin-usuarios-tabla td {
+    padding: 8px;
+    text-align: center;
+}
+
+.admin-usuarios-acciones {
+    white-space: nowrap;
+}
+
+.admin-usuarios-eliminar {
+    color: red;
+}

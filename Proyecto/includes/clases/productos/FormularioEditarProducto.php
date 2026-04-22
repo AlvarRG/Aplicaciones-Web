@@ -36,27 +36,27 @@ class FormularioEditarProducto extends Formulario
         $product = Producto::porId((int)$this->idProducto);
 
 		//Preparamos las variables, si tenemos datos usamos esos, si no los que hemos consultado
-        $nombre = $datos['nombre'] ?? $product['nombre'];
-        $descripcion = $datos['descripcion'] ?? $product['descripcion'];
-        $precio_base = $datos['precio_base'] ?? $product['precio_base'];
-        $id_categoria_actual = $datos['id_categoria'] ?? $product['id_categoria'];
-        $iva_actual = $datos['iva'] ?? $product['iva'];
+        $nombre = $datos['nombre'] ?? ($product ? $product->getNombre() : '');
+        $descripcion = $datos['descripcion'] ?? ($product ? $product->getDescripcion() : '');
+        $precio_base = $datos['precio_base'] ?? ($product ? $product->getPrecioBase() : '');
+        $id_categoria_actual = $datos['id_categoria'] ?? ($product ? $product->getIdCategoria() : '');
+        $iva_actual = $datos['iva'] ?? ($product ? $product->getIva() : '');
         
        //Checkboxes de estado
         if (!empty($datos)) {
             $dispChecked = isset($datos['disponible']) ? 'checked' : '';
             $oferChecked = isset($datos['ofertado']) ? 'checked' : '';
         } else {
-            $dispChecked = ($product['disponible'] == 1) ? 'checked' : '';
-            $oferChecked = ($product['ofertado'] == 1) ? 'checked' : '';
+            $dispChecked = ($product && $product->getDisponible() == 1) ? 'checked' : '';
+            $oferChecked = ($product && $product->getOfertado() == 1) ? 'checked' : '';
         }
 
         //Generar el selector de categorías dinámico
         $categorias = Categoria::todas();
         $selectorCategorias = '<select name="id_categoria" required>';
         foreach ($categorias as $cat) {
-            $selected = ($cat['id'] == $id_categoria_actual) ? 'selected' : '';
-            $selectorCategorias .= "<option value='{$cat['id']}' $selected>{$cat['nombre']}</option>";
+            $selected = ($cat->getId() == $id_categoria_actual) ? 'selected' : '';
+            $selectorCategorias .= "<option value='{$cat->getId()}' $selected>{$cat->getNombre()}</option>";
         }
         $selectorCategorias .= '</select>';
 
@@ -67,6 +67,7 @@ class FormularioEditarProducto extends Formulario
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
         $rutaImgs = RUTA_IMGS;
+        $imagenActual = $product ? $product->getImagen() : 'prod_default.png';
 
         return <<<EOF
         $htmlErroresGlobales
@@ -101,7 +102,7 @@ class FormularioEditarProducto extends Formulario
         <fieldset>
             <legend>Imagen y Disponibilidad</legend>
             <p>Imagen actual:<br>
-               <img src="{$rutaImgs}/productos/{$product['imagen']}" width="100" class="form-imagen-actual">
+               <img src="{$rutaImgs}/productos/{$imagenActual}" width="100" class="form-imagen-actual">
             </p>
             <p>Cambiar imagen: <input type="file" name="imagen" accept="image/*"></p>
             
@@ -146,7 +147,7 @@ class FormularioEditarProducto extends Formulario
         if (count($this->errores) === 0) {
             //Recuperar imagen actual
             $productoActual = Producto::porId($id);
-            $imagenFinal = $productoActual['imagen'] ?? 'prod_default.png';
+            $imagenFinal = $productoActual ? $productoActual->getImagen() : 'prod_default.png';
 
             //Gestión de nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {

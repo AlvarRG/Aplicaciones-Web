@@ -15,8 +15,9 @@ class FormularioEditarOferta extends Formulario
      *
      * @param int $idOferta
      */
-    public function __construct($idOferta) {
-		//Página a la que redirige cuando tiene éxito
+    public function __construct($idOferta)
+    {
+        //Página a la que redirige cuando tiene éxito
         parent::__construct('formEditarOferta', [
             'urlRedireccion' => 'admin_ofertas.php?success=edit',
             'enctype' => 'multipart/form-data'
@@ -35,14 +36,14 @@ class FormularioEditarOferta extends Formulario
         //Cogemos la oferta
         $oferta = Oferta::porId((int)$this->idOferta);
 
-		//Preparamos las variables, si tenemos datos usamos esos, si no los que hemos consultado
-        $nombre = $datos['nombre'] ?? $oferta['nombre'];
-        $descripcion = $datos['descripcion'] ?? $oferta['descripcion'];
-        $fecha_inicio = $datos['fecha_inicio'] ?? $oferta['fecha_inicio'];
-        $fecha_fin = $datos['fecha_fin'] ?? $oferta['fecha_fin'];
-        $descuento = $datos['descuento'] ?? $oferta['descuento'];
-		
-		$id_producto_seleccionado = $datos['id_producto'] ?? '';
+        //Preparamos las variables, si tenemos datos usamos esos, si no los que hemos consultado
+        $nombre = $datos['nombre'] ?? ($oferta ? $oferta->getNombre() : '');
+        $descripcion = $datos['descripcion'] ?? ($oferta ? $oferta->getDescripcion() : '');
+        $fecha_inicio = $datos['fecha_inicio'] ?? ($oferta ? $oferta->getFechaInicio() : '');
+        $fecha_fin = $datos['fecha_fin'] ?? ($oferta ? $oferta->getFechaFin() : '');
+        $descuento = $datos['descuento'] ?? ($oferta ? $oferta->getDescuento() : '');
+
+        $id_producto_seleccionado = $datos['id_producto'] ?? '';
         $productosEnOfertaBD = Oferta::obtenerProductosOferta($this->idOferta);
         $cantidadesAntiguas = []; // Guardamos [ID_Producto => Cantidad]
         foreach ($productosEnOfertaBD as $poBD) {
@@ -50,20 +51,21 @@ class FormularioEditarOferta extends Formulario
         }
 
         $productos = Producto::todosConCategoria();
-		$selectorProductos = '<select multiple class="select-multiple" style="height: 200px; min-width: 200px;">';
-		
-		foreach ($productos as $prod) {
-            $idProd = $prod['id'];
-            $precioIva = Producto::calcularPrecioConIva($prod['precio_base'], $prod['iva']);
-            
+        $selectorProductos = '<select multiple class="select-multiple" style="height: 200px; min-width: 200px;">';
+
+        foreach ($productos as $prod) {
+            $idProd = $prod->getId();
+            $precioIva = $prod->getPrecioConIva();
+
             // Si el producto estaba ya en la oferta, lo marcamos Selected y le ponemos su data-cantidad
             if (isset($cantidadesAntiguas[$idProd])) {
                 $c = $cantidadesAntiguas[$idProd];
-                $selectorProductos .= "<option value='{$idProd}' selected data-cantidad='{$c}' data-precio='{$precioIva}' data-nombre='{$prod['nombre']}'>{$prod['nombre']} ({$precioIva}€)</option>";
-            } else {
-                $selectorProductos .= "<option value='{$idProd}' data-precio='{$precioIva}' data-nombre='{$prod['nombre']}'>{$prod['nombre']} ({$precioIva}€)</option>";
+                $selectorProductos .= "<option value='{$idProd}' selected data-cantidad='{$c}' data-precio='{$precioIva}' data-nombre='{$prod->getNombre()}'>{$prod->getNombre()} ({$precioIva}€)</option>";
             }
-		}
+            else {
+                $selectorProductos .= "<option value='{$idProd}' data-precio='{$precioIva}' data-nombre='{$prod->getNombre()}'>{$prod->getNombre()} ({$precioIva}€)</option>";
+            }
+        }
         $selectorProductos .= '</select>';
 
 
@@ -136,41 +138,41 @@ EOF;
         $this->errores = [];
 
         //Tomamos las variables filtrando su contenido
-		$id = (int)$datos['id'];
+        $id = (int)$datos['id'];
         $nombre = (string)($datos['nombre'] ?? '');
         $descripcion = (string)($datos['descripcion'] ?? '');
-		$fecha_inicio = (string)($datos['fecha_inicio'] ?? '');
-		$fecha_fin = (string)($datos['fecha_fin'] ?? '');
+        $fecha_inicio = (string)($datos['fecha_inicio'] ?? '');
+        $fecha_fin = (string)($datos['fecha_fin'] ?? '');
         $descuento = (int)($datos['descuento'] ?? 10);
-		$id_productos = $datos['id_productos'] ?? [];
-		$cantidades = $datos['cantidades'] ?? [];
+        $id_productos = $datos['id_productos'] ?? [];
+        $cantidades = $datos['cantidades'] ?? [];
 
         //Validaciones básicas
         if (empty($nombre)) {
             $this->errores['nombre'] = "El nombre es obligatorio.";
         }
-		if (empty($id_productos)) {
-			$this->errores['id_productos'] = "Debes seleccionar al menos un producto.";
-		}
-		if ($fecha_fin < $fecha_inicio) {
-			$this->errores['fecha'] = "La fecha de fin debe ser mayor a la fecha de inicio";
-		}
+        if (empty($id_productos)) {
+            $this->errores['id_productos'] = "Debes seleccionar al menos un producto.";
+        }
+        if ($fecha_fin < $fecha_inicio) {
+            $this->errores['fecha'] = "La fecha de fin debe ser mayor a la fecha de inicio";
+        }
         //Si no hay errores, guardamos
         if (count($this->errores) === 0) {
             //Inserción en la BD
             $exito = Oferta::actualizar(
-				$id,
+                $id,
                 $nombre,
                 $descripcion,
-				$fecha_inicio,
-				$fecha_fin,
+                $fecha_inicio,
+                $fecha_fin,
                 $descuento,
-				$id_productos,
-				$cantidades
+                $id_productos,
+                $cantidades
             );
-			if (!$exito) {
-				$this->errores[] = "Error al guardar la oferta en la base de datos.";
-			}
+            if (!$exito) {
+                $this->errores[] = "Error al guardar la oferta en la base de datos.";
+            }
         }
     }
 }

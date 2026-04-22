@@ -42,11 +42,11 @@ if (empty($carrito)) {
     $totalPedido = 0;
 
     foreach ($productos as $fila) {
-        $id       = $fila['id'];
+        $id       = $fila->getId();
         $cantidad = $carrito[$id];
 
         //Precio unitario con IVA y subtotal para esta línea
-        $precioUd     = Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']);
+        $precioUd     = $fila->getPrecioConIva();
         $subtotal     = $precioUd * $cantidad;
         $totalPedido += $subtotal;
 
@@ -55,7 +55,7 @@ if (empty($carrito)) {
 
         $filasTabla .= <<<EOS
             <tr>
-                <td class='carrito-tabla td-producto'>{$fila['nombre']}</td>
+                <td class='carrito-tabla td-producto'>{$fila->getNombre()}</td>
                 <td>{$precioUdFmt} €</td>
                 <td><strong>{$cantidad}</strong></td>
                 <td><strong>{$subtotalFmt} €</strong></td>
@@ -92,11 +92,11 @@ if (empty($carrito)) {
 	$ofertas = Oferta::ofertasActivas();
 	$filasTablaOfertas = "";
 	foreach ($ofertas as $fila) {
-		$esAplicable = Oferta::esAplicable($fila['id'], $carrito);
+		$esAplicable = Oferta::esAplicable($fila->getId(), $carrito);
 		if ($esAplicable) {
-			$nombre = $fila['nombre'];
+			$nombre = $fila->getNombre();
 			
-			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila['id']);
+			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
             $textosProductos = [];
             $precioOriginalLote = 0;
             foreach ($productosDeLaOferta as $prod) {
@@ -106,16 +106,16 @@ if (empty($carrito)) {
             }
 			$productosIncluidos = implode(', <br>', $textosProductos);
 			
-            $fechaFin = new DateTime($fila['fecha_fin']);
+            $fechaFin = new DateTime($fila->getFechaFin());
 			
-			$descuento = $fila['descuento'];
+			$descuento = $fila->getDescuento();
 			$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
             $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
             $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
 			
 			$filasTablaOfertas .= <<<EOS
                 <tr>
-                    <td class='carrito-tabla td-producto'>{$fila['nombre']}</td>
+                    <td class='carrito-tabla td-producto'>{$nombre}</td>
                     <td>{$productosIncluidos}</td>
                     <td>{$fechaFin->format('d/m/Y')}</td>
                     <td>{$descuento}%</td>

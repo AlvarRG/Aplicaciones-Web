@@ -18,15 +18,15 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     //Si la consulta anterior ha devuelto algo, recorremos las categorías devueltas y construimos las filas de la tabla
     $filas = "";
     if(!empty($categorias)) {
-        foreach ($categorias as $fila) {
+        foreach ($categorias as $cat) {
             $filas .= <<<EOS
                 <tr>
-                    <td><img src="{$rutaImgs}/categorias/{$fila['imagen']}" width="100"></td>
-                    <td>{$fila['nombre']}</td>
-                    <td>{$fila['descripcion']}</td>
+                    <td><img src="{$rutaImgs}/categorias/{$cat->getImagen()}" width="100"></td>
+                    <td>{$cat->getNombre()}</td>
+                    <td>{$cat->getDescripcion()}</td>
                     <td>
-                        <a href="$rutaApp/editar_categoria.php?id={$fila['id']}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_categoria.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?">[Borrar]</a>
+                        <a href="$rutaApp/editar_categoria.php?id={$cat->getId()}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_categoria.php?id={$cat->getId()}" class="admin-categorias-eliminar boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?">[Borrar]</a>
                     </td>
                 </tr>
             EOS;
@@ -41,7 +41,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $contenidoPrincipal = <<<EOS
         <h1>Categorías de Productos</h1>
         <p><a href="$rutaApp/nueva_categoria.php">Añadir Categoría</a></p>
-        <table>
+        <table class="admin-categorias-tabla">
             <thead>
                 <tr>
                     <th>Imagen</th>

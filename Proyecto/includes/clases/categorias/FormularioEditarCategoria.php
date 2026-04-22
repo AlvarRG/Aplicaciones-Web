@@ -38,11 +38,12 @@ class FormularioEditarCategoria extends Formulario
         $cat = Categoria::porId((int)$this->idCategoria);
 
 		//Cogemos los datos, si no tenemos usamos los que hemos consultado
-        $nombre = $datos['nombre'] ?? $cat['nombre'];
-        $descripcion = $datos['descripcion'] ?? $cat['descripcion'];
+        $nombre = $datos['nombre'] ?? ($cat ? $cat->getNombre() : '');
+        $descripcion = $datos['descripcion'] ?? ($cat ? $cat->getDescripcion() : '');
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
         $rutaImgs = RUTA_IMGS;
+        $imagen = $cat ? $cat->getImagen() : 'cat_default.png';
 
         return <<<EOF
         $htmlErroresGlobales
@@ -63,7 +64,7 @@ class FormularioEditarCategoria extends Formulario
             
             <div>
                 <p>Imagen actual:</p>
-                <img src="{$rutaImgs}/categorias/{$cat['imagen']}" width="80" class="form-imagen-categoria">
+                <img src="{$rutaImgs}/categorias/{$imagen}" width="80" class="form-imagen-categoria">
             </div>
             
             <div>
@@ -99,7 +100,7 @@ class FormularioEditarCategoria extends Formulario
         if (count($this->errores) === 0) {
             //Recuperar imagen actual por si no se cambia
             $categoriaActual = Categoria::porId($id);
-            $imagenFinal = $categoriaActual['imagen'] ?? 'cat_default.png';
+            $imagenFinal = $categoriaActual ? $categoriaActual->getImagen() : 'cat_default.png';
 
             //Si se sube una nueva imagen
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {

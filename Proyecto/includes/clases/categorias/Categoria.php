@@ -7,10 +7,38 @@ use es\ucm\fdi\aw\Aplicacion;
 
 class Categoria
 {
+    private $id;
+    private $nombre;
+    private $descripcion;
+    private $imagen;
+
+    public function __construct(string $nombre, ?string $descripcion = null, string $imagen = 'cat_default.png', ?int $id = null)
+    {
+        $this->id = $id;
+        $this->nombre = $nombre;
+        $this->descripcion = $descripcion;
+        $this->imagen = $imagen;
+    }
+
+    public function getId(): ?int { return $this->id; }
+    public function getNombre(): string { return $this->nombre; }
+    public function getDescripcion(): ?string { return $this->descripcion; }
+    public function getImagen(): string { return $this->imagen; }
+
+    private static function creaDesdeFila(array $fila): Categoria
+    {
+        return new Categoria(
+            $fila['nombre'],
+            $fila['descripcion'] ?? null,
+            $fila['imagen'] ?? 'cat_default.png',
+            isset($fila['id']) ? (int)$fila['id'] : null
+        );
+    }
+
     /**
      * Devuelve todas las categorías
      *
-     * @return array
+     * @return Categoria[]
      */
     public static function todas(): array
     {
@@ -20,7 +48,7 @@ class Categoria
         $categorias = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $categorias[] = $fila;
+                $categorias[] = self::creaDesdeFila($fila);
             }
             $rs->free();
         }
@@ -32,16 +60,19 @@ class Categoria
      * Devuelve una categoría por id o null si no existe
      *
      * @param int $id
-     * @return array|null
+     * @return Categoria|null
      */
-    public static function porId(int $id): ?array
+    public static function porId(int $id): ?Categoria
     {
         $queryCategoriaPorId = "SELECT * FROM categorias WHERE id = ?";
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryCategoriaPorId, "i", $id)->get_result();
 
         $categoria = null;
         if ($rs) {
-            $categoria = $rs->fetch_assoc() ?: null;
+            $fila = $rs->fetch_assoc();
+            if ($fila) {
+                $categoria = self::creaDesdeFila($fila);
+            }
             $rs->free();
         }
 

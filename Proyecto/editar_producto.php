@@ -23,8 +23,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $rutaApp = RUTA_APP;
     $rutaJs = RUTA_JS;
 
+    $nombreProducto = $product ? $product->getNombre() : '';
+
     $contenidoPrincipal = <<<EOS
-        <h1>Editar Producto: {$product['nombre']}</h1>
+        <h1>Editar Producto: {$nombreProducto}</h1>
         <p><a href="$rutaApp/admin_productos.php">⬅ Volver al listado</a></p>
         $htmlFormulario
         <script src="$rutaJs/productos.js"></script>

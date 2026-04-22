@@ -31,20 +31,20 @@ $totalPedido = 0;
 $productosDetalle = [];
 
 foreach ($productosCarrito as $fila) {
-    $idProd = $fila['id'];
+    $idProd = $fila->getId();
     $cantidad = $_SESSION['carrito'][$idProd] ?? 0;
     if ($cantidad <= 0) {
         continue;
     }
     
-    $precioUdConIva = Producto::calcularPrecioConIva((float)$fila['precio_base'], (int)$fila['iva']);
+    $precioUdConIva = $fila->getPrecioConIva();
     $totalPedido += ($precioUdConIva * $cantidad);
     
     $productosDetalle[] = [
         'id' => $idProd,
         'cantidad' => $cantidad,
-        'precio_unitario' => $fila['precio_base'],
-        'iva' => $fila['iva']
+        'precio_unitario' => $fila->getPrecioBase(),
+        'iva' => $fila->getIva()
     ];
 }
 

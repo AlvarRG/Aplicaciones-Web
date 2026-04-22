@@ -169,4 +169,41 @@ class Oferta
     
 		return false;
     }
+	
+	// Función que nos permite obtener todas las ofertas activas
+    public static function ofertasActivas(): array
+    {
+        $queryOfertas = "SELECT * FROM ofertas 
+						 WHERE CURRENT_DATE BETWEEN fecha_inicio AND fecha_fin";
+
+        $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryOfertas)->get_result();
+        $ofertas = [];
+
+        if ($rs) {
+            while ($fila = $rs->fetch_assoc()) {
+                $ofertas[] = $fila;
+            }
+            $rs->free();
+        }
+
+        return $ofertas;
+    }
+	
+	// Función que nos permite saber si una oferta es aplicable dados unos productos en carrito
+    public static function esAplicable(int $idOferta, array $carrito): bool
+	{
+		$productosNecesarios = self::obtenerProductosOferta($idOferta);
+		$valido = true;
+
+		foreach ($productosNecesarios as $pReq) {
+			$idReq = $pReq['id'];
+			$cantReq = $pReq['cantidad'];
+
+			if (!isset($carrito[$idReq]) || $carrito[$idReq] < $cantReq) {
+				$valido = false;
+			}
+		}
+
+		return $valido;
+	}
 }

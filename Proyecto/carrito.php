@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\productos\Producto;
-
+use es\ucm\fdi\aw\ofertas\Oferta;
 
 $estilosExtra = ['carrito.css'];
 
@@ -88,6 +88,70 @@ if (empty($carrito)) {
         </table>
         <h2 class='carrito-total'>Total a pagar: {$totalPedidoFmt} €</h2>
     EOS;
+	
+	$ofertas = Oferta::ofertasActivas();
+	$filasTablaOfertas = "";
+	foreach ($ofertas as $fila) {
+		$esAplicable = Oferta::esAplicable($fila['id'], $carrito);
+		if ($esAplicable) {
+			$nombre = $fila['nombre'];
+			
+			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila['id']);
+            $textosProductos = [];
+            $precioOriginalLote = 0;
+            foreach ($productosDeLaOferta as $prod) {
+                $textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
+                $precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
+                $precioOriginalLote += ($precioConIva * $prod['cantidad']);
+            }
+			$productosIncluidos = implode(', <br>', $textosProductos);
+			
+            $fechaFin = new DateTime($fila['fecha_fin']);
+			
+			$descuento = $fila['descuento'];
+			$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
+            $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
+            $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
+			
+			$filasTablaOfertas .= <<<EOS
+                <tr>
+                    <td class='carrito-tabla td-producto'>{$fila['nombre']}</td>
+                    <td>{$productosIncluidos}</td>
+                    <td>{$fechaFin->format('d/m/Y')}</td>
+                    <td>{$descuento}%</td>
+                    <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
+                    <td>
+                        <button type="submit" class="carrito-boton-anadirOferta">Añadir</button>
+                    </td>
+                </tr>
+            EOS;
+		}
+	}
+	
+	//Tabla completa de ofertas con las filas construidas
+	$htmlOfertas = "";
+	if (!empty($filasTablaOfertas)) {
+		$htmlOfertas .= <<<EOS
+        <table class='carrito-tabla'>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Productos incluidos</th>
+                    <th>Fecha fin</th>
+                    <th>% de descuento</th>
+					<th>Precio final</th>
+					<th>Añadir</th>
+                </tr>
+            </thead>
+            <tbody>$filasTablaOfertas</tbody>
+        </table>
+EOS;
+	}
+	else {
+		$htmlOfertas .= <<<EOS
+		<p>No puedes aplicar ninguna oferta</p>
+EOS;
+	}
 
     //Formulario de opciones de entrega y acceso al pago
     $htmlFormulario = <<<EOS
@@ -122,8 +186,8 @@ if (empty($carrito)) {
         </div>
     EOS;
 
-    //Montamos el contenido final: tabla de artículos + formulario de entrega
-    $contenidoPrincipal = "<h1>Revisar Pedido</h1>" . $htmlArticulos . $htmlFormulario;
+    //Montamos el contenido final: tabla de artículos + tabla de ofertas + formulario de entrega
+    $contenidoPrincipal = "<h1>Revisar Pedido</h1>" . $htmlArticulos . "<h1>Ofertas aplicables</h1>" . $htmlOfertas . $htmlFormulario;
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

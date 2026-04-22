@@ -3,7 +3,7 @@ require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\ofertas\Oferta;
 
 //Obtenemos todos los productos ofertados junto con su categoría, ordenados por categoría y nombre
-$ofertasCarta = Oferta::todasLasOfertas();
+$ofertasCarta = Oferta::ofertasActivas();
 
 //Construimos el HTML de la carta agrupando los productos por categoría
 $cartaOfertasHTML    = "";

@@ -1,3 +1,3 @@
 <footer>
-	Pie de página
+	© 2026 Bistro FDI
 </footer>

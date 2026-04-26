@@ -53,10 +53,22 @@
     text-align: left;
 }
 
+/* Columna de productos incluidos en la tabla de ofertas */
+.carrito-col-productos {
+    min-width: 250px;
+}
+
+/* Celda de cantidad con botones + y − en línea */
+.carrito-cantidad {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
 /* Celda de la tabla que contiene el total. Alinea el contenido a la derecha */
 .carrito-total {
     text-align: right;
-    border-top: 2px solid #ccc;
     padding-top: 10px;
 }
 

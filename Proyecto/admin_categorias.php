@@ -24,9 +24,9 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td><img src="{$rutaImgs}/categorias/{$cat->getImagen()}" width="100"></td>
                     <td>{$cat->getNombre()}</td>
                     <td>{$cat->getDescripcion()}</td>
-                    <td>
-                        <a href="$rutaApp/editar_categoria.php?id={$cat->getId()}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_categoria.php?id={$cat->getId()}" class="admin-categorias-eliminar boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?">[Borrar]</a>
+                    <td class="admin-categorias-acciones">
+                        <a href="$rutaApp/editar_categoria.php?id={$cat->getId()}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a>
+                        <a href="$rutaApp/includes/borrar_categoria.php?id={$cat->getId()}" class="admin-categorias-eliminar boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?"><img src="{$rutaImgs}/borrar.png" width="30" alt="Borrar"></a>
                     </td>
                 </tr>
             EOS;

@@ -35,8 +35,8 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td class="admin-productos-centro">$disponible</td>
                     <td class="admin-productos-centro">$ofertado</td>
                     <td class="admin-productos-acciones">
-                        <a href="$rutaApp/editar_producto.php?id={$fila->getId()}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_producto.php?id={$fila->getId()}" class="admin-productos-eliminar boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente.">[Eliminar]</a>
+                        <a href="$rutaApp/editar_producto.php?id={$fila->getId()}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a>
+                        <a href="$rutaApp/includes/borrar_producto.php?id={$fila->getId()}" class="admin-productos-eliminar boton-borrar" data-mensaje="¿Estás seguro? Borrará este producto permanentemente."><img src="{$rutaImgs}/borrar.png" width="30" alt="Eliminar"></a>
                     </td>
                 </tr>
             EOS;

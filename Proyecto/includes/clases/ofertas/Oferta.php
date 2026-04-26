@@ -251,4 +251,22 @@ class Oferta
 
 		return $valido;
 	}
+
+    // Función que permite calcular cuantos productos no forman parte de ninguna oferta, devuelve la misma estructura del carrito, 
+    // es una resta entre los productos del carrito y los productos necesarios para las ofertas aplicadas   
+    public static function calcularProductosLibres(array $carrito, array $ofertas_aplicadas): array
+    {
+        $productos_libres = $carrito;
+
+        foreach ($ofertas_aplicadas as $idOferta => $veces) {
+			$productos_oferta = self::obtenerProductosOferta($idOferta);
+
+			foreach ($productos_oferta as $prod) {
+				$productos_libres[$prod['id']] -= $veces * $prod['cantidad'];
+			}
+		}
+
+        return $productos_libres;
+    }
+
 }

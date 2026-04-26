@@ -37,7 +37,7 @@
     font-size: 2.8em;
     font-weight: bold;
     margin: 0 0 10px 0;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .index-hero-subtitulo {
@@ -48,7 +48,7 @@
 
 /* Botón de llamada a la acción en el banner (ej. "Ver Carta") */
 .index-hero-cta {
-    background: #e63946;
+    background: #721c24;
     color: white;
     padding: 14px 32px;
     border-radius: 30px;
@@ -59,7 +59,7 @@
 }
 
 .index-hero-cta:hover {
-    background: #c1121f;
+    background: #692d33;
 }
 
 /* ============================
@@ -87,7 +87,7 @@
 .index-categoria-card {
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: inherit;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -96,7 +96,7 @@
 
 .index-categoria-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .index-categoria-img {
@@ -133,7 +133,7 @@
     border-radius: 10px;
     padding: 25px 20px;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .index-paso-icono {

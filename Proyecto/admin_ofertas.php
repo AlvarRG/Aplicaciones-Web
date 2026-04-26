@@ -59,8 +59,8 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td class="admin-ofertas-numero"><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
                     <td class="admin-ofertas-centro">{$estado}</td>
                     <td class="admin-ofertas-acciones">
-                        <a href="$rutaApp/editar_oferta.php?id={$fila->getId()}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila->getId()}" class="admin-ofertas-eliminar boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
+                        <a href="$rutaApp/editar_oferta.php?id={$fila->getId()}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a>
+                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila->getId()}" class="admin-ofertas-eliminar boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente."><img src="{$rutaImgs}/borrar.png" width="30" alt="Borrar"></a>
                     </td>
                 </tr>
             EOS;

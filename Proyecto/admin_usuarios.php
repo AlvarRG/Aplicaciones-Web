@@ -16,6 +16,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     
     $rutaApp = RUTA_APP;
     $rutaJs = RUTA_JS;
+    $rutaImgs = RUTA_IMGS;
 
     //Si la consulta anterior ha devuelto algo, recorremos los usuarios devueltos y construimos las filas de la tabla
     $filas = "";
@@ -28,8 +29,8 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td>{$fila->getEmail()}</td>
                     <td>{$fila->getNombreRol()}</td>
                     <td class="admin-usuarios-acciones">
-                        <a href="$rutaApp/editar_usuario.php?id={$fila->getId()}">[Cambiar Rol]</a> 
-                        <a href="$rutaApp/includes/borrar_usuario.php?id={$fila->getId()}" class="admin-usuarios-eliminar boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?">[Borrar]</a>
+                        <a href="$rutaApp/editar_usuario.php?id={$fila->getId()}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a> 
+                        <a href="$rutaApp/includes/borrar_usuario.php?id={$fila->getId()}" class="admin-usuarios-eliminar boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?"><img src="{$rutaImgs}/borrar.png" width="30" alt="Borrar"></a>
                     </td>
                 </tr>
             EOS;

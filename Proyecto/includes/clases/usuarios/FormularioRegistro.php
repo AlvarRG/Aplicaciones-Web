@@ -50,6 +50,7 @@ class FormularioRegistro extends Formulario
             <div>
                 <label for="email">Email:</label>
                 <input id="email" type="email" name="email" value="$email" required />
+				<span id="validEmail"></span> {$erroresCampos['email']}
             </div>
         </fieldset>
         <br>
@@ -58,6 +59,7 @@ class FormularioRegistro extends Formulario
             <div>
                 <label for="nombreUsuario">Nombre de usuario:</label>
                 <input id="nombreUsuario" type="text" name="nombreUsuario" value="$nombreUsuario" required />
+				<span id="validUsuario"></span> {$erroresCampos['nombreUsuario']}
             </div>
             <div>
                 <label for="password">Password:</label>

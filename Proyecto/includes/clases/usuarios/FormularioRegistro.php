@@ -34,6 +34,7 @@ class FormularioRegistro extends Formulario
         $nombreUsuario = $datos['nombreUsuario'] ?? '';
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
+		$erroresCampos = self::generaErroresCampos(['nombreUsuario', 'nombre', 'email', 'password', 'password2'], $this->errores, 'span', array('class' => 'error'));
 
         return <<<EOF
         $htmlErroresGlobales

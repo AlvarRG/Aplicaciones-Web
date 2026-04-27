@@ -175,42 +175,45 @@ if (empty($carrito)) {
     $productosLibres = Oferta::calcularProductosLibres($carrito, $ofertas_aplicadas);
 	
 	foreach ($ofertas as $fila) {
-        $nombre = $fila->getNombre();
-        $productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
-        $textosProductos = [];
-        $precioOriginalLote = 0;
-    
-        foreach ($productosDeLaOferta as $prod) {
-            $textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
-            $precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
-            $precioOriginalLote += ($precioConIva * $prod['cantidad']);
-        }
-        $productosIncluidos = implode(', <br>', $textosProductos);
-        
-        $fechaFin = new DateTime($fila->getFechaFin());
-        
-        $descuento = $fila->getDescuento();
-        $precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
-        $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
-        $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
-      
-            
-        $botonHTML = "<form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
-                        <input type='hidden' name='id_oferta' value='{$fila->getId()}'>
-                        <input type='hidden' name='accion' value='aplicar_oferta'>
-                        <button type='submit' class='carrito-boton-anadirOferta'>Añadir</button>
-                    </form>";
-        
-        $filasTablaOfertas .= <<<EOS
-            <tr>
-                <td class='carrito-tabla td-producto'>{$nombre}</td>
-                <td>{$productosIncluidos}</td>
-                <td>{$fechaFin->format('d/m/Y')}</td>
-                <td>{$descuento}%</td>
-                <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
-                <td>{$botonHTML}</td>
-            </tr>
-        EOS;
+		$idOferta = $fila->getId();
+		if (Oferta::esAplicable($idOferta, $carrito)) {
+				$nombre = $fila->getNombre();
+				$productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
+				$textosProductos = [];
+				$precioOriginalLote = 0;
+			
+				foreach ($productosDeLaOferta as $prod) {
+					$textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
+					$precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
+					$precioOriginalLote += ($precioConIva * $prod['cantidad']);
+				}
+				$productosIncluidos = implode(', <br>', $textosProductos);
+				
+				$fechaFin = new DateTime($fila->getFechaFin());
+				
+				$descuento = $fila->getDescuento();
+				$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
+				$pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
+				$pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
+			  
+					
+				$botonHTML = "<form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
+								<input type='hidden' name='id_oferta' value='{$fila->getId()}'>
+								<input type='hidden' name='accion' value='aplicar_oferta'>
+								<button type='submit' class='carrito-boton-anadirOferta'>Añadir</button>
+							</form>";
+				
+				$filasTablaOfertas .= <<<EOS
+					<tr>
+						<td class='carrito-tabla td-producto'>{$nombre}</td>
+						<td>{$productosIncluidos}</td>
+						<td>{$fechaFin->format('d/m/Y')}</td>
+						<td>{$descuento}%</td>
+						<td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
+						<td>{$botonHTML}</td>
+					</tr>
+EOS;
+		}
 	}
 	
 	//Tabla completa de ofertas con las filas construidas

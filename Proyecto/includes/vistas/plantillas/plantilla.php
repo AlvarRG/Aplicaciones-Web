@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title><?= $tituloPagina //El título de la página, que cada una rellena?></title>
+		<script>
+			const RUTA_APP = "<?= RUTA_APP ?>";
+		</script>
 		<link rel="stylesheet" type="text/css" href="<?= RUTA_CSS ?>/estilo.css?v=1.1">
 		<?php //Si la página tiene estilos extra se los pone
             if (isset($estilosExtra)) {

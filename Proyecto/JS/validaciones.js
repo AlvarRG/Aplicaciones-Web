@@ -19,8 +19,8 @@ $(document).ready(function () {
     }
 
     // Validación del correo
-    $("#emailUsuario").change(function () {
-        const campo = $("#emailUsuario");
+    $("#email").change(function () {
+        const campo = $("#email");
         const marca = $("#validEmail");
 
         campo[0].setCustomValidity("");
@@ -30,8 +30,8 @@ $(document).ready(function () {
             marca.html('&#x2714;');
             campo[0].setCustomValidity("");
         } else {
-            marca.html('&#x274C;');
-            campo[0].setCustomValidity("El correo debe ser válido y acabar por @ucm.es");
+            marca.html('&#x274C; El correo debe tener un formato válido'); 
+			campo[0].setCustomValidity("El correo debe tener un formato válido");
         }
     });
 
@@ -39,8 +39,8 @@ $(document).ready(function () {
     $("#nombreUsuario").change(function () {
         const nombre = $(this).val();
         if (nombre !== "") {
-            const url = "/Aplicaciones-Web/ej3_2026/comprobarUsuario.php?user=" + encodeURIComponent(nombre);
+            const url = RUTA_APP + "/includes/comprobarUsuario.php?user=" + encodeURIComponent(nombre);
             $.get(url, usuarioExiste);
-        }
+        }	
     });
 });

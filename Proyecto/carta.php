@@ -55,7 +55,10 @@ if (!empty($productosCarta)) {
 }
 
 //Calculamos cuántos artículos hay en el carrito para mostrarlos en el botón de acceso
-$cantidadEnCarrito = array_sum($_SESSION['carrito']);
+$cantidadEnCarrito = 0;
+foreach ($_SESSION['carrito'] as $id => $datos) {
+    $cantidadEnCarrito += is_array($datos) ? $datos['total'] : $datos;
+}
 
 //Parámetros para la plantilla
 $tituloPagina = 'Nuestra Carta';

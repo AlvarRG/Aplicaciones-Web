@@ -5,7 +5,7 @@
     <?php
 	//Si hay algo en el carrito mostramos una vista resumen del contenido con opción de realizar acciones sobre él, si está vacío mostramos un mensaje
     if (isset($_SESSION['carrito']) && count($_SESSION['carrito']) > 0) {
-        $totalArticulos = array_sum($_SESSION['carrito']);
+       $totalArticulos = array_sum(array_column($_SESSION['carrito'], 'total'));
         
         echo "<p>Tienes <strong>$totalArticulos</strong> artículos.</p>";
         

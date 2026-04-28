@@ -219,7 +219,7 @@ class Oferta
     public static function ofertasActivas(): array
     {
         $queryOfertas = "SELECT * FROM ofertas 
-						 WHERE CURRENT_DATE BETWEEN fecha_inicio AND fecha_fin";
+						 WHERE fecha_inicio <= CURRENT_DATE AND fecha_fin > CURRENT_DATE";
 
         $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryOfertas)->get_result();
         $ofertas = [];
@@ -237,36 +237,91 @@ class Oferta
 	// Función que nos permite saber si una oferta es aplicable dados unos productos en carrito
     public static function esAplicable(int $idOferta, array $carrito): bool
 	{
-		$productosNecesarios = self::obtenerProductosOferta($idOferta);
-		$valido = true;
+		$productosOferta = self::obtenerProductosOferta($idOferta);
 
-		foreach ($productosNecesarios as $pReq) {
-			$idReq = $pReq['id'];
-			$cantReq = $pReq['cantidad'];
+		foreach ($productosOferta as $productoOferta) {
+			$idProducto = $productoOferta['id'];
+			$cantidadProducto = $productoOferta['cantidad'];
 
-			if (!isset($carrito[$idReq]) || $carrito[$idReq] < $cantReq) {
-				$valido = false;
+			if (!isset($carrito[$idProducto]) || $carrito[$idProducto]['disponible'] < $cantidadProducto) {
+				return false;
 			}
 		}
 
-		return $valido;
+		return true;
 	}
 
-    // Función que permite calcular cuantos productos no forman parte de ninguna oferta, devuelve la misma estructura del carrito, 
-    // es una resta entre los productos del carrito y los productos necesarios para las ofertas aplicadas   
-    public static function calcularProductosLibres(array $carrito, array $ofertas_aplicadas): array
-    {
-        $productos_libres = $carrito;
+    // Función que calcula cuantas veces se puede aplicar una oferta que se sabe que es aplicable
+    public static function calcularVecesAplicable(int $idOferta, array $carrito): int
+	{
+		$productosOferta = self::obtenerProductosOferta($idOferta);
+		$vecesAplicable = 0;
 
-        foreach ($ofertas_aplicadas as $idOferta => $veces) {
-			$productos_oferta = self::obtenerProductosOferta($idOferta);
+		foreach ($productosOferta as $productoOferta) {
+			$idProducto = $productoOferta['id'];
+			$cantidadProducto = $productoOferta['cantidad'];
 
-			foreach ($productos_oferta as $prod) {
-				$productos_libres[$prod['id']] -= $veces * $prod['cantidad'];
-			}
+			$veces = (int) floor($carrito[$idProducto]['disponible'] / $cantidadProducto);
+
+			$vecesAplicable = $vecesAplicable === 0 ? $veces : min($vecesAplicable, $veces);
 		}
 
-        return $productos_libres;
+		return $vecesAplicable;
+	}
+
+    // Calcula el descuento monetario real de una oferta (precio del pack con IVA × descuento%)
+    // Devuelve un float sin formatear para que el caller decida la precisión
+    public static function calcularDescuentoMonetario(int $idOferta): float
+    {
+        $oferta = self::porID($idOferta);
+        $descuentoPorcentaje = $oferta->getDescuento();
+
+        $productosOferta = self::obtenerProductosOferta($idOferta);
+
+        $precioPack = 0.0;
+        foreach ($productosOferta as $prod) {
+            $precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
+            $precioPack  += $precioConIva * $prod['cantidad'];
+        }
+
+        return number_format($precioPack * ($descuentoPorcentaje / 100), 2, '.', '');
+    }
+
+    //Función que quita una oferta o la que tenga menos descuento para el usuario en caso de que haya varias
+    public static function quitarOferta(int $id_producto, array &$carrito, array &$ofertas_aplicadas): void
+    {
+        // Recorremos las ofertas que tiene el carrito y miramos si el producto está en alguna y guardamos aquel cuyo descuento de la oferta sea menor
+        $descuentoMonetarioMinimo = PHP_FLOAT_MAX;
+        $idOfertaMinimo = 0;
+        
+		foreach ($ofertas_aplicadas as $idOferta => $veces) {
+            $productosOferta = self::obtenerProductosOferta($idOferta);
+            foreach ($productosOferta as $productoOferta) {
+                if($productoOferta['id'] == $id_producto) {
+                    $descuentoMonetario = self::calcularDescuentoMonetario($idOferta);
+                    if($descuentoMonetarioMinimo === 0 || $descuentoMonetarioMinimo > $descuentoMonetario) {
+                        $descuentoMonetarioMinimo = $descuentoMonetario;
+                        $idOfertaMinimo = $idOferta;
+                    }
+                }
+            }
+		}
+
+        //Descontamos la oferta
+        if ($idOfertaMinimo !== 0) {
+            $ofertas_aplicadas[$idOfertaMinimo]--;
+
+            // Si se ha quitado la última oferta, la eliminamos
+            if ($ofertas_aplicadas[$idOfertaMinimo] === 0) {
+                unset($ofertas_aplicadas[$idOfertaMinimo]);
+            }
+
+            //Restauramos los productos de la oferta al carrito, ya que vuelven a estar disponibles
+            $productosOferta = self::obtenerProductosOferta($idOfertaMinimo);
+            foreach ($productosOferta as $productoOferta) {
+                $carrito[$productoOferta['id']]['disponible'] += $productoOferta['cantidad'];
+            }
+        }
     }
 
 }

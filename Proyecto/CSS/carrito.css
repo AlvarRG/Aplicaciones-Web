@@ -39,13 +39,17 @@
 
 /* Encabezado de la tabla */
 .carrito-tabla thead {
-    background: #eee;
+    background: #63161c;
+    color: white;
 }
 
 /* Celdas de la tabla */
 .carrito-tabla th,
 .carrito-tabla td {
-    padding: 10px;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+    /* Evita que el padding del botón Quitar descoloque las demás celdas */
 }
 
 /* Celda de la tabla que contiene el producto. Alinea el contenido a la izquierda */
@@ -58,13 +62,51 @@
     min-width: 250px;
 }
 
-/* Celda de cantidad con botones + y − en línea */
-.carrito-cantidad {
+/* Celda de cantidad: la <td> permanece como table-cell sin modificar */
+.carrito-cantidad-inner {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 10px;
+    white-space: nowrap;
 }
+
+/* Eliminamos márgenes de los formularios para que no rompan la alineación */
+.carrito-cantidad-inner form {
+    margin: 0;
+    display: flex;
+}
+
+.carrito-cantidad-inner strong {
+    display: inline-block;
+    min-width: 25px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+/* Estilo para los botones de + y - */
+.carrito-boton-cantidad {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.carrito-boton-cantidad:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+
 
 /* Celda de la tabla que contiene el total. Alinea el contenido a la derecha */
 .carrito-total {
@@ -130,11 +172,14 @@
 
 /* Botón de quitar. Le da un estilo rojo al botón */
 .carrito-boton-quitar {
-    background: none;
+    background: rgb(190, 5, 5);
     border: none;
-    color: red;
+    color: white;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 .carrito-boton-anadirOferta {

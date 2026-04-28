@@ -32,7 +32,11 @@ $productosDetalle = [];
 
 foreach ($productosCarrito as $fila) {
     $idProd = $fila->getId();
-    $cantidad = $_SESSION['carrito'][$idProd] ?? 0;
+    $datosCart = $_SESSION['carrito'][$idProd] ?? 0;
+    
+    // Nueva estructura: total y disponible
+    $cantidad = is_array($datosCart) ? $datosCart['total'] : $datosCart;
+    
     if ($cantidad <= 0) {
         continue;
     }

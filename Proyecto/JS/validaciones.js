@@ -30,17 +30,19 @@ $(document).ready(function () {
             marca.html('&#x2714;');
             campo[0].setCustomValidity("");
         } else {
-            marca.html('&#x274C; El correo debe tener un formato válido'); 
-			campo[0].setCustomValidity("El correo debe tener un formato válido");
+            marca.html('&#x274C; El correo debe tener un formato válido');
+            campo[0].setCustomValidity("El correo debe tener un formato válido");
         }
     });
 
     // Validación del usuario
     $("#nombreUsuario").change(function () {
-        const nombre = $(this).val();
-        if (nombre !== "") {
-            const url = RUTA_APP + "/includes/comprobarUsuario.php?user=" + encodeURIComponent(nombre);
-            $.get(url, usuarioExiste);
-        }	
+        if ($("#validUsuario").length > 0) { // Solo si existe el span de validación
+            const nombre = $(this).val();
+            if (nombre !== "") {
+                const url = RUTA_APP + "/includes/comprobarUsuario.php?user=" + encodeURIComponent(nombre);
+                $.get(url, usuarioExiste);
+            }
+        }
     });
 });

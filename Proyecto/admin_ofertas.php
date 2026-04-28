@@ -19,10 +19,10 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $filas = "";
     if(!empty($ofertas)) {
         foreach ($ofertas as $fila) {
-			$nombre = $fila['nombre'];
-			$descripcion = $fila['descripcion'];
+			$nombre = $fila->getNombre();
+			$descripcion = $fila->getDescripcion();
 			
-			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila['id']);
+			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
             $textosProductos = [];
             $precioOriginalLote = 0;
             foreach ($productosDeLaOferta as $prod) {
@@ -33,18 +33,18 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
 			$productosIncluidos = implode(', <br>', $textosProductos);
 			
             $fechaActual = new DateTime();
-            $fechaInicio = new DateTime($fila['fecha_inicio']);
-            $fechaFin = new DateTime($fila['fecha_fin']);
+            $fechaInicio = new DateTime($fila->getFechaInicio());
+            $fechaFin = new DateTime($fila->getFechaFin());
 			
-			$descuento = $fila['descuento'];
+			$descuento = $fila->getDescuento();
 			$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
             $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
             $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
 			
 			$estado = "Inactiva";
-            if ($fechaActual >= $fechaInicio && $fechaActual <= $fechaFin) {
+            if ($fechaActual >= $fechaInicio && $fechaActual < $fechaFin) {
                 $estado = "Activa";
-            } elseif ($fechaActual > $fechaFin) {
+            } elseif ($fechaActual >= $fechaFin) {
                 $estado = "Caducada";
             }
 
@@ -59,8 +59,8 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
                     <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
                     <td>{$estado}</td>
                     <td>
-                        <a href="$rutaApp/editar_oferta.php?id={$fila['id']}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila['id']}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
+                        <a href="$rutaApp/editar_oferta.php?id={$fila->getId()}">[Editar]</a>
+                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila->getId()}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
                     </td>
                 </tr>
             EOS;

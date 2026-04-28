@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/includes/config.php';
+require_once __DIR__ . '/includes/config.php';
 use es\ucm\fdi\aw\usuarios\Usuario;
 use es\ucm\fdi\aw\pedidos\Pedido;
 
@@ -13,7 +13,7 @@ if (!isset($_SESSION['login']) || !isset($_SESSION['nombreUsuario'])) {
 $estilosExtra = ['perfil.css'];
 
 //Recuperamos la información del usuario logueado desde la capa de dominio
-$nombreUsuario = (string)$_SESSION['nombreUsuario'];
+$nombreUsuario = (string) $_SESSION['nombreUsuario'];
 $usuarioObj = Usuario::buscaUsuario($nombreUsuario);
 if (!$usuarioObj) {
     header('Location: logout.php');
@@ -22,14 +22,14 @@ if (!$usuarioObj) {
 
 //Para no tocar demasiado HTML existente, montamos un array compatible
 $usuario = [
-    'id'            => $usuarioObj->getId(),
+    'id' => $usuarioObj->getId(),
     'nombreUsuario' => $usuarioObj->getNombreUsuario(),
-    'nombre'        => $usuarioObj->getNombre(),
-    'avatar'        => $usuarioObj->getAvatar(),
+    'nombre' => $usuarioObj->getNombre(),
+    'avatar' => $usuarioObj->getAvatar(),
 ];
 
 //Obtención de pedidos activos del usuario (Pedidos en curso)
-$pedidosActivos = Pedido::activosPorUsuario((int)$usuario['id']);
+$pedidosActivos = Pedido::activosPorUsuario((int) $usuario['id']);
 
 //Pestañas de pedidos activos
 $htmlActivos = "";
@@ -53,7 +53,7 @@ if (!empty($pedidosActivos)) {
 }
 
 //Obtención de pedidos entregados o cancelados del usuario (Historial de pedidos)
-$pedidosHistorial = Pedido::historialPorUsuario((int)$usuario['id']);
+$pedidosHistorial = Pedido::historialPorUsuario((int) $usuario['id']);
 
 //Contenido tabla de historial de pedidos
 if (!empty($pedidosHistorial)) {
@@ -123,4 +123,4 @@ $contenidoPrincipal = <<<EOS
     </div>
 EOS;
 
-require __DIR__.'/includes/vistas/plantillas/plantilla.php';
+require __DIR__ . '/includes/vistas/plantillas/plantilla.php';

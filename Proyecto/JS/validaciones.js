@@ -32,6 +32,8 @@ $(document).ready(function () {
         } else {
             marca.html('&#x274C; El correo debe tener un formato válido');
             campo[0].setCustomValidity("El correo debe tener un formato válido");
+            marca.html('&#x274C; El correo debe tener un formato válido');
+            campo[0].setCustomValidity("El correo debe tener un formato válido");
         }
     });
 

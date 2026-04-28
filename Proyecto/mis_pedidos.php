@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/includes/config.php';
+require_once __DIR__ . '/includes/config.php';
 use es\ucm\fdi\aw\usuarios\Usuario;
 use es\ucm\fdi\aw\pedidos\Pedido;
 
@@ -11,14 +11,14 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 }
 
 //Cogemos el id del usuario
-$idUsuario = (int)$_SESSION['id'];
+$idUsuario = (int) $_SESSION['id'];
 
 //Cancelar el pedido
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'cancelar') {
-    $idPed = (int)$_POST['id_pedido'];
-    
+    $idPed = (int) $_POST['id_pedido'];
+
     Pedido::cancelarCliente($idPed, $idUsuario);
-    
+
     header('Location: ' . RUTA_APP . '/mis_pedidos.php');
     exit();
 }
@@ -48,30 +48,40 @@ if (!empty($pedidosUsuario)) {
             <th class='mis-pedidos-th'>Acciones</th>
         </tr>
     </thead><tbody>";
-    
+
     foreach ($pedidosUsuario as $fila) {
         $totalFmt = number_format($fila->getTotal(), 2, '.', '');
-        
-        $claseEstado = 'badge-estado--generico'; 
+
+        $claseEstado = 'badge-estado--generico';
         switch ($fila->getEstado()) {
-            case 'Recibido': $claseEstado = 'badge-estado--recibido'; break; 
+            case 'Recibido':
+                $claseEstado = 'badge-estado--recibido';
+                break;
             case 'En preparacion':
-            case 'Cocinando': $claseEstado = 'badge-estado--preparacion'; break; 
-            case 'Listo cocina': $claseEstado = 'badge-estado--listo-cocina'; break; 
-            case 'Terminado': 
-            case 'Entregado': $claseEstado = 'badge-estado--terminado'; break; 
-            case 'Cancelado': $claseEstado = 'badge-estado--cancelado'; break; 
+            case 'Cocinando':
+                $claseEstado = 'badge-estado--preparacion';
+                break;
+            case 'Listo cocina':
+                $claseEstado = 'badge-estado--listo-cocina';
+                break;
+            case 'Terminado':
+            case 'Entregado':
+                $claseEstado = 'badge-estado--terminado';
+                break;
+            case 'Cancelado':
+                $claseEstado = 'badge-estado--cancelado';
+                break;
         }
-        
+
         $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$fila->getEstado()}</span>";
-        
+
         $contenidoPrincipal .= "<tr class='mis-pedidos-row'>";
         $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-cell--numero'>#{$fila->getNumeroPedido()}</td>";
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila->getFecha()}</td>";
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila->getTipo()}</td>";
         $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-total'><strong>{$totalFmt} €</strong></td>";
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$badgeEstado}</td>";
-        
+
         $contenidoPrincipal .= "<td class='mis-pedidos-cell'>";
         //Cancelar el pedido, solo si está en estado 'Recibido'
         if ($fila->getEstado() === 'Recibido') {
@@ -88,7 +98,7 @@ if (!empty($pedidosUsuario)) {
         $contenidoPrincipal .= "</td>";
         $contenidoPrincipal .= "</tr>";
     }
-    
+
     $contenidoPrincipal .= "</tbody></table>";
 } else {
     $contenidoPrincipal .= "<div class='mis-pedidos-empty'>
@@ -97,4 +107,4 @@ if (!empty($pedidosUsuario)) {
     </div>";
 }
 
-require __DIR__.'/includes/vistas/plantillas/plantilla.php';
+require __DIR__ . '/includes/vistas/plantillas/plantilla.php';

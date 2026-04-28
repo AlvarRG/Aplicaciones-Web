@@ -46,32 +46,71 @@ class Pedido
         $this->avatar_cocinero = $avatar_cocinero;
     }
 
-    public function getId(): ?int { return $this->id; }
-    public function getIdUsuario(): int { return $this->id_usuario; }
-    public function getIdCocinero(): ?int { return $this->id_cocinero; }
-    public function getNumeroPedido(): int { return $this->numero_pedido; }
-    public function getEstado(): string { return $this->estado; }
-    public function getTipo(): string { return $this->tipo; }
-    public function getTotal(): float { return (float)$this->total; }
-    public function getFecha(): string { return $this->fecha; }
-    public function getNombreCliente(): ?string { return $this->nombre_cliente; }
-    public function getAvatarCocinero(): ?string { return $this->avatar_cocinero; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    public function getIdUsuario(): int
+    {
+        return $this->id_usuario;
+    }
+    public function getIdCocinero(): ?int
+    {
+        return $this->id_cocinero;
+    }
+    public function getNumeroPedido(): int
+    {
+        return $this->numero_pedido;
+    }
+    public function getEstado(): string
+    {
+        return $this->estado;
+    }
+    public function getTipo(): string
+    {
+        return $this->tipo;
+    }
+    public function getTotal(): float
+    {
+        return (float) $this->total;
+    }
+    public function getFecha(): string
+    {
+        return $this->fecha;
+    }
+    public function getNombreCliente(): ?string
+    {
+        return $this->nombre_cliente;
+    }
+    public function getAvatarCocinero(): ?string
+    {
+        return $this->avatar_cocinero;
+    }
 
-    public function getProductos(): array { return $this->productos; }
-    public function setProductos(array $productos): void { $this->productos = $productos; }
-    public function addProducto(array $producto): void { $this->productos[] = $producto; }
+    public function getProductos(): array
+    {
+        return $this->productos;
+    }
+    public function setProductos(array $productos): void
+    {
+        $this->productos = $productos;
+    }
+    public function addProducto(array $producto): void
+    {
+        $this->productos[] = $producto;
+    }
 
     private static function creaDesdeFila(array $fila): Pedido
     {
         return new Pedido(
-            (int)($fila['id_usuario'] ?? 0),
-            (int)($fila['numero_pedido'] ?? 0),
+            (int) ($fila['id_usuario'] ?? 0),
+            (int) ($fila['numero_pedido'] ?? 0),
             $fila['estado'] ?? '',
             $fila['tipo'] ?? '',
-            (float)($fila['total'] ?? 0),
+            (float) ($fila['total'] ?? 0),
             $fila['fecha'] ?? '',
-            isset($fila['id_cocinero']) ? (int)$fila['id_cocinero'] : null,
-            isset($fila['id']) ? (int)$fila['id'] : null,
+            isset($fila['id_cocinero']) ? (int) $fila['id_cocinero'] : null,
+            isset($fila['id']) ? (int) $fila['id'] : null,
             $fila['nombre_cliente'] ?? null,
             $fila['avatar_cocinero'] ?? null
         );
@@ -119,7 +158,7 @@ class Pedido
     public static function historialPorUsuario(int $idUsuario): array
     {
         $estadosActivos = ['En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'];
-        
+
         //Devuelve los pedidos que no están en la lista de estados activos
         return self::porUsuarioYEstados($idUsuario, $estadosActivos, false);
     }
@@ -204,7 +243,7 @@ class Pedido
         $detalles = [];
         if ($rs) {
             while ($fila = $rs->fetch_assoc()) {
-                $idPedido = (int)$fila['id_pedido'];
+                $idPedido = (int) $fila['id_pedido'];
                 if (!isset($detalles[$idPedido])) {
                     $detalles[$idPedido] = [];
                 }
@@ -294,10 +333,10 @@ class Pedido
     {
         $queryUpdatePedido = "UPDATE pedidos SET estado = ?, id_cocinero = ? WHERE id = ?";
         Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdatePedido, "sii", $nuevoEstado, $idCocinero, $idPedido);
-        
+
         $queryUpdateProductos = "UPDATE pedidos_productos SET estado = ? WHERE id_pedido = ?";
         Aplicacion::getInstance()->ejecutarConsultaBd($queryUpdateProductos, "si", $nuevoEstado, $idPedido);
-        
+
         return true;
     }
 
@@ -308,14 +347,14 @@ class Pedido
     {
         $query = "UPDATE pedidos_productos SET estado = ? WHERE id_pedido = ? AND id_producto = ?";
         $stmt = Aplicacion::getInstance()->ejecutarConsultaBd($query, "sii", $nuevoEstado, $idPedido, $idProducto);
-        
+
         // Comprobar si todos los productos están ya listos o más avanzados
         if ($nuevoEstado === 'Listo cocina' || $nuevoEstado === 'Terminado') {
             $queryCheck = "SELECT COUNT(*) as pendientes FROM pedidos_productos WHERE id_pedido = ? AND estado NOT IN ('Listo cocina', 'Terminado', 'Entregado')";
             $rs = Aplicacion::getInstance()->ejecutarConsultaBd($queryCheck, "i", $idPedido)->get_result();
             if ($rs) {
                 $fila = $rs->fetch_assoc();
-                if ((int)$fila['pendientes'] === 0) {
+                if ((int) $fila['pendientes'] === 0) {
                     // Todos listos, avanzamos el pedido general
                     self::cambiarEstado($idPedido, 'Listo cocina');
                 }
@@ -342,8 +381,8 @@ class Pedido
 
         $totalPedido = 0.0;
         foreach ($lineas as $lin) {
-            $precioUdConIva = Producto::calcularPrecioConIva((float)$lin['precio_unitario'], (int)$lin['iva']);
-            $totalPedido += $precioUdConIva * (int)$lin['cantidad'];
+            $precioUdConIva = Producto::calcularPrecioConIva((float) $lin['precio_unitario'], (int) $lin['iva']);
+            $totalPedido += $precioUdConIva * (int) $lin['cantidad'];
         }
 
         $estadoInicial = ($metodoPago === 'tarjeta') ? 'En preparacion' : 'Recibido';
@@ -366,7 +405,7 @@ class Pedido
             $queryInsertPedido,
             "iissd",
             $idUsuario,
-            (int)$numeroPedidoDiario,
+            (int) $numeroPedidoDiario,
             $estadoInicial,
             $tipoPedido,
             $totalPedido
@@ -385,16 +424,16 @@ class Pedido
             Aplicacion::getInstance()->ejecutarConsultaBd(
                 $queryInsertDetalle,
                 "iiidis",
-                (int)$idNuevoPedido,
-                (int)$lin['id'],
-                (int)$lin['cantidad'],
-                (float)$lin['precio_unitario'],
-                (int)$lin['iva'],
+                (int) $idNuevoPedido,
+                (int) $lin['id'],
+                (int) $lin['cantidad'],
+                (float) $lin['precio_unitario'],
+                (int) $lin['iva'],
                 $estadoInicial
             );
         }
 
-        return (int)$idNuevoPedido;
+        return (int) $idNuevoPedido;
     }
 
     /**

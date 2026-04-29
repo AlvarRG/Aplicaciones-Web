@@ -37,8 +37,8 @@ class FormularioLogin extends Formulario
         <fieldset>
             <legend>Usuario y contraseña</legend>
             <div>
-                <label for="nombreUsuario">Nombre de usuario:</label>
-                <input id="nombreUsuario" type="text" name="nombreUsuario" value="$nombreUsuario" />
+                <label for="loginUsuario">Nombre de usuario:</label>
+                <input id="loginUsuario" type="text" name="nombreUsuario" value="$nombreUsuario" />
                 {$erroresCampos['nombreUsuario']}
             </div>
             <div>

@@ -66,6 +66,7 @@ class FormularioPerfil extends Formulario
         }
 
         $htmlErrores = self::generaListaErroresGlobales($this->errores);
+		$erroresCampos = self::generaErroresCampos(['email'], $this->errores, 'span', array('class' => 'error'));
 
         return <<<EOF
         $htmlErrores
@@ -73,7 +74,11 @@ class FormularioPerfil extends Formulario
             <legend class="perfil-legend">Actualizar mis datos</legend>
             <p>Nombre:<br><input type="text" name="nombre" value="$nombre" class="perfil-input-text" required></p>
             <p>Apellidos:<br><input type="text" name="apellidos" value="$apellidos" class="perfil-input-text"></p>
-            <p>Email:<br><input type="email" name="email" value="$email" class="perfil-input-text" required></p>
+            <div>
+                <label for="email">Email:</label>
+                <input id="email" type="email" name="email" value="$email" class="perfil-input-text" required />
+				<span id="validEmail"></span> {$erroresCampos['email']}
+            </div>
 
             <h4 class="perfil-avatar-title">Cambiar Avatar</h4>
             <div class="perfil-avatar-box">$htmlAvatares</div>
@@ -82,7 +87,7 @@ class FormularioPerfil extends Formulario
 
             <button type="submit" name="actualizar" class="perfil-submit">Guardar Cambios</button>
         </fieldset>
-        EOF;
+EOF;
     }
 
     /**

@@ -67,9 +67,10 @@ class FormularioRegistro extends Formulario
                 <input id="password" type="password" name="password" required />
             </div>
             <div>
-                <label for="password2">Reintroduce el password:</label>
-                <input id="password2" type="password" name="password2" required />
-            </div>
+				<label for="password2">Reintroduce el password:</label>
+				<input id="password2" type="password" name="password2" required />
+				<span id="validPassword2"></span> {$erroresCampos['password2']}
+			</div>
             <div>
                 <button type="submit">Registrar</button>
             </div>

@@ -20,20 +20,24 @@
 	</head>
 	<body>
 		<div id="contenedor">
-		<?php //Cabecera y barra izquierda
-			require('includes/vistas/comun/cabecera.php');
-			require('includes/vistas/comun/sideBarIzq.php');
-		?>
-			<main>
-				<article>
-					<?= $contenidoPrincipal //El contenido principal de la página, que cada una rellena?>
-				</article>
-			</main>
-		<?php //Barra derecha y pie de página
-			require('includes/vistas/comun/sideBarDer.php');
-			require('includes/vistas/comun/pie.php');
-		?>
-		</div>
+		<?php require('includes/vistas/comun/cabecera.php'); ?>
+
+		<input type="checkbox" id="btn-menu-izq" class="sidebar-check">
+		<label for="btn-menu-izq" class="sidebar-button-izq">☰</label>
+		<?php require('includes/vistas/comun/sideBarIzq.php'); ?>
+
+		<main>
+			<article>
+				<?= $contenidoPrincipal ?>
+			</article>
+		</main>
+
+		<input type="checkbox" id="btn-menu-der" class="sidebar-check">
+		<label for="btn-menu-der" class="sidebar-button-der">🛒</label>
+		<?php require('includes/vistas/comun/sideBarDer.php'); ?>
+
+		<?php require('includes/vistas/comun/pie.php'); ?>
+</div>
         <?php  //Si la página tiene scripts extra los incluye
             if (isset($scriptsExtra)) {
                 foreach ($scriptsExtra as $script) {

@@ -92,6 +92,10 @@
     color: inherit;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     background: white;
+	
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .index-categoria-card:hover {
@@ -173,6 +177,7 @@
 	
 	.index-categorias-grid {
 		grid-template-columns: repeat(auto-fill, minmax(25vw, 1fr));
+		gap: 10px;
 	}
 	
 	.index-sección-titulo {

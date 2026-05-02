@@ -139,18 +139,80 @@ aside {
     flex-shrink: 0;
 }
 
+/* Escondemos el checkbox siempre */
+.sidebar-check {
+    display: none;
+}
+
+/* En escritorio, el botón no se ve */
+.sidebar-button-izq {
+    display: none;
+}
+
+.sidebar-button-der {
+    display: none;
+}
+
 /* Media query para ajustar página */
 @media only screen and (max-width: 768px) {
-  /* Para móviles: */
-  div#contenedor {
-    flex-direction: column; /* Se apilan verticalmente */
-  }
-  main {
-    padding: 8px;
-}
-  nav, main, aside {
-    width: 100%;
-  }
+    /* Ajustes del contenedor y contenido principal */
+    div#contenedor {
+        flex-direction: column;
+    }
+
+    main {
+        width: 100%;
+        padding: 8px;
+        min-height: auto; 
+    }
+
+    /* Estilo de los botones (Labels) que actúan como interruptores */
+    .sidebar-button-izq,
+    .sidebar-button-der {
+        display: block; /* Los hacemos visibles en móvil */
+        position: fixed;
+        top: 15px;
+        z-index: 1001; /* Asegura que estén por encima de las barras */
+        font-size: 25px;
+        color: white;
+        background-color: #303030;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .sidebar-button-izq { left: 10px; }
+    .sidebar-button-der { right: 10px; }
+
+    /* Configuración de las barras laterales (Nav y Aside) */
+    nav, aside {
+        position: fixed;
+        top: 0;
+        width: 250px; /* Ancho fijo para el menú desplegable */
+        height: 100vh; /* Ocupa toda la altura de la pantalla */
+        z-index: 1000;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease; /* Movimiento suave */
+        padding-top: 70px; /* Espacio para que el contenido no choque con los botones */
+    }
+
+    nav {
+        left: 0;
+        transform: translateX(-100%); /* Escondido a la izquierda */
+    }
+
+    aside {
+        right: 0;
+        transform: translateX(100%); /* Escondido a la derecha */
+    }
+    
+    #btn-menu-izq:checked ~ nav {
+        transform: translateX(0); /* Entra la barra izquierda */
+    }
+
+    #btn-menu-der:checked ~ aside {
+        transform: translateX(0); /* Entra la barra derecha */
+    }
 }
 
 /* Pie de página global */

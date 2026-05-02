@@ -17,8 +17,8 @@
 
 /* Imagen de perfil del usuario en la cabecera */
 .perfil-header-avatar {
-    width: 60px;
-    height: 60px;
+    width: 3vw;
+    height: 3vw;
     border-radius: 50%;
     border: 2px solid white;
     object-fit: cover;
@@ -35,9 +35,9 @@
 /* Caja que envuelve el formulario de edición de datos personales */
 .perfil-form-wrapper {
     flex: 1;
-    min-width: 300px;
+    min-width: 25vw;
     background: white;
-    padding: 35px;
+    padding: 1vw;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -45,10 +45,11 @@
 .perfil-fieldset {
     border: none;
     padding: 0;
+	min-width: 0;
 }
 
 .perfil-legend {
-    font-size: 1.3em;
+    font-size: 1.2vw;
     font-weight: bold;
     margin-bottom: 20px;
     color: #333;
@@ -73,7 +74,7 @@
     border-radius: 8px;
     margin-bottom: 15px;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     overflow-x: auto;
@@ -81,6 +82,10 @@
 
 .perfil-file-input {
     margin-top: 5px;
+	max-width: 100%;
+    overflow: hidden; /* Oculta lo que se salga de la caja */
+    text-overflow: ellipsis; /* Añade puntos suspensivos (...) al texto cortado */
+    white-space: nowrap;
 }
 
 .perfil-checkbox {
@@ -102,7 +107,7 @@
 
 .perfil-panels {
     flex: 2;
-    min-width: 400px;
+    min-width: 20vw;
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -133,8 +138,8 @@
 }
 
 .perfil-avatar-opcion img {
-    width: 35px;
-    height: 35px;
+    width: 2vw;
+    height: 2vw;
     object-fit: cover;
     vertical-align: middle;
     border-radius: 5px;
@@ -244,4 +249,37 @@
     padding: 20px;
     text-align: center;
     color: #777;
+}
+
+@media only screen and (max-width: 768px) {
+	.perfil-header-avatar {
+		width: 10vw;
+		height: 10vw;
+	}
+	
+	.perfil-layout {
+		flex-direction: column; /* Forzamos a que el formulario y los paneles vayan uno debajo del otro */
+	}
+
+	.perfil-form-wrapper {
+		width: 100%; /* Ahora ocupan todo el ancho disponible */
+	}
+	
+	.perfil-panels {
+		width: 100%; /* Ahora ocupan todo el ancho disponible */
+		min-width: 0; /* Evita que el contenido interior rompa la caja */
+	}
+	
+	.perfil-legend {
+		font-size: 4.5vw;
+	}
+	
+	.perfil-avatar-opcion img {
+		width: 8vw;
+		height: 8vw;
+	}
+	
+	.perfil-historial-tabla {
+		font-size: 3vw;
+	}
 }

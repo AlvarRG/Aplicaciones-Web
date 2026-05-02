@@ -55,7 +55,7 @@ $contenidoPrincipal = <<<EOS
         </div>
         <div class="index-paso">
             <span class="index-paso-icono">💳</span>
-            <p class="index-paso-titulo">Paga como prefieras</p>
+            <p class="index-paso-titulo">Paga como elijas</p>
             <p class="index-paso-desc">Con tarjeta online o en efectivo al camarero.</p>
         </div>
         <div class="index-paso">

@@ -42,7 +42,7 @@
 
 .index-hero-subtitulo {
     font-size: 1vw;
-    margin: 0 0 25px 0;
+    margin: 0 0 2vw 0;
     opacity: 0.9;
 }
 
@@ -155,17 +155,20 @@
 }
 
 @media only screen and (max-width: 768px) {
+	.index-hero {
+		height: 30vw;
+	}
 	/* Resize de las fuentes para que no se vean demasiado pequeñas */
 	.index-hero-titulo {
-		font-size: 5vw;
+		font-size: 4vw;
 	}
 	
 	.index-hero-subtitulo {
-		font-size: 3.5vw;
+		font-size: 3vw;
 	}
 	
 	.index-hero-cta {
-		font-size: 3.25vw;
+		font-size: 2.75vw;
 	}
 	
 	.index-categorias-grid {
@@ -182,6 +185,10 @@
 	
 	.index-paso-icono {
 		font-size: 5vw;
+	}
+	
+	.index-paso-titulo {
+		font-size: 3.5vw;
 	}
 	
 	.index-paso-desc {

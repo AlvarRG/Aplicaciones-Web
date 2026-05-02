@@ -145,6 +145,9 @@ aside {
   div#contenedor {
     flex-direction: column; /* Se apilan verticalmente */
   }
+  main {
+    padding: 8px;
+}
   nav, main, aside {
     width: 100%;
   }

@@ -13,7 +13,7 @@ define('BD_PASS', 'bistro_fdi');
  * Parámetros de configuración utilizados para generar las URLs y las rutas a ficheros en la aplicación
  */
 define('RAIZ_APP', dirname(__DIR__));
-define('RUTA_APP', '/Aplicaciones-Web/Proyecto');
+define('RUTA_APP', '/AW/Aplicaciones-Web/Proyecto');
 define('RUTA_IMGS', RUTA_APP . '/img');
 define('RUTA_CSS', RUTA_APP . '/CSS');
 define('RUTA_JS', RUTA_APP . '/js');

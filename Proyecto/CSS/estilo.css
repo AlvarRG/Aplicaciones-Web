@@ -30,6 +30,7 @@ header {
 }
 
 header img {
+	height: 100%;
     height: 80px;
 }
 
@@ -107,7 +108,7 @@ header img {
 
 /* Menú de navegación lateral (izquierda) */
 nav {
-    width: 200px;
+    width: 20%;
     padding: 20px;
     background-color: #f9f3e6;
     box-sizing: border-box;
@@ -117,6 +118,7 @@ nav {
 
 /* Área de contenido principal de cada página */
 main {
+	width: 60%;
     flex: 1;
     padding: 40px;
     background-color: #efe2d0;
@@ -126,11 +128,22 @@ main {
 
 /* Barra lateral derecha opcional (Aside) */
 aside {
-    width: 180px;
+    width: 20%;
     padding: 20px;
     background-color: #f9f3e6;
     box-sizing: border-box;
     flex-shrink: 0;
+}
+
+/* Media query para ajustar página */
+@media only screen and (max-width: 768px) {
+  /* Para móviles: */
+  div#contenedor {
+    flex-direction: column; /* Se apilan verticalmente */
+  }
+  nav, main, aside {
+    width: 100%;
+  }
 }
 
 /* Pie de página global */

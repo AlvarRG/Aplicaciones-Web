@@ -29,24 +29,33 @@
     font-weight: bold;
 }
 
+.carrito-wrapper {
+	overflow-x: auto;
+}
+
 /* Tabla del carrito. Centra el contenido y le da espacio */
 .carrito-tabla {
     width: 100%;
-    text-align: center;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+	overflow-x: auto;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	text-align: center;
 }
 
 /* Encabezado de la tabla */
 .carrito-tabla thead {
-    background: #63161c;
-    color: white;
+    background: #303030;
+    color: black;
 }
 
 /* Celdas de la tabla */
 .carrito-tabla th,
 .carrito-tabla td {
-    padding: 15px;
+    padding: 1vw;
     border-bottom: 1px solid #ddd;
     vertical-align: middle;
     /* Evita que el padding del botón Quitar descoloque las demás celdas */
@@ -59,7 +68,7 @@
 
 /* Columna de productos incluidos en la tabla de ofertas */
 .carrito-col-productos {
-    min-width: 250px;
+    min-width: 15vw;
 }
 
 /* Celda de cantidad: la <td> permanece como table-cell sin modificar */
@@ -126,7 +135,7 @@
 /* Etiqueta de las opciones del carrito. Cambia el cursor a una mano y le da un estilo negrita */
 .carrito-opciones-label {
     cursor: pointer;
-    font-size: 1.1em;
+    font-size: 1vw;
     font-weight: normal;
 }
 
@@ -142,7 +151,7 @@
     background-color: #28a745;
     color: white;
     padding: 15px 30px;
-    font-size: 1.2em;
+    font-size: 1vw;
     border: none;
     cursor: pointer;
     border-radius: 5px;
@@ -192,4 +201,36 @@
     margin-top: 10px;
     font-weight: bold;
     cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+	.carrito-tabla {
+		font-size: 10px;
+	}
+	
+	.carrito-boton-cantidad {
+		width: 15px;
+		height: 15px;
+	}
+	
+	.carrito-total {
+		font-size: 15px;
+	}
+	
+	.carrito-opciones-label {
+		font-size: 10px;
+	}
+	
+	.carrito-boton-pago {
+		padding: 5px 10px;
+		font-size: 10px;
+	}
+	
+	.carrito-boton-quitar {
+		font-size: 10px;
+	}
+	
+	.carrito-boton-anadirOferta {
+		font-size: 10px;
+	}
 }

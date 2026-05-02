@@ -127,19 +127,20 @@ if (empty($carrito)) {
 
     // --- Montaje final de la tabla de productos ---
     $htmlTablaProductos = <<<EOS
-        <table class='carrito-tabla'>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Precio Ud.</th>
-                    <th>Cantidad</th>
-                    <th>Subtotal</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>$filasTablaProductos</tbody>
-        </table>
-    EOS;
+		<div class="carrito-wrapper"> <table class='carrito-tabla'>
+				<thead>
+					<tr>
+						<th>Producto</th>
+						<th>Precio Ud.</th>
+						<th>Cantidad</th>
+						<th>Subtotal</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>$filasTablaProductos</tbody>
+			</table>
+		</div>
+	EOS;
 
     // ========================================================================
     // SECCIÓN 2: DESGLOSE DE TOTALES (SUBTOTAL, AHORRO Y TOTAL)
@@ -208,20 +209,21 @@ if (empty($carrito)) {
 	$htmlOfertas = "";
 	if (!empty($filasTablaOfertas)) {
 		$htmlOfertas .= <<<EOS
-        <table class='carrito-tabla'>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th class='carrito-col-productos'>Productos incluidos</th>
-                    <th>Fecha fin</th>
-                    <th>% de descuento</th>
-                    <th>Precio final</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>$filasTablaOfertas</tbody>
-        </table>
-        EOS;
+			<div class="carrito-wrapper"> <table class='carrito-tabla'>
+					<thead>
+						<tr>
+							<th>Nombre</th>
+							<th class='carrito-col-productos'>Productos incluidos</th>
+							<th>Fecha fin</th>
+							<th>% de descuento</th>
+							<th>Precio final</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>$filasTablaOfertas</tbody>
+				</table>
+			</div>
+EOS;
 	} else {
 		$htmlOfertas .= "<p>No puedes aplicar ninguna oferta</p>";
 	}

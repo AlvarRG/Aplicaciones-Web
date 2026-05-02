@@ -10,6 +10,8 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     exit();
 }
 
+$estilosExtra = ['mis_pedidos.css'];
+
 //Cogemos el id del usuario
 $idUsuario = (int) $_SESSION['id'];
 
@@ -37,6 +39,7 @@ $contenidoPrincipal = <<<EOS
 EOS;
 
 if (!empty($pedidosUsuario)) {
+	$contenidoPrincipal .= "<div class='mis-pedidos-wrapper'>"; // Wrapper para la tabla
     $contenidoPrincipal .= "<table class='mis-pedidos-tabla'>";
     $contenidoPrincipal .= "<thead class='mis-pedidos-thead'>
         <tr>
@@ -100,6 +103,7 @@ if (!empty($pedidosUsuario)) {
     }
 
     $contenidoPrincipal .= "</tbody></table>";
+	$contenidoPrincipal .= "</div>"; // Cerramos el div del wrapper
 } else {
     $contenidoPrincipal .= "<div class='mis-pedidos-empty'>
         <p>Aún no has realizado ningún pedido con nosotros.</p>

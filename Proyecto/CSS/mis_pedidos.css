@@ -1,0 +1,145 @@
+/* ============================
+   Estilos mis pedidos / badges
+   ============================ */
+
+.debug-session-error {
+    padding: 20px;
+    background: #f8d7da;
+    color: #721c24;
+    margin: 50px auto;
+    max-width: 800px;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+}
+
+.debug-session-dump {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    color: black;
+}
+
+.mis-pedidos-wrapper {
+	overflow-x: auto;
+}
+
+.mis-pedidos-tabla {
+	width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+	overflow-x: auto;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mis-pedidos-thead {
+    background: #303030;
+    color: black;
+}
+
+.mis-pedidos-th-principal {
+    padding: 10px;
+    border: 1px solid #555;
+}
+
+.mis-pedidos-th {
+    border: 1px solid #555;
+}
+
+.mis-pedidos-row {
+    border-bottom: 1px solid #eee;
+}
+
+.mis-pedidos-cell {
+    border: 1px solid #ddd;
+}
+
+.mis-pedidos-cell--numero {
+    padding: 15px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+}
+
+.mis-pedidos-total {
+    font-weight: bold;
+}
+
+.mis-pedidos-no-cancelable {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.mis-pedidos-empty {
+    background: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+.mis-pedidos-empty-link {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+
+.form-inline {
+    display: inline;
+}
+
+.btn-cancelar-pedido-cliente {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Estilo base para los distintivos (badges) de estado de los pedidos */
+.badge-estado {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.badge-estado--recibido {
+    background: #ffc107;
+}
+
+.badge-estado--preparacion {
+    background: #17a2b8;
+}
+
+.badge-estado--listo-cocina {
+    background: #fd7e14;
+}
+
+.badge-estado--terminado {
+    background: #28a745;
+}
+
+.badge-estado--cancelado {
+    background: #dc3545;
+}
+
+.badge-estado--generico {
+    background: #6c757d;
+}
+
+@media only screen and (max-width: 768px) {
+	.mis-pedidos-tabla {
+		font-size: 10px;
+	}
+}

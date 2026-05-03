@@ -3,32 +3,55 @@ require_once __DIR__ . '/includes/config.php';
 use es\ucm\fdi\aw\pedidos\Pedido;
 
 /**
- * Renderiza el badge de estado con su clase CSS correspondiente.
+ * Mapea el estado de un pedido o producto a su clase CSS y texto descriptivo.
  */
-function renderBadgeEstado($estado) {
-    $claseEstado = 'badge-estado--generico';
-    
+function getEstadoInfo($estado) {
+    $info = [
+        'clase' => 'badge-estado--generico',
+        'texto' => $estado
+    ];
+
     switch ($estado) {
         case 'Recibido':
-            $claseEstado = 'badge-estado--recibido';
+            $info['clase'] = 'badge-estado--recibido';
             break;
         case 'En preparacion':
         case 'Cocinando':
-            $claseEstado = 'badge-estado--preparacion';
+            $info['clase'] = 'badge-estado--preparacion';
+            $info['texto'] = ($estado === 'Cocinando') ? 'Cocinando' : 'Preparando';
             break;
         case 'Listo cocina':
-            $claseEstado = 'badge-estado--listo-cocina';
+            $info['clase'] = 'badge-estado--listo-cocina';
+            $info['texto'] = 'Listo cocina';
             break;
         case 'Terminado':
         case 'Entregado':
-            $claseEstado = 'badge-estado--terminado';
+            $info['clase'] = 'badge-estado--terminado';
+            $info['texto'] = $estado;
             break;
         case 'Cancelado':
-            $claseEstado = 'badge-estado--cancelado';
+            $info['clase'] = 'badge-estado--cancelado';
             break;
     }
+    return $info;
+}
 
-    return "<span class='badge-estado {$claseEstado}'>{$estado}</span>";
+/**
+ * Renderiza el badge de estado, incluyendo el avatar del cocinero si procede.
+ */
+function renderBadgeEstado($estado, $avatar = null, $rutaApp = "", $isMini = false) {
+    $info = getEstadoInfo($estado);
+    $style = $isMini ? "style='font-size:0.7em;'" : "";
+    
+    $html = "<span class='badge-estado {$info['clase']}' {$style}>{$info['texto']}</span>";
+    
+    if ($avatar && in_array($estado, ['En preparacion', 'Cocinando', 'Listo cocina'])) {
+        $html .= "<div class='gestion-pedidos-avatar-wrapper'>
+                    <img src='{$rutaApp}/img/avatares/{$avatar}' class='gestion-pedidos-avatar' title='Preparado por Chef'>
+                  </div>";
+    }
+    
+    return $html;
 }
 
 /**

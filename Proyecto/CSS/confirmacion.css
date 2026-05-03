@@ -6,7 +6,7 @@
     background: white;
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-top: 5px solid #28a745;
 }
 
@@ -39,6 +39,7 @@
     line-height: 1;
 }
 
+/* Muestra el estado actual del pedido en la confirmación del pedido */
 .confirmacion-estado {
     font-size: 1.2em;
     margin-top: 15px;
@@ -52,6 +53,7 @@
     border-radius: 20px;
 }
 
+/* Mensaje de texto general de confirmación */
 .confirmacion-texto {
     margin-bottom: 30px;
     color: #777;
@@ -69,7 +71,7 @@
     display: inline-block;
 }
 
+/* Efecto de realce al pasar el ratón por el botón de confirmación */
 .confirmacion-boton:hover {
     filter: brightness(1.05);
 }
-

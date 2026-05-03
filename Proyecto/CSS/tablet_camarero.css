@@ -11,17 +11,20 @@
     box-sizing: border-box;
 }
 
+/* Título del panel del camarero */
 .tablet-camarero-header h2 {
     margin: 0;
     font-size: 1.2em;
 }
 
+/* Usuario del panel */
 .tablet-camarero-user {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Nombre del usuario del panel */
 .tablet-camarero-user span {
     font-size: 0.9em;
 }
@@ -53,18 +56,22 @@
     box-sizing: border-box;
 }
 
+/* Columna de cobros */
 .tablet-camarero-column--cobros {
     background: #fff8e1;
 }
 
+/* Columna de cocina */
 .tablet-camarero-column--cocina {
     background: #e0f7fa;
 }
 
+/* Columna de entrega */
 .tablet-camarero-column--entrega {
     background: #e8f5e9;
 }
 
+/* Título del grupo */
 .tablet-camarero-column h3 {
     text-align: center;
     margin-top: 0;
@@ -74,16 +81,19 @@
     padding-bottom: 4px;
 }
 
+/* Color del título de la columna de cobros */
 .tablet-camarero-column--cobros h3 {
     color: #856404;
     border-bottom-color: #ffeeba;
 }
 
+/* Color del título de la columna de cocina */
 .tablet-camarero-column--cocina h3 {
     color: #006064;
     border-bottom-color: #bee5eb;
 }
 
+/* Color del título de la columna de entrega */
 .tablet-camarero-column--entrega h3 {
     color: #1b5e20;
     border-bottom-color: #c3e6cb;
@@ -100,6 +110,7 @@
     box-sizing: border-box;
 }
 
+/* Cabecera de la tarjeta del pedido */
 .tablet-camarero-card-header {
     display: flex;
     justify-content: space-between;
@@ -115,6 +126,7 @@
     border-radius: 3px;
 }
 
+/*Lista de productos del pedido */
 .tablet-camarero-productos {
     margin: 5px 0;
     font-size: 0.8em;
@@ -123,12 +135,14 @@
     padding: 5px 0;
 }
 
+/* Fila de producto individual */
 .tablet-camarero-producto-row {
     display: flex;
     justify-content: space-between;
     gap: 5px;
 }
 
+/* Nombre del producto */
 .tablet-camarero-producto-nombre {
     white-space: nowrap;
     overflow: hidden;
@@ -143,6 +157,7 @@
     margin-bottom: 8px;
 }
 
+/* Botón de acción de la tarjeta */
 .tablet-camarero-btn {
     width: 100%;
     padding: 8px;
@@ -169,6 +184,7 @@
     background-color: #28a745;
 }
 
+/* Precio individual del producto dentro de la tarjeta */
 .tablet-camarero-producto-precio {
     font-weight: bold;
 }

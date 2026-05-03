@@ -1,3 +1,4 @@
+/* Base para la tabla de administración de productos, definiendo bordes colapsados, fuente y ancho mínimo de 600px */
 .admin-productos-tabla {
     border-collapse: collapse;
     width: 100%;
@@ -5,26 +6,32 @@
     font-family: Arial, sans-serif;
 }
 
+/* Fija un fondo gris claro en el thead para separar los nombres de columnas de los datos */
 .admin-productos-tabla thead {
     background-color: #eee;
 }
 
+/* Centra la miniatura de imagen del producto dentro de su celda */
 .admin-productos-img {
     text-align: center;
 }
 
+/* Alinea los precios y cifras del producto hacia la derecha para mejorar la lectura de cantidades */
 .admin-productos-numero {
     text-align: right;
 }
 
+/* Clase de utilidad para alinear el contenido general al centro de la celda */
 .admin-productos-centro {
     text-align: center;
 }
 
+/* Evita que las acciones (iconos de editar/eliminar) se coloquen en múltiples líneas */
 .admin-productos-acciones {
     white-space: nowrap;
 }
 
+/* Configura un color rojo para el botón o texto de eliminación */
 .admin-productos-eliminar {
     color: red;
 }

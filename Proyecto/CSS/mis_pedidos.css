@@ -1,76 +1,66 @@
-/* ============================
-   Estilos mis pedidos / badges
-   ============================ */
-
-.debug-session-error {
-    padding: 20px;
-    background: #f8d7da;
-    color: #721c24;
-    margin: 50px auto;
-    max-width: 800px;
-    border-radius: 8px;
-    border: 1px solid #f5c6cb;
-}
-
-.debug-session-dump {
-    background: white;
-    padding: 10px;
-    border-radius: 5px;
-    color: black;
-}
-
+/* Envuelve los contenedores de los pedidos */
 .mis-pedidos-wrapper {
-	overflow-x: auto;
+    overflow-x: auto;
 }
 
+/* Tabla de pedidos */
 .mis-pedidos-tabla {
-	width: 100%;
+    width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
     background: white;
     border-radius: 8px;
-	overflow-x: auto;
+    overflow-x: auto;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* Cabecera de la tabla */
 .mis-pedidos-thead {
     background: #303030;
     color: black;
 }
 
+/* Cabecera principal de la tabla */
 .mis-pedidos-th-principal {
     padding: 10px;
     border: 1px solid #555;
 }
 
+/* Celda de cabecera */
 .mis-pedidos-th {
     border: 1px solid #555;
 }
 
+/* Fila de la tabla */
 .mis-pedidos-row {
     border-bottom: 1px solid #eee;
 }
 
+/* Celda de la tabla */
 .mis-pedidos-cell {
     border: 1px solid #ddd;
 }
 
+/* Celda con el número de pedido */
 .mis-pedidos-cell--numero {
     padding: 15px;
     font-weight: bold;
     border: 1px solid #ddd;
 }
 
+/* Celda con el total del pedido */
 .mis-pedidos-total {
     font-weight: bold;
 }
 
+/* Celda con pedido no cancelable */
 .mis-pedidos-no-cancelable {
     color: #aaa;
     font-size: 0.9em;
 }
 
+/* Tabla vacía */
 .mis-pedidos-empty {
     background: #f9f9f9;
     padding: 20px;
@@ -80,6 +70,17 @@
     border: 1px solid #ddd;
 }
 
+/* Botón de enlace en página vacía */
+.mis-pedidos-empty {
+    background: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+/* Botón de enlace en página vacía */
 .mis-pedidos-empty-link {
     background: #28a745;
     color: white;
@@ -91,11 +92,12 @@
     margin-top: 10px;
 }
 
-
+/* Formulario en línea */
 .form-inline {
     display: inline;
 }
 
+/* Botón de cancelar pedido */
 .btn-cancelar-pedido-cliente {
     background: #dc3545;
     color: white;
@@ -114,32 +116,39 @@
     font-weight: bold;
 }
 
+/* Estado recibido */
 .badge-estado--recibido {
     background: #ffc107;
 }
 
+/* Estado preparación */
 .badge-estado--preparacion {
     background: #17a2b8;
 }
 
+/* Estado listo cocina */
 .badge-estado--listo-cocina {
     background: #fd7e14;
 }
 
+/* Estado terminado */
 .badge-estado--terminado {
     background: #28a745;
 }
 
+/* Estado cancelado */
 .badge-estado--cancelado {
     background: #dc3545;
 }
 
+/* Estado genérico */
 .badge-estado--generico {
     background: #6c757d;
 }
 
+/* Responsividad para móviles */
 @media only screen and (max-width: 768px) {
-	.mis-pedidos-tabla {
-		font-size: 10px;
-	}
+    .mis-pedidos-tabla {
+        font-size: 10px;
+    }
 }

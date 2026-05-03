@@ -1,14 +1,16 @@
+/* ANTIGRAVITY: Estilos generales para la tabla de administración de categorías, colapsando bordes y ocupando el 100% del ancho */
 .admin-categorias-tabla {
     border-collapse: collapse;
     width: 100%;
 }
 
+/* ANTIGRAVITY: Agrega un espaciado interno a las celdas y cabeceras para separar el contenido de los bordes */
 .admin-categorias-tabla th,
 .admin-categorias-tabla td {
     padding: 8px;
 }
 
+/* ANTIGRAVITY: Resalta visualmente el enlace de eliminar categoría usando un color rojo de alerta */
 .admin-categorias-eliminar {
     color: red;
 }
-

@@ -1,7 +1,9 @@
+/* Estilos CSS globales para el proyecto */
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
+/* Estilos globales del cuerpo de la página */
 body {
     background-color: #CDCDCD;
     margin: 0;
@@ -11,11 +13,8 @@ body {
 /* Contenedor principal de toda la web. Usa Flexbox para organizar el menú y el contenido */
 div#contenedor {
     width: 100%;
-    /* Cambiado de 95% a 100% */
     max-width: 100%;
-    /* Eliminamos el tope de 1400px */
     margin: 0;
-    /* Quitamos el margen para que pegue a los bordes */
     display: flex;
     flex-wrap: wrap;
     background-color: #303030;
@@ -33,8 +32,9 @@ header {
     box-sizing: border-box;
 }
 
+/* Estilos de la imagen del header */
 header img {
-	height: 100%;
+    height: 100%;
     height: 80px;
 }
 
@@ -47,6 +47,7 @@ header img {
     padding: 0;
 }
 
+/* Enlaces de navegación en el header */
 .header-nav a {
     color: white;
     text-decoration: none;
@@ -57,31 +58,36 @@ header img {
     transition: background-color 0.3s;
 }
 
+/* Efecto de realce al pasar el ratón por los enlaces de navegación en el header */
 .header-nav a:hover {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Menú de usuario a la derecha */
+/* Área del usuario a la derecha */
 .header-usuario {
     text-align: right;
     font-size: 1em;
     font-weight: bold;
 }
 
+/* Estilos del nombre de usuario en el header */
 .header-usuario span {
     margin-right: 10px;
 }
 
+/* Enlaces de usuario en el header */
 .header-usuario a {
     color: #f0d0a0;
     text-decoration: none;
     margin-left: 10px;
 }
 
+/* Efecto de realce al pasar el ratón por los enlaces de usuario en el header */
 .header-usuario a:hover {
     text-decoration: underline;
 }
 
+/* Estilos de los iconos de acción en las tablas de administración */
 .admin-productos-acciones a,
 .admin-usuarios-acciones a,
 .admin-categorias-acciones a,
@@ -91,6 +97,7 @@ header img {
     text-decoration: none;
 }
 
+/* Estilos de las imágenes de los iconos de acción en las tablas de administración */
 .admin-productos-acciones img,
 .admin-usuarios-acciones img,
 .admin-categorias-acciones img,
@@ -98,9 +105,9 @@ header img {
     transition: transform 0.2s ease, opacity 0.2s ease;
     vertical-align: middle;
     pointer-events: none;
-    /* El click pasa al <a> */
 }
 
+/* Efecto de realce al pasar el ratón por las imágenes de los iconos de acción en las tablas de administración */
 .admin-productos-acciones a:hover img,
 .admin-usuarios-acciones a:hover img,
 .admin-categorias-acciones a:hover img,
@@ -109,29 +116,25 @@ header img {
     opacity: 0.8;
 }
 
-
-/* Menú de navegación lateral (izquierda) */
+/* Estilos del menú de navegación lateral (izquierda) */
 nav {
-	position: sticky;
+    position: sticky;
     width: 15%;
     padding: 20px;
     background-color: #f9f3e6;
     box-sizing: border-box;
     flex-shrink: 0;
-    /* No se encoge */
-	
-	position: -webkit-sticky; /* Soporte para Safari */
     position: sticky;
-    top: 0px;  /* Distancia desde la parte superior de la pantalla donde se quedará pegado */
-    
+    top: 0px;
+
     /* Si la barra lateral es muy larga, no se corta y aparece su propio scroll */
-    max-height: 100vh; 
+    max-height: 100vh;
     overflow-y: auto;
 }
 
 /* Área de contenido principal de cada página */
 main {
-	width: 70%;
+    width: 70%;
     flex: 1;
     padding: 40px;
     background-color: #efe2d0;
@@ -139,24 +142,23 @@ main {
     box-sizing: border-box;
 }
 
-/* Barra lateral derecha opcional (Aside) */
+/* Barra lateral derecha (Aside) */
 aside {
     width: 15%;
     padding: 20px;
     background-color: #f9f3e6;
     box-sizing: border-box;
     flex-shrink: 0;
-	
-	position: -webkit-sticky; /* Soporte para Safari */
     position: sticky;
-    top: 0px;  /* Distancia desde la parte superior de la pantalla donde se quedará pegado */
-    
+    top: 0px;
+
     /* Si la barra lateral es muy larga, no se corta y aparece su propio scroll */
-    max-height: 100vh; 
+    max-height: 100vh;
     overflow-y: auto;
 }
 
 /* Escondemos el checkbox siempre */
+/* El checkbox es el "interruptor" invisible que activa o desactiva los menús */
 .sidebar-check {
     display: none;
 }
@@ -166,70 +168,96 @@ aside {
     display: none;
 }
 
+/* En escritorio, el botón no se ve */
 .sidebar-button-der {
     display: none;
 }
 
-/* Media query para ajustar página */
+/* Media query para ajustar página en pantallas pequeñas */
 @media only screen and (max-width: 768px) {
+
     /* Ajustes del contenedor y contenido principal */
     div#contenedor {
         flex-direction: column;
         min-height: 100vh;
     }
 
+    /* Contenido principal ocupa de cada página */
     main {
         width: 100%;
         padding: 8px;
-        min-height: auto; 
+        min-height: auto;
     }
 
     /* Estilo de los botones (Labels) que actúan como interruptores */
     .sidebar-button-izq,
     .sidebar-button-der {
-        display: block; /* Los hacemos visibles en móvil */
+        display: block;
         position: fixed;
         top: 15px;
-        z-index: 1001; /* Asegura que estén por encima de las barras */
-        font-size: 25px;
+        z-index: 1001;
+        /* Asegura que estén por encima de las barras */
+        font-size: 20px;
         color: white;
         background-color: #303030;
-        padding: 5px 10px;
         border-radius: 5px;
         cursor: pointer;
     }
 
-    .sidebar-button-izq { left: 10px; }
-    .sidebar-button-der { right: 10px; }
+    /* Botón de la barra lateral izquierda */
+    .sidebar-button-izq {
+        padding: 5px 10px;
+        left: 10px;
+    }
+
+    /* Botón de la barra lateral derecha */
+    .sidebar-button-der {
+        font-size: 20px;
+        padding: 5px 0px;
+        right: 1px;
+    }
 
     /* Configuración de las barras laterales (Nav y Aside) */
-    nav, aside {
+    nav,
+    aside {
         position: fixed;
         top: 0;
-        width: 250px; /* Ancho fijo para el menú desplegable */
-        height: 100vh; /* Ocupa toda la altura de la pantalla */
+        width: 250px;
+        /* Ancho fijo para el menú desplegable */
+        height: 100vh;
+        /* Ocupa toda la altura de la pantalla */
         z-index: 1000;
-        box-shadow: 0 0 15px rgba(0,0,0,0.3);
-        transition: transform 0.3s ease; /* Movimiento suave */
-        padding-top: 70px; /* Espacio para que el contenido no choque con los botones */
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+        /* Movimiento suave */
+        padding-top: 70px;
+        /* Espacio para que el contenido no choque con los botones */
     }
 
+    /* Barra lateral izquierda */
     nav {
         left: 0;
-        transform: translateX(-100%); /* Escondido a la izquierda */
+        transform: translateX(-100%);
+        /* Escondido a la izquierda */
     }
 
+    /* Barra lateral derecha */
     aside {
         right: 0;
-        transform: translateX(100%); /* Escondido a la derecha */
-    }
-    
-    #btn-menu-izq:checked ~ nav {
-        transform: translateX(0); /* Entra la barra izquierda */
+        transform: translateX(100%);
+        /* Escondido a la derecha */
     }
 
-    #btn-menu-der:checked ~ aside {
-        transform: translateX(0); /* Entra la barra derecha */
+    /* Cuando el checkbox está activado, se muestra la barra lateral */
+    #btn-menu-izq:checked~nav {
+        transform: translateX(0);
+        /* Entra la barra izquierda */
+    }
+
+    /* Cuando el checkbox está activado, se muestra la barra lateral */
+    #btn-menu-der:checked~aside {
+        transform: translateX(0);
+        /* Entra la barra derecha */
     }
 }
 
@@ -241,9 +269,10 @@ footer {
     color: white;
     text-align: center;
     box-sizing: border-box;
-	height: 15%;
+    height: 15%;
 }
 
+/* Configuración general de tablas */
 table {
     width: 100%;
     border-collapse: separate;
@@ -254,6 +283,7 @@ table {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Cabeceras de las tablas */
 th {
     background-color: #57151e;
     color: white;
@@ -266,6 +296,7 @@ th {
     border: none;
 }
 
+/* Celdas de las tablas */
 td {
     padding: 12px;
     border-bottom: 1px solid #e0d5c7;
@@ -273,24 +304,29 @@ td {
     font-weight: 600;
 }
 
+/* Celdas de las tablas, negrita */
 td strong,
 td b {
     font-weight: 900;
 }
 
+/* Celdas de las tablas, alternas */
 tr:nth-child(even) td {
     background-color: #f0e8da;
 }
 
+/* Celdas de las tablas, al pasar el ratón */
 tr:hover td {
     background-color: #e8dccb;
 }
 
+/* Lista de la barra lateral izquierda */
 nav ul {
     list-style: none;
     padding: 0;
 }
 
+/* Enlaces de la barra lateral izquierda */
 nav a {
     text-decoration: none;
     color: red;
@@ -299,19 +335,23 @@ nav a {
     margin: 10px 0;
 }
 
+/* Enlaces de la barra lateral izquierda, al pasar el ratón */
 nav a:hover {
     text-decoration: underline;
 }
 
+/* Carrito */
 #mini-carrito {
     padding: 10px;
 }
 
+/* Título del carrito */
 .mini-carrito-titulo {
     border-bottom: 2px solid #303030;
     padding-bottom: 5px;
 }
 
+/* Botón del carrito */
 .mini-carrito-boton {
     display: block;
     text-align: center;
@@ -324,11 +364,13 @@ nav a:hover {
     margin-top: 15px;
 }
 
+/* Formulario del carrito */
 .mini-carrito-form {
     margin-top: 10px;
     text-align: center;
 }
 
+/* Botón de vaciar el carrito */
 .mini-carrito-vaciar {
     background: none;
     border: none;
@@ -337,44 +379,53 @@ nav a:hover {
     cursor: pointer;
 }
 
+/* Carrito vacío */
 .mini-carrito-vacio {
     color: #666;
     font-style: italic;
 }
 
+/* Precio final del carrito */
 .form-precio-final {
     font-size: 1.2em;
     color: green;
 }
 
+/* Imagen actual del formulario */
 .form-imagen-actual {
     border: 1px solid #ccc;
     margin: 5px 0;
 }
 
+/* Imagen de la categoría del formulario */
 .form-imagen-categoria {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
+/* Acciones del formulario de editar producto */
 .form-editar-producto-acciones {
     margin-top: 20px;
 }
 
+/* Botón de eliminar producto */
 .form-eliminar-producto {
     color: red;
     margin-left: 20px;
 }
 
+/* Formulario de editar usuario */
 .form-editar-usuario {
     max-width: 400px;
 }
 
+/* Select del formulario de editar usuario */
 .form-editar-usuario-select {
     width: 100%;
     padding: 8px;
 }
 
+/* Submit del formulario de editar usuario */
 .form-editar-usuario-submit {
     margin-top: 15px;
 }

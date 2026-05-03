@@ -1,3 +1,4 @@
+/* Tabla de administración de usuarios. Define un ancho completo, fuente básica y un ancho mínimo para pantallas pequeñas */
 .admin-usuarios-tabla {
     border-collapse: collapse;
     width: 100%;
@@ -5,20 +6,24 @@
     font-family: Arial, sans-serif;
 }
 
+/* Aplica un sombreado gris claro a la zona del thead para diferenciar las cabeceras */
 .admin-usuarios-tabla thead {
     background-color: #eee;
 }
 
+/* Agrega padding a todas las celdas y centra el contenido */
 .admin-usuarios-tabla th,
 .admin-usuarios-tabla td {
     padding: 8px;
     text-align: center;
 }
 
+/* Mantiene los botones de acciones (editar/borrar) en una sola línea horizontal */
 .admin-usuarios-acciones {
     white-space: nowrap;
 }
 
+/* Color rojo para la opción de borrar */
 .admin-usuarios-eliminar {
     color: red;
 }

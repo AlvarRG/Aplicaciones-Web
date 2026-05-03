@@ -10,6 +10,7 @@
     align-items: center;
 }
 
+/* Título del header */
 .perfil-header-title {
     margin: 0;
     font-size: 1.8em;
@@ -42,12 +43,14 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Contenedor de campos del formulario de perfil */
 .perfil-fieldset {
     border: none;
     padding: 0;
-	min-width: 0;
+    min-width: 0;
 }
 
+/* Título de un grupo de campos del formulario de perfil */
 .perfil-legend {
     font-size: 1.2vw;
     font-weight: bold;
@@ -55,6 +58,7 @@
     color: #333;
 }
 
+/* Campo de texto del formulario */
 .perfil-input-text {
     width: 100%;
     padding: 8px;
@@ -63,6 +67,7 @@
     border-radius: 4px;
 }
 
+/* Título del grupo de imágenes de avatar */
 .perfil-avatar-title {
     margin: 25px 0 10px 0;
 }
@@ -80,14 +85,18 @@
     overflow-x: auto;
 }
 
+/* Campo de carga de archivo del formulario de perfil */
 .perfil-file-input {
     margin-top: 5px;
-	max-width: 100%;
-    overflow: hidden; /* Oculta lo que se salga de la caja */
-    text-overflow: ellipsis; /* Añade puntos suspensivos (...) al texto cortado */
+    max-width: 100%;
+    overflow: hidden;
+    /* Oculta lo que se salga de la caja */
+    text-overflow: ellipsis;
+    /* Añade puntos suspensivos (...) al texto cortado */
     white-space: nowrap;
 }
 
+/* Casilla de verificación del formulario de perfil */
 .perfil-checkbox {
     margin-top: 15px;
 }
@@ -105,6 +114,7 @@
     width: 100%;
 }
 
+/* Paneles de información del usuario */
 .perfil-panels {
     flex: 2;
     min-width: 20vw;
@@ -113,12 +123,14 @@
     gap: 30px;
 }
 
+/* Panel general del perfil */
 .perfil-panel {
     background: #eceff1;
     padding: 25px;
     border-radius: 12px;
 }
 
+/* Título del panel */
 .perfil-panel-title {
     margin-top: 0;
     color: #455a64;
@@ -127,16 +139,19 @@
     margin-bottom: 20px;
 }
 
+/* Wrapper del historial de pedidos */
 .perfil-historial-wrapper {
     overflow-x: auto;
 }
 
+/* Opción de avatar clickable */
 .perfil-avatar-opcion {
     cursor: pointer;
     display: flex;
     align-items: center;
 }
 
+/* Imagen del avatar en la lista de opciones */
 .perfil-avatar-opcion img {
     width: 2vw;
     height: 2vw;
@@ -157,16 +172,21 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* Encabezado del pedido activo */
 .perfil-pedido-activo-header {
     background-color: transparent;
     padding: 0;
     color: inherit;
-    display: flex;            /* Coloca los elementos en la misma línea */
-    align-items: center;      /* Los centra verticalmente */
-    gap: 15px;                /* Deja un espacio entre el Título y el Estado */
-    margin-bottom: 10px;      
+    display: flex;
+    /* Coloca los elementos en la misma línea */
+    align-items: center;
+    /* Los centra verticalmente */
+    gap: 15px;
+    /* Deja un espacio entre el Título y el Estado */
+    margin-bottom: 10px;
 }
 
+/* Título del pedido activo */
 .perfil-pedido-activo-titulo {
     font-size: 1.2em;
     color: #333;
@@ -210,6 +230,7 @@
     margin-left: 5px;
 }
 
+/* Total del pedido activo */
 .perfil-pedido-activo-detalle .perfil-pedido-activo-total {
     font-size: 1.1em;
     color: #28a745;
@@ -217,10 +238,12 @@
     font-weight: bold;
 }
 
+/* Total del pedido activo (negrita) */
 .perfil-pedido-activo-total strong {
     font-weight: bold;
 }
 
+/* Mensaje de pedido activo vacío */
 .perfil-pedido-activo-vacio {
     padding: 20px;
     background: white;
@@ -242,65 +265,82 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* Encabezado de la tabla de historial */
 .perfil-historial-thead {
     background-color: #333;
     color: black;
 }
 
+/* Celdas del encabezado de la tabla */
 .perfil-historial-th {
     padding: 12px;
     text-align: left;
 }
 
+/* Fila de la tabla de historial */
 .perfil-historial-row {
     border-bottom: 1px solid #eee;
 }
 
+/* Celda de la tabla de historial */
 .perfil-historial-cell {
     padding: 12px;
 }
 
+/* Celda del total de la tabla de historial */
 .perfil-historial-cell--total {
     padding: 12px;
     text-align: right;
     font-weight: bold;
 }
 
+/* Mensaje de historial vacío */
 .perfil-historial-vacio {
     padding: 20px;
     text-align: center;
     color: #777;
 }
 
+/* Vista para pantallas pequeñas (móviles) */
 @media only screen and (max-width: 768px) {
-	.perfil-header-avatar {
-		width: 10vw;
-		height: 10vw;
-	}
-	
-	.perfil-layout {
-		flex-direction: column; /* Forzamos a que el formulario y los paneles vayan uno debajo del otro */
-	}
 
-	.perfil-form-wrapper {
-		width: 100%; /* Ahora ocupan todo el ancho disponible */
-	}
-	
-	.perfil-panels {
-		width: 100%; /* Ahora ocupan todo el ancho disponible */
-		min-width: 0; /* Evita que el contenido interior rompa la caja */
-	}
-	
-	.perfil-legend {
-		font-size: 4.5vw;
-	}
-	
-	.perfil-avatar-opcion img {
-		width: 8vw;
-		height: 8vw;
-	}
-	
-	.perfil-historial-tabla {
-		font-size: 3vw;
-	}
+    /* Avatar del header */
+    .perfil-header-avatar {
+        width: 10vw;
+        height: 10vw;
+    }
+
+    /* Layout general */
+    .perfil-layout {
+        flex-direction: column;
+        /* Forzamos a que el formulario y los paneles vayan uno debajo del otro */
+    }
+
+    /* Formulario de perfil */
+    .perfil-form-wrapper {
+        width: 100%;
+    }
+
+    /* Paneles de información del usuario */
+    .perfil-panels {
+        width: 100%;
+        min-width: 0;
+        /* Evita que el contenido interior rompa la caja */
+    }
+
+    /* Título del grupo de campos del formulario de perfil */
+    .perfil-legend {
+        font-size: 4.5vw;
+    }
+
+    /* Imagen del avatar en la lista de opciones */
+    .perfil-avatar-opcion img {
+        width: 8vw;
+        height: 8vw;
+    }
+
+    /* Tabla del historial de pedidos */
+    .perfil-historial-tabla {
+        font-size: 3vw;
+    }
 }

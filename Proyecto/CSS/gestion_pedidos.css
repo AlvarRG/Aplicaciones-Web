@@ -8,6 +8,7 @@
     margin-bottom: 20px;
 }
 
+/* Título del panel de gestión de pedidos */
 .gestion-header-title {
     margin: 0;
 }
@@ -31,24 +32,29 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Encabezado de la tabla de gestión de pedidos */
 .gestion-pedidos-thead {
     background: #303030;
     color: black;
 }
 
+/* Celdas del encabezado de la tabla de gestión de pedidos */
 .gestion-pedidos-th-principal {
     padding: 15px;
     border: 1px solid #555;
 }
 
+/* Celdas del encabezado de la tabla de gestión de pedidos */
 .gestion-pedidos-th {
     border: 1px solid #555;
 }
 
+/* Filas de la tabla de gestión de pedidos */
 .gestion-pedidos-row {
     border-bottom: 1px solid #eee;
 }
 
+/* Celdas de la tabla de gestión de pedidos */
 .gestion-pedidos-cell {
     border: 1px solid #ddd;
 }
@@ -61,6 +67,7 @@
     border: 1px solid #ddd;
 }
 
+/* Total del pedido en la tabla de gestión de pedidos */
 .gestion-pedidos-total {
     font-weight: bold;
 }
@@ -76,11 +83,13 @@
     font-weight: bold;
 }
 
+/* Celdas que no tienen acciones en la tabla de gestión de pedidos */
 .gestion-pedidos-sin-acciones {
     color: #aaa;
     font-style: italic;
 }
 
+/* Celda vacía en la tabla de gestión de pedidos */
 .gestion-pedidos-empty {
     background: #fff;
     padding: 30px;
@@ -89,10 +98,12 @@
     border-radius: 8px;
 }
 
+/* Título de la celda vacía en la tabla de gestión de pedidos */
 .gestion-pedidos-empty-title {
     color: #666;
 }
 
+/* Envoltorio de la imagen del cocinero */
 .gestion-pedidos-avatar-wrapper {
     margin-top: 8px;
 }
@@ -115,10 +126,12 @@
     outline: none;
 }
 
+/* Título interactivo (#Número) que despliega los detalles del pedido, al pasar el ratón */
 .gestion-pedidos-summary:hover {
     color: #01579b;
 }
 
+/* Detalles del pedido en la tabla de gestión de pedidos */
 .gestion-pedidos-details {
     margin-top: 10px;
     font-size: 0.8em;
@@ -127,18 +140,21 @@
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Tabla interna de productos en los detalles del pedido */
 .gestion-productos-interna {
     width: 100%;
     border-collapse: collapse;
 }
 
+/* Filas de la tabla interna de productos */
 .gestion-productos-interna tr {
     border-bottom: 1px dashed #ddd;
 }
 
+/* Última fila de la tabla interna de productos */
 .gestion-productos-interna tr:last-child {
     border-bottom: none;
 }
@@ -152,26 +168,32 @@
     font-weight: bold;
 }
 
+/* Badge de estado recibido en la tabla de gestión de pedidos */
 .badge-estado--recibido {
     background: #ffc107;
 }
 
+/* Badge de estado en preparación en la tabla de gestión de pedidos */
 .badge-estado--preparacion {
     background: #17a2b8;
 }
 
+/* Badge de estado listo en cocina en la tabla de gestión de pedidos */
 .badge-estado--listo-cocina {
     background: #fd7e14;
 }
 
+/* Badge de estado terminado en la tabla de gestión de pedidos */
 .badge-estado--terminado {
     background: #28a745;
 }
 
+/* Badge de estado cancelado en la tabla de gestión de pedidos */
 .badge-estado--cancelado {
     background: #dc3545;
 }
 
+/* Badge de estado genérico en la tabla de gestión de pedidos */
 .badge-estado--generico {
     background: #6c757d;
 }

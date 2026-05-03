@@ -12,6 +12,7 @@
     margin-bottom: 40px;
 }
 
+/* Imagen del banner principal */
 .index-hero-img {
     width: 100%;
     height: 100%;
@@ -33,6 +34,7 @@
     padding: 20px;
 }
 
+/* Título del banner principal */
 .index-hero-titulo {
     font-size: 2.5vw;
     font-weight: bold;
@@ -40,6 +42,7 @@
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
+/* Subtítulo del banner principal */
 .index-hero-subtitulo {
     font-size: 1vw;
     margin: 0 0 2vw 0;
@@ -58,6 +61,7 @@
     transition: background 0.2s ease;
 }
 
+/* Hover del botón de llamada a la acción en el banner principal */
 .index-hero-cta:hover {
     background: #692d33;
 }
@@ -66,6 +70,7 @@
    Sección categorías
    ============================ */
 
+/* Título de la sección de categorías */
 .index-sección-titulo {
     font-size: 1vw;
     font-weight: bold;
@@ -84,6 +89,7 @@
     margin-bottom: 40px;
 }
 
+/* Tarjeta de categoría individual */
 .index-categoria-card {
     border-radius: 10px;
     overflow: hidden;
@@ -92,17 +98,19 @@
     color: inherit;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     background: white;
-	
-	display: flex;
+
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+/* Hover de la tarjeta de categoría individual */
 .index-categoria-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* Imagen de la tarjeta de categoría */
 .index-categoria-img {
     width: 100%;
     height: 65%;
@@ -110,6 +118,7 @@
     display: block;
 }
 
+/* Nombre de la tarjeta de categoría */
 .index-categoria-nombre {
     padding: 12px;
     font-weight: bold;
@@ -130,6 +139,7 @@
     margin-bottom: 20px;
 }
 
+/* Paso individual en "Cómo funciona" */
 .index-paso {
     flex: 1;
     min-width: 25vw;
@@ -140,63 +150,78 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
+/* Icono de paso en "Cómo funciona" */
 .index-paso-icono {
     font-size: 2vw;
     margin-bottom: 10px;
     display: block;
 }
 
+/* Título de paso en "Cómo funciona" */
 .index-paso-titulo {
     font-weight: bold;
     margin: 0 0 6px 0;
     color: #222;
 }
 
+/* Descripción de paso en "Cómo funciona" */
 .index-paso-desc {
     font-size: 0.8vw;
     color: #666;
     margin: 0;
 }
 
+/* Responsividad del banner principal de index */
 @media only screen and (max-width: 768px) {
-	.index-hero {
-		height: 30vw;
-	}
-	/* Resize de las fuentes para que no se vean demasiado pequeñas */
-	.index-hero-titulo {
-		font-size: 4vw;
-	}
-	
-	.index-hero-subtitulo {
-		font-size: 3vw;
-	}
-	
-	.index-hero-cta {
-		font-size: 2.75vw;
-	}
-	
-	.index-categorias-grid {
-		grid-template-columns: repeat(auto-fill, minmax(25vw, 1fr));
-		gap: 10px;
-	}
-	
-	.index-sección-titulo {
-		font-size: 3.5vw;
-	}
-	
-	.index-categoria-nombre {
-		font-size: 3vw;
-	}
-	
-	.index-paso-icono {
-		font-size: 5vw;
-	}
-	
-	.index-paso-titulo {
-		font-size: 3.5vw;
-	}
-	
-	.index-paso-desc {
-		font-size: 3vw;
-	}
+
+    /* Banner principal */
+    .index-hero {
+        height: 30vw;
+    }
+
+    /* Título del banner */
+    .index-hero-titulo {
+        font-size: 4vw;
+    }
+
+    /* Subtítulo del banner */
+    .index-hero-subtitulo {
+        font-size: 3vw;
+    }
+
+    /* Botón de llamada a la acción en el banner */
+    .index-hero-cta {
+        font-size: 2.75vw;
+    }
+
+    /* Rejilla de categorías */
+    .index-categorias-grid {
+        grid-template-columns: repeat(auto-fill, minmax(25vw, 1fr));
+        gap: 10px;
+    }
+
+    /* Título de la sección de categorías */
+    .index-sección-titulo {
+        font-size: 3.5vw;
+    }
+
+    /* Nombre de la tarjeta de categoría */
+    .index-categoria-nombre {
+        font-size: 3vw;
+    }
+
+    /* Icono de paso en "Cómo funciona" */
+    .index-paso-icono {
+        font-size: 5vw;
+    }
+
+    /* Título de paso en "Cómo funciona" */
+    .index-paso-titulo {
+        font-size: 3.5vw;
+    }
+
+    /* Descripción de paso en "Cómo funciona" */
+    .index-paso-desc {
+        font-size: 3vw;
+    }
 }

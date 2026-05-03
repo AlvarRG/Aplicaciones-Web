@@ -1,3 +1,4 @@
+/* Base para la tabla de administración de ofertas, definiendo bordes colapsados, fuente básica y ancho mínimo para no perder formato */
 .admin-ofertas-tabla {
     border-collapse: collapse;
     width: 100%;
@@ -5,22 +6,27 @@
     font-family: Arial, sans-serif;
 }
 
+/* Fija un color de fondo gris claro para diferenciar la cabecera del cuerpo de la tabla */
 .admin-ofertas-tabla thead {
     background-color: #eee;
 }
 
+/* Clase de utilidad para alinear números o cantidades a la derecha */
 .admin-ofertas-numero {
     text-align: right;
 }
 
+/* Clase de utilidad para alinear el contenido al centro de la celda */
 .admin-ofertas-centro {
     text-align: center;
 }
 
+/* Impide que los iconos/botones de acción sufran saltos de línea y se apilen incorrectamente */
 .admin-ofertas-acciones {
     white-space: nowrap;
 }
 
+/* Otorga color rojo al texto de la acción de eliminar */
 .admin-ofertas-eliminar {
     color: red;
 }

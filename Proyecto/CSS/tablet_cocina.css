@@ -11,6 +11,7 @@
     box-sizing: border-box;
 }
 
+/* Título del panel de cocina */
 .tablet-cocinero-header h2 {
     margin: 0;
     font-size: 1.2em;
@@ -23,10 +24,12 @@
     gap: 10px;
 }
 
+/* Nombre del usuario del panel */
 .tablet-camarero-user span {
     font-size: 0.9em;
 }
 
+/* Avatar del usuario del panel */
 .tablet-camarero-avatar {
     width: 35px;
     height: 35px;
@@ -55,13 +58,16 @@
 
 /* Solo dos columnas: Nuevas y En proceso */
 .tablet-cocinero-column--nuevas {
-    background: #fff3e0; /* Tono naranja muy claro */
+    background: #fff3e0;
+    /* Tono naranja muy claro */
 }
 
 .tablet-cocinero-column--proceso {
-    background: #e1f5fe; /* Tono azul muy claro */
+    background: #e1f5fe;
+    /* Tono azul muy claro */
 }
 
+/* Título de la columna de la tablet de cocina */
 .tablet-cocinero-column h3 {
     text-align: center;
     margin-top: 0;
@@ -71,11 +77,13 @@
     padding-bottom: 6px;
 }
 
+/* Estilos para la columna de nuevos pedidos */
 .tablet-cocinero-column--nuevas h3 {
     color: #e65100;
     border-bottom-color: #ffe0b2;
 }
 
+/* Estilos para la columna de pedidos en proceso */
 .tablet-cocinero-column--proceso h3 {
     color: #01579b;
     border-bottom-color: #b3e5fc;
@@ -92,6 +100,7 @@
     box-sizing: border-box;
 }
 
+/* Encabezado de la tarjeta de pedido */
 .tablet-cocinero-card-header {
     display: flex;
     justify-content: space-between;
@@ -99,16 +108,19 @@
     font-size: 0.9em;
 }
 
+/* Lista de productos a preparar */
 .tablet-cocinero-productos {
     margin: 10px 0;
     font-size: 0.95em;
 }
 
+/* Fila de producto individual */
 .tablet-cocinero-producto-row {
     padding: 4px 0;
     border-bottom: 1px dashed #eee;
 }
 
+/* Botón de acción de la tarjeta */
 .tablet-cocinero-btn {
     width: 100%;
     padding: 12px;
@@ -124,14 +136,17 @@
 /* Botones específicos de cocina */
 /* Botón naranja para aceptar el pedido y pasar a cocinarlo */
 .tablet-cocinero-btn--cocinar {
-    background-color: #fd7e14; /* Naranja */
+    background-color: #fd7e14;
+    /* Naranja */
 }
 
 /* Botón verde para marcar todo el pedido como listo */
 .tablet-cocinero-btn--listo {
-    background-color: #28a745; /* Verde */
+    background-color: #28a745;
+    /* Verde */
 }
 
+/* Efecto de realce al pasar el ratón por el botón de la tablet de cocina */
 .tablet-cocinero-btn:hover {
     filter: brightness(90%);
 }
@@ -147,6 +162,8 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+/* Efecto de realce al pasar el ratón por el botón mini */
 .tablet-cocinero-btn--mini:hover {
     background-color: #218838;
 }

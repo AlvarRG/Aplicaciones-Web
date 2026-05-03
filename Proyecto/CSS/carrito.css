@@ -29,8 +29,9 @@
     font-weight: bold;
 }
 
+/* Ajusta el desbordamiento de la tabla */
 .carrito-wrapper {
-	overflow-x: auto;
+    overflow-x: auto;
 }
 
 /* Tabla del carrito. Centra el contenido y le da espacio */
@@ -40,10 +41,10 @@
     margin-top: 15px;
     background: white;
     border-radius: 8px;
-	overflow-x: auto;
+    overflow-x: auto;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-	text-align: center;
+    text-align: center;
 }
 
 /* Encabezado de la tabla */
@@ -86,6 +87,7 @@
     display: flex;
 }
 
+/* Muestra la cantidad de cada producto */
 .carrito-cantidad-inner strong {
     display: inline-block;
     min-width: 25px;
@@ -110,12 +112,11 @@
     color: #333;
 }
 
+/* Efecto al pasar el ratón por encima del botón de cantidad */
 .carrito-boton-cantidad:hover {
     background-color: #f0f0f0;
     border-color: #999;
 }
-
-
 
 /* Celda de la tabla que contiene el total. Alinea el contenido a la derecha */
 .carrito-total {
@@ -191,6 +192,7 @@
     font-weight: bold;
 }
 
+/* Botón de añadir oferta. Le da un estilo verde al botón */
 .carrito-boton-anadirOferta {
     background-color: green;
     color: white;
@@ -203,34 +205,43 @@
     cursor: pointer;
 }
 
+/* Ajustes para pantallas pequeñas o móviles */
 @media only screen and (max-width: 768px) {
-	.carrito-tabla {
-		font-size: 10px;
-	}
-	
-	.carrito-boton-cantidad {
-		width: 15px;
-		height: 15px;
-	}
-	
-	.carrito-total {
-		font-size: 15px;
-	}
-	
-	.carrito-opciones-label {
-		font-size: 10px;
-	}
-	
-	.carrito-boton-pago {
-		padding: 5px 10px;
-		font-size: 10px;
-	}
-	
-	.carrito-boton-quitar {
-		font-size: 10px;
-	}
-	
-	.carrito-boton-anadirOferta {
-		font-size: 10px;
-	}
+
+    /* Tabla del carrito */
+    .carrito-tabla {
+        font-size: 10px;
+    }
+
+    /* Botón de cantidad */
+    .carrito-boton-cantidad {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Total del carrito */
+    .carrito-total {
+        font-size: 15px;
+    }
+
+    /* Opciones del carrito */
+    .carrito-opciones-label {
+        font-size: 10px;
+    }
+
+    /* Botón de pago */
+    .carrito-boton-pago {
+        padding: 5px 10px;
+        font-size: 10px;
+    }
+
+    /* Botón de quitar */
+    .carrito-boton-quitar {
+        font-size: 10px;
+    }
+
+    /* Botón de añadir oferta */
+    .carrito-boton-anadirOferta {
+        font-size: 10px;
+    }
 }

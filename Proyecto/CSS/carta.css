@@ -6,6 +6,7 @@
     margin-bottom: 20px;
 }
 
+/* ANTIGRAVITY: Elimina márgenes extra en el título principal de la cabecera */
 .carta-header h1 {
     margin: 0;
 }
@@ -38,7 +39,7 @@
     width: 100%;
     border-bottom: 2px solid #303030;
     margin-top: 20px;
-	font-size: 25px;
+    font-size: 25px;
 }
 
 /* Tarjeta individual de cada producto. Define el borde, sombra y fondo */
@@ -49,8 +50,8 @@
     width: 13vw;
     text-align: center;
     background-color: #f9f3e6;
-	
-	display: flex;
+
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
@@ -66,7 +67,7 @@
 /* Nombre del plato o bebida */
 .carta-producto-nombre {
     margin: 10px 0 5px 0;
-	font-size: 1vw;
+    font-size: 1vw;
 }
 
 /* Estilo del precio resaltado en verde y negrita */
@@ -75,14 +76,14 @@
     color: #28a745;
     font-weight: bold;
     margin: 10px 0;
-	font-size: 1vw;
+    font-size: 1vw;
 }
 
 /* Campo numérico para elegir la cantidad a pedir */
 .carta-producto-cantidad {
     width: 50px;
     display: inline-block;
-	font-size: 1vw;
+    font-size: 1vw;
 }
 
 /* Botón negro para añadir el producto al carrito */
@@ -96,47 +97,58 @@
     margin-top: 10px;
     font-weight: bold;
     cursor: pointer;
-	font-size: 0.75vw;
+    font-size: 0.75vw;
 }
 
+/* Efecto al pasar el ratón por el botón de añadir al carrito */
 .carta-boton-anadir:hover {
     filter: brightness(1.05);
 }
 
+/* Media query para ajustar el diseño en pantallas pequeñas o móviles */
 @media only screen and (max-width: 768px) {
-	.carta-header h1 {
-		font-size: 25px;
-	}
 
-	.carta-link-carrito {
-		padding: 8px 15px;
-		font-size: 15px;
-	}
-	
-	.carta-contenedor {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-	}
-	
-	.carta-producto {
-		padding: 5px;
-		width: 45vw;
-	}
-	
-	.carta-producto-nombre {
-		font-size: 15px;
-	}
-	
-	.carta-producto-precio {
-		font-size: 15px;
-	}
-	
-	.carta-producto-cantidad {
-		font-size: 15px;
-	}
-	
-	.carta-boton-anadir {
-		font-size: 10px;
-	}
+    /* Título de la carta */
+    .carta-header h1 {
+        font-size: 25px;
+    }
+
+    /* Enlace del carrito */
+    .carta-link-carrito {
+        padding: 8px 15px;
+        font-size: 15px;
+    }
+
+    /* Contenedor de la rejilla de productos */
+    .carta-contenedor {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Tarjeta individual de cada producto */
+    .carta-producto {
+        padding: 5px;
+        width: 45vw;
+    }
+
+    /* Nombre del producto */
+    .carta-producto-nombre {
+        font-size: 15px;
+    }
+
+    /* Precio del producto */
+    .carta-producto-precio {
+        font-size: 15px;
+    }
+
+    /* Cantidad del producto */
+    .carta-producto-cantidad {
+        font-size: 15px;
+    }
+
+    /* Botón de añadir producto */
+    .carta-boton-anadir {
+        font-size: 10px;
+    }
 }

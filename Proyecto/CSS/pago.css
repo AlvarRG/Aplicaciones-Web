@@ -1,4 +1,4 @@
-/* Caja superior con el resumen del total a pagar en color verde suave */
+/* Caja superior con el resumen del total a pagar */
 .pago-resumen {
     background: #eef9f0;
     padding: 15px;
@@ -8,6 +8,7 @@
     font-size: 1.2em;
 }
 
+/* Envuelve los métodos de pago disponibles */
 .pago-tarjetas-wrapper {
     display: flex;
     gap: 20px;
@@ -24,10 +25,12 @@
     background: white;
 }
 
+/* Título de formulario */
 .pago-tarjeta-form h3 {
     margin-top: 0;
 }
 
+/* Input de texto para tarjeta */
 .pago-input-text {
     width: 100%;
     margin-bottom: 10px;
@@ -35,12 +38,14 @@
     box-sizing: border-box;
 }
 
+/* Filas con input para tarjeta */
 .pago-input-row {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
 }
 
+/* Columna de input para tarjeta */
 .pago-input-col {
     flex: 1;
 }
@@ -57,6 +62,7 @@
     cursor: pointer;
 }
 
+/* Efecto hover del botón de confirmar */
 .pago-boton-confirmar:hover {
     filter: brightness(1.05);
 }
@@ -86,6 +92,7 @@
     cursor: pointer;
 }
 
+/* Efecto hover del botón de pagar en el local */
 .pago-boton-camarero:hover {
     filter: brightness(1.05);
 }
@@ -94,4 +101,3 @@
 .pago-error {
     color: red;
 }
-

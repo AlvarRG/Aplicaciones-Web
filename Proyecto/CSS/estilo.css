@@ -269,7 +269,8 @@ footer {
     color: white;
     text-align: center;
     box-sizing: border-box;
-    height: 15%;
+    height: 5vh;
+	z-index: 2000;
 }
 
 /* Configuración general de tablas */

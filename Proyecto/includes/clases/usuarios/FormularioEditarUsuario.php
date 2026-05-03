@@ -88,13 +88,23 @@ EOF;
         $nuevoRol = (int)$datos['nuevo_rol'];
 
 		//Validación de los datos
-        if ($id <= 0 || $nuevoRol <= 0) {
-            $this->errores[] = "Datos de rol inválidos.";
-        }
+        if ($id <= 0 || $nuevoRol < 1 || $nuevoRol > 4) {
+			$this->errores[] = "Datos de edición no válidos.";
+		}
 
 		//Si no ha habido errores actualizamos el rol
         if (count($this->errores) === 0) {
-            Usuario::actualizarRol($id, $nuevoRol);
-        }
+			$actualizado = Usuario::actualizarRol($id, $nuevoRol);
+
+			if (!$actualizado) {
+				$this->errores[] = "Error al actualizar el rol en la base de datos.";
+			} else {
+				if ($id === (int)$_SESSION['id']) {
+					$_SESSION['esAdmin']    = ($nuevoRol === Usuario::ADMIN_ROLE);
+					$_SESSION['esCamarero'] = ($nuevoRol === Usuario::CAMARERO_ROLE);
+					$_SESSION['esCocinero'] = ($nuevoRol === Usuario::COCINERO_ROLE);
+				}
+			}
+		}
     }
 }

@@ -142,3 +142,36 @@
 .gestion-productos-interna tr:last-child {
     border-bottom: none;
 }
+
+/* Estilo base para los distintivos (badges) de estado de los pedidos */
+.badge-estado {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.badge-estado--recibido {
+    background: #ffc107;
+}
+
+.badge-estado--preparacion {
+    background: #17a2b8;
+}
+
+.badge-estado--listo-cocina {
+    background: #fd7e14;
+}
+
+.badge-estado--terminado {
+    background: #28a745;
+}
+
+.badge-estado--cancelado {
+    background: #dc3545;
+}
+
+.badge-estado--generico {
+    background: #6c757d;
+}

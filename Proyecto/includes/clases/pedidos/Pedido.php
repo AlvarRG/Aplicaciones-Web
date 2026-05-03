@@ -145,7 +145,7 @@ class Pedido
      */
     public static function activosPorUsuario(int $idUsuario): array
     {
-        $estadosActivos = ['En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'];
+        $estadosActivos = ['Recibido', 'En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'];
         return self::porUsuarioYEstados($idUsuario, $estadosActivos, true);
     }
 
@@ -157,7 +157,7 @@ class Pedido
      */
     public static function historialPorUsuario(int $idUsuario): array
     {
-        $estadosActivos = ['En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'];
+        $estadosActivos = ['Recibido', 'En preparacion', 'Cocinando', 'Listo cocina', 'Terminado'];
 
         //Devuelve los pedidos que no están en la lista de estados activos
         return self::porUsuarioYEstados($idUsuario, $estadosActivos, false);

@@ -17,6 +17,7 @@
 		?>
 		<script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
 		<script src="js/validaciones.js"></script>
+		<script src="js/logica_carrito.js"></script>
 	</head>
 	<body>
 		<div id="contenedor">

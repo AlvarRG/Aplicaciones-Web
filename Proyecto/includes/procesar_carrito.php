@@ -103,6 +103,21 @@ if ($id_producto > 0) {
 	}
 }
 
+// Devolver JSON si es una petición AJAX
+if (isset($_POST['ajax']) || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) {
+    $totalArticulos = 0;
+    if (isset($_SESSION['carrito'])) {
+        $totalArticulos = array_sum(array_column($_SESSION['carrito'], 'total'));
+    }
+    
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'success',
+        'totalArticulos' => $totalArticulos
+    ]);
+    exit();
+}
+
 //Redirigir al usuario de vuelta
 $urlDestino = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../carta.php';
 header("Location: $urlDestino");

@@ -158,6 +158,7 @@ aside {
     /* Ajustes del contenedor y contenido principal */
     div#contenedor {
         flex-direction: column;
+        min-height: 100vh;
     }
 
     main {

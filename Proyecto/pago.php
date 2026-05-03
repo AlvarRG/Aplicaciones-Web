@@ -2,11 +2,82 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\productos\Producto;
 use es\ucm\fdi\aw\pedidos\Pedido;
-use es\ucm\fdi\aw\usuarios\Usuario;
 
+/**
+ * Renderiza el resumen del pedido (total y modo de entrega).
+ */
+function renderResumenPago($totalFmt, $tipoPedido, $error = null) {
+    $htmlError = $error ? "<p class='pago-error'>{$error}</p>" : "";
+    
+    return <<<HTML
+        <h1>Pago de tu Pedido</h1>
+        <div class="pago-resumen">
+            Total a pagar: <strong>{$totalFmt} €</strong><br>
+            <small>Modo de entrega: {$tipoPedido}</small>
+        </div>
+        {$htmlError}
+HTML;
+}
 
-$estilosExtra = ['pago.css'];
+/**
+ * Renderiza el formulario de pago con tarjeta.
+ */
+function renderSeccionTarjeta($rutaApp) {
+    return <<<HTML
+        <div class="pago-tarjeta-form">
+            <h3>Pagar con Tarjeta</h3>
+            <p><small>Simulación: No se realizarán cargos reales.</small></p>
+            
+            <form action="{$rutaApp}/pago.php" method="POST">
+                <input type="hidden" name="metodo_pago" value="tarjeta">
+                
+                <label>Número de Tarjeta</label>
+                <input type="text" name="tarjeta" required pattern="[\d\s\-]{16,19}" 
+                       placeholder="1234 5678 9101 1121" class="pago-input-text">
+                
+                <div class="pago-input-row">
+                    <div class="pago-input-col">
+                        <label>Caducidad</label>
+                        <input type="text" name="caducidad" required pattern="(0[1-9]|1[0-2])\/\d{2}" 
+                               placeholder="MM/YY" class="pago-input-text">
+                    </div>
+                    <div class="pago-input-col">
+                        <label>CVV</label>
+                        <input type="text" name="cvv" required pattern="\d{3,4}" 
+                               placeholder="123" class="pago-input-text">
+                    </div>
+                </div>
+                
+                <button type="submit" class="pago-boton-confirmar">
+                    Confirmar Pago y Pedir
+                </button>
+            </form>
+        </div>
+HTML;
+}
 
+/**
+ * Renderiza la sección de pago al camarero.
+ */
+function renderSeccionCamarero($rutaApp) {
+    return <<<HTML
+        <div class="pago-camarero">
+            <h3>Pagar al Camarero</h3>
+            <p>Prepararemos tu pedido y podrás abonarlo en efectivo o tarjeta cuando te atienda nuestro personal.</p>
+            
+            <form action="{$rutaApp}/pago.php" method="POST">
+                <input type="hidden" name="metodo_pago" value="camarero">
+                <button type="submit" class="pago-boton-camarero">
+                    Pedir y Pagar al Camarero
+                </button>
+            </form>
+        </div>
+HTML;
+}
+
+// --- LÓGICA DE CONTROL ---
+
+// 1. Verificación de acceso
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
@@ -18,12 +89,15 @@ if (empty($_SESSION['carrito'])) {
 }
 
 $idUsuario = (int)$_SESSION['id'];
+$rutaApp = RUTA_APP;
 
+// 2. Gestión del tipo de pedido
 if (isset($_POST['tipo_pedido'])) {
     $_SESSION['tipo_pedido'] = $_POST['tipo_pedido'];
 }
 $tipoPedido = $_SESSION['tipo_pedido'] ?? 'Local';
 
+// 3. Cálculo de totales y preparación de datos para la BD
 $idsProductos = array_map('intval', array_keys($_SESSION['carrito']));
 $productosCarrito = Producto::porIds($idsProductos);
 
@@ -34,33 +108,30 @@ foreach ($productosCarrito as $fila) {
     $idProd = $fila->getId();
     $datosCart = $_SESSION['carrito'][$idProd] ?? 0;
     
-    // Nueva estructura: total y disponible
+    // Soporte para estructura simple o array de la sesión
     $cantidad = is_array($datosCart) ? $datosCart['total'] : $datosCart;
     
-    if ($cantidad <= 0) {
-        continue;
+    if ($cantidad > 0) {
+        $totalPedido += ($fila->getPrecioConIva() * $cantidad);
+        $productosDetalle[] = [
+            'id' => $idProd,
+            'cantidad' => $cantidad,
+            'precio_unitario' => $fila->getPrecioBase(),
+            'iva' => $fila->getIva()
+        ];
     }
-    
-    $precioUdConIva = $fila->getPrecioConIva();
-    $totalPedido += ($precioUdConIva * $cantidad);
-    
-    $productosDetalle[] = [
-        'id' => $idProd,
-        'cantidad' => $cantidad,
-        'precio_unitario' => $fila->getPrecioBase(),
-        'iva' => $fila->getIva()
-    ];
 }
 
+// 4. Procesamiento del pago (POST)
+$errorDB = null;
 if (isset($_POST['metodo_pago'])) {
     $metodoPago = $_POST['metodo_pago'];
     
-    $idNuevoPedido = Pedido::crearConLineas((int)$idUsuario, (string)$tipoPedido, (string)$metodoPago, $productosDetalle);
+    $idNuevoPedido = Pedido::crearConLineas($idUsuario, (string)$tipoPedido, (string)$metodoPago, $productosDetalle);
+    
     if ($idNuevoPedido) {
-        
         unset($_SESSION['carrito']);
         unset($_SESSION['tipo_pedido']);
-        
         header("Location: confirmacion.php?pedido=$idNuevoPedido");
         exit();
     } else {
@@ -68,66 +139,17 @@ if (isset($_POST['metodo_pago'])) {
     }
 }
 
+// --- CONSTRUCCIÓN DE LA VISTA ---
+
 $tituloPagina = 'Pago del Pedido';
+$estilosExtra = ['pago.css'];
 $totalPedidoFmt = number_format($totalPedido, 2, '.', '');
 
-$contenidoPrincipal = <<<EOS
-    <h1>Pago de tu Pedido</h1>
-    <div class="pago-resumen">
-        Total a pagar: <strong>{$totalPedidoFmt} €</strong><br>
-        <small>Modo de entrega: {$tipoPedido}</small>
-    </div>
-EOS;
+$contenidoPrincipal = renderResumenPago($totalPedidoFmt, $tipoPedido, $errorDB);
 
-if (isset($errorDB)) {
-    $contenidoPrincipal .= "<p class='pago-error'>$errorDB</p>";
-}
-
-$rutaApp = RUTA_APP;
-
-$contenidoPrincipal .= <<<EOS
-    <div class="pago-tarjetas-wrapper">
-        
-        <div class="pago-tarjeta-form">
-            <h3>Pagar con Tarjeta</h3>
-            <p><small>Simulación: No se realizarán cargos reales.</small></p>
-            
-            <form action="$rutaApp/pago.php" method="POST">
-                <input type="hidden" name="metodo_pago" value="tarjeta">
-                
-                <label>Número de Tarjeta</label>
-                <input type="text" name="tarjeta" required pattern="[\d\s\-]{16,19}" placeholder="1234 5678 9101 1121" class="pago-input-text">
-                
-                <div class="pago-input-row">
-                    <div class="pago-input-col">
-                        <label>Caducidad</label>
-                        <input type="text" name="caducidad" required pattern="(0[1-9]|1[0-2])\/\d{2}" placeholder="MM/YY" class="pago-input-text">
-                    </div>
-                    <div class="pago-input-col">
-                        <label>CVV</label>
-                        <input type="text" name="cvv" required pattern="\d{3,4}" placeholder="123" class="pago-input-text">
-                    </div>
-                </div>
-                
-                <button type="submit" class="pago-boton-confirmar">
-                    Confirmar Pago y Pedir
-                </button>
-            </form>
-        </div>
-
-        <div class="pago-camarero">
-            <h3>Pagar al Camarero</h3>
-            <p>Prepararemos tu pedido y podrás abonarlo en efectivo o tarjeta cuando te atienda nuestro personal.</p>
-            
-            <form action="$rutaApp/pago.php" method="POST">
-                <input type="hidden" name="metodo_pago" value="camarero">
-                <button type="submit" class="pago-boton-camarero">
-                    Pedir y Pagar al Camarero
-                </button>
-            </form>
-        </div>
-
-    </div>
-EOS;
+$contenidoPrincipal .= '<div class="pago-tarjetas-wrapper">';
+$contenidoPrincipal .= renderSeccionTarjeta($rutaApp);
+$contenidoPrincipal .= renderSeccionCamarero($rutaApp);
+$contenidoPrincipal .= '</div>';
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

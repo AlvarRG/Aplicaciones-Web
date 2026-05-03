@@ -1,10 +1,29 @@
 <?php
 use es\ucm\fdi\aw\usuarios\Usuario;
 
-
 require_once __DIR__.'/includes/config.php';
 
+function renderFilaUsuario($fila, $rutaApp, $rutaImgs) {
+    $nombreUsuario = $fila->getNombreUsuario();
+    $nombre = $fila->getNombre();
+    $apellidos = $fila->getApellidos();
+    $email = $fila->getEmail();
+    $nombreRol = $fila->getNombreRol();
+    $id = $fila->getId();
 
+    return <<<HTML
+        <tr>
+            <td>{$nombreUsuario}</td>
+            <td>{$nombre} {$apellidos}</td>
+            <td>{$email}</td>
+            <td>{$nombreRol}</td>
+            <td class="admin-usuarios-acciones">
+                <a href="$rutaApp/editar_usuario.php?id={$id}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a> 
+                <a href="$rutaApp/includes/borrar_usuario.php?id={$id}" class="admin-usuarios-eliminar boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?"><img src="{$rutaImgs}/borrar.png" width="30" alt="Borrar"></a>
+            </td>
+        </tr>
+HTML;
+}
 
 //Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
@@ -22,18 +41,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $filas = "";
     if(!empty($usuarios)) {
         foreach ($usuarios as $fila) {
-            $filas .= <<<EOS
-                <tr>
-                    <td>{$fila->getNombreUsuario()}</td>
-                    <td>{$fila->getNombre()} {$fila->getApellidos()}</td>
-                    <td>{$fila->getEmail()}</td>
-                    <td>{$fila->getNombreRol()}</td>
-                    <td class="admin-usuarios-acciones">
-                        <a href="$rutaApp/editar_usuario.php?id={$fila->getId()}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a> 
-                        <a href="$rutaApp/includes/borrar_usuario.php?id={$fila->getId()}" class="admin-usuarios-eliminar boton-borrar" data-mensaje="Esto borrará al usuario de la base de datos permanentemente. ¿Proceder?"><img src="{$rutaImgs}/borrar.png" width="30" alt="Borrar"></a>
-                    </td>
-                </tr>
-            EOS;
+            $filas .= renderFilaUsuario($fila, $rutaApp, $rutaImgs);
         }
     }
 
@@ -58,7 +66,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
             </tbody>
         </table>
         <script src="$rutaJs/confirmacion_borrado.js"></script>
-    EOS;
+EOS;
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

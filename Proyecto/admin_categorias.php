@@ -2,6 +2,24 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\categorias\Categoria;
 
+function renderFilaCategoria($cat, $rutaApp, $rutaImgs) {
+    $id = $cat->getId();
+    $nombre = $cat->getNombre();
+    $descripcion = $cat->getDescripcion();
+    $imagen = $cat->getImagen();
+
+    return <<<HTML
+        <tr>
+            <td><img src="{$rutaImgs}/categorias/{$imagen}" width="100"></td>
+            <td>{$nombre}</td>
+            <td>{$descripcion}</td>
+            <td class="admin-categorias-acciones">
+                <a href="$rutaApp/editar_categoria.php?id={$id}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a>
+                <a href="$rutaApp/includes/borrar_categoria.php?id={$id}" class="admin-categorias-eliminar boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?"><img src="{$rutaImgs}/borrar.png" width="30" alt="Borrar"></a>
+            </td>
+        </tr>
+HTML;
+}
 
 //Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
@@ -19,17 +37,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $filas = "";
     if(!empty($categorias)) {
         foreach ($categorias as $cat) {
-            $filas .= <<<EOS
-                <tr>
-                    <td><img src="{$rutaImgs}/categorias/{$cat->getImagen()}" width="100"></td>
-                    <td>{$cat->getNombre()}</td>
-                    <td>{$cat->getDescripcion()}</td>
-                    <td class="admin-categorias-acciones">
-                        <a href="$rutaApp/editar_categoria.php?id={$cat->getId()}"><img src="{$rutaImgs}/edit.png" width="30" alt="Editar"></a>
-                        <a href="$rutaApp/includes/borrar_categoria.php?id={$cat->getId()}" class="admin-categorias-eliminar boton-borrar" data-mensaje="¡OJO! Esto borrará la categoría permanentemente. ¿Proceder?"><img src="{$rutaImgs}/borrar.png" width="30" alt="Borrar"></a>
-                    </td>
-                </tr>
-            EOS;
+            $filas .= renderFilaCategoria($cat, $rutaApp, $rutaImgs);
         }
     }
 
@@ -53,7 +61,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
             <tbody>$filas</tbody>
         </table>
         <script src="$rutaJs/confirmacion_borrado.js"></script>
-    EOS;
+EOS;
 }
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

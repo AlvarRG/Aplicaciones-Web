@@ -3,6 +3,107 @@ require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\productos\Producto;
 use es\ucm\fdi\aw\ofertas\Oferta;
 
+function renderFilaProductoCarrito($fila, $cantidad, $rutaApp) {
+    $id = $fila->getId();
+    $nombreProducto = $fila->getNombre();
+    $precioUnitario = number_format($fila->getPrecioConIva(), 2, '.', '');
+    $subtotalProducto = number_format($precioUnitario * $cantidad, 2, '.', '');
+
+    return <<<HTML
+        <tr>
+            <td class='carrito-tabla td-producto'>{$nombreProducto}</td>
+            <td>{$precioUnitario} €</td>
+            <td>
+                <div class='carrito-cantidad-inner'>
+                    <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
+                        <input type='hidden' name='id_producto' value='{$id}'>
+                        <input type='hidden' name='accion' value='add'>
+                        <input type='hidden' name='cantidad' value='-1'>
+                        <button type='submit' class='carrito-boton-cantidad'>−</button>
+                    </form>
+                    <strong>{$cantidad}</strong>
+                    <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
+                        <input type='hidden' name='id_producto' value='{$id}'>
+                        <input type='hidden' name='accion' value='add'>
+                        <input type='hidden' name='cantidad' value='1'>
+                        <button type='submit' class='carrito-boton-cantidad'>+</button>
+                    </form>
+                </div>
+            </td>
+            <td><strong>{$subtotalProducto} €</strong></td>
+            <td>
+                <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
+                    <input type='hidden' name='id_producto' value='{$id}'>
+                    <input type='hidden' name='accion' value='remove'>
+                    <button type='submit' class='carrito-boton-quitar'>Quitar</button>
+                </form>
+            </td>
+        </tr>
+HTML;
+}
+
+function renderFilaDescuento($oferta, $veces, $rutaApp) {
+    $idOferta = $oferta->getId();
+    $nombreOferta = $oferta->getNombre();
+    $descuentoUnitario = Oferta::calcularDescuentoMonetario($idOferta);
+    $subtotalDescuento = number_format($descuentoUnitario * $veces, 2, '.', '');
+
+    return <<<HTML
+        <tr class='carrito-fila-descuento'>
+            <td class='carrito-tabla td-producto'>{$nombreOferta}</td>
+            <td>{$descuentoUnitario}€</td>
+            <td>{$veces}</td>
+            <td><strong class='carrito-descuento'>-{$subtotalDescuento} €</strong></td>
+            <td>
+                <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
+                    <input type='hidden' name='id_oferta' value='{$idOferta}'>
+                    <input type='hidden' name='accion' value='quitarOferta'>
+                    <button type='submit' class='carrito-boton-quitar'>Quitar</button>
+                </form>
+            </td>
+        </tr>
+HTML;
+}
+
+function renderFilaOfertaDisponible($fila, $rutaApp) {
+    $idOferta = $fila->getId();
+    $nombre = $fila->getNombre();
+    $productosDeLaOferta = Oferta::obtenerProductosOferta($idOferta);
+    $textosProductos = [];
+    $precioOriginalLote = 0;
+
+    foreach ($productosDeLaOferta as $prod) {
+        $textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
+        $precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
+        $precioOriginalLote += ($precioConIva * $prod['cantidad']);
+    }
+    $productosIncluidos = implode(', <br>', $textosProductos);
+    
+    $fechaFin = new DateTime($fila->getFechaFin());
+    $descuento = $fila->getDescuento();
+    $precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
+    
+    $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
+    $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
+    
+    return <<<HTML
+        <tr>
+            <td class='carrito-tabla td-producto'>{$nombre}</td>
+            <td>{$productosIncluidos}</td>
+            <td>{$fechaFin->format('d/m/Y')}</td>
+            <td>{$descuento}%</td>
+            <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
+            <td>
+                <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
+                    <input type='hidden' name='id_oferta' value='{$idOferta}'>
+                    <input type='hidden' name='accion' value='aplicarOferta'>
+                    <button type='submit' class='carrito-boton-anadirOferta'>Aplicar</button>
+                </form>
+            </td>
+        </tr>
+HTML;
+}
+
 $estilosExtra = ['carrito.css'];
 
 $rutaApp = RUTA_APP;
@@ -25,7 +126,6 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 
 $tituloPagina = 'Revisar Pedido';
 
-// Obtenemos los datos de la sesión
 $carrito = $_SESSION['carrito'] ?? [];
 $ofertas_aplicadas = $_SESSION['ofertas_aplicadas'] ?? [];
 
@@ -39,7 +139,6 @@ if (empty($carrito)) {
         <p><a href="$rutaApp/carta.php" class="carrito-empty-link">Volver a la Carta</a></p>
     EOS;
 } else {
-    //Inicializamos algunas variables del desglose
     $subtotalPedido = 0;
     $descuento = 0;
 
@@ -52,95 +151,44 @@ if (empty($carrito)) {
     $filasTablaProductos = "";
     foreach ($productos as $fila) {
         $id = $fila->getId();
-        // Obtenemmos todos los datos necesarios de la fila
-        $nombreProducto = $fila->getNombre();
-        $precioUnitario = number_format($fila->getPrecioConIva(), 2, '.', '');
         $cantidad = $carrito[$id]['total'];
+        $precioUnitario = number_format($fila->getPrecioConIva(), 2, '.', '');
         $subtotalProducto = number_format($precioUnitario * $cantidad, 2, '.', '');
 
-        //Sumamos el subtotal del producto al subtotal del pedido
         $subtotalPedido += $subtotalProducto;
         
-
-        $filasTablaProductos .= <<<EOS
-            <tr>
-                <td class='carrito-tabla td-producto'>{$nombreProducto}</td>
-                <td>{$precioUnitario} €</td>
-                <td>
-                    <div class='carrito-cantidad-inner'>
-                        <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
-                            <input type='hidden' name='id_producto' value='{$id}'>
-                            <input type='hidden' name='accion' value='add'>
-                            <input type='hidden' name='cantidad' value='-1'>
-                            <button type='submit' class='carrito-boton-cantidad'>−</button>
-                        </form>
-                        <strong>{$cantidad}</strong>
-                        <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
-                            <input type='hidden' name='id_producto' value='{$id}'>
-                            <input type='hidden' name='accion' value='add'>
-                            <input type='hidden' name='cantidad' value='1'>
-                            <button type='submit' class='carrito-boton-cantidad'>+</button>
-                        </form>
-                    </div>
-                </td>
-                <td><strong>{$subtotalProducto} €</strong></td>
-                <td>
-                    <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
-                        <input type='hidden' name='id_producto' value='{$id}'>
-                        <input type='hidden' name='accion' value='remove'>
-                        <button type='submit' class='carrito-boton-quitar'>Quitar</button>
-                    </form>
-                </td>
-            </tr>
-        EOS;
+        $filasTablaProductos .= renderFilaProductoCarrito($fila, $cantidad, $rutaApp);
     }
     $subtotalPedido = number_format($subtotalPedido, 2, '.', '');
 
     // --- Parte B: Filas de Ofertas Aplicadas (Descuentos) ---
-    
     foreach ($ofertas_aplicadas as $idOferta => $veces) {
         $oferta = Oferta::porID($idOferta);
-
-        $nombreOferta = $oferta->getNombre();
         $descuentoUnitario = Oferta::calcularDescuentoMonetario($idOferta);
         $subtotalDescuento = number_format($descuentoUnitario * $veces, 2, '.', '');
 
         $descuento += $subtotalDescuento;
         
-        $filasTablaProductos .= <<<EOS
-            <tr class='carrito-fila-descuento'>
-                <td class='carrito-tabla td-producto'>{$nombreOferta}</td>
-                <td>{$descuentoUnitario}€</td>
-                <td>{$veces}</td>
-                <td><strong class='carrito-descuento'>-{$subtotalDescuento} €</strong></td>
-                <td>
-                    <form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
-                        <input type='hidden' name='id_oferta' value='{$idOferta}'>
-                        <input type='hidden' name='accion' value='quitarOferta'>
-                        <button type='submit' class='carrito-boton-quitar'>Quitar</button>
-                    </form>
-                </td>
-            </tr>
-        EOS;
+        $filasTablaProductos .= renderFilaDescuento($oferta, $veces, $rutaApp);
     }
     $descuento = number_format($descuento, 2, '.', '');
 
     // --- Montaje final de la tabla de productos ---
     $htmlTablaProductos = <<<EOS
-		<div class="carrito-wrapper"> <table class='carrito-tabla'>
-				<thead>
-					<tr>
-						<th>Producto</th>
-						<th>Precio Ud.</th>
-						<th>Cantidad</th>
-						<th>Subtotal</th>
-						<th>Acciones</th>
-					</tr>
-				</thead>
-				<tbody>$filasTablaProductos</tbody>
-			</table>
-		</div>
-	EOS;
+        <div class="carrito-wrapper"> <table class='carrito-tabla'>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio Ud.</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>$filasTablaProductos</tbody>
+            </table>
+        </div>
+    EOS;
 
     // ========================================================================
     // SECCIÓN 2: DESGLOSE DE TOTALES (SUBTOTAL, AHORRO Y TOTAL)
@@ -163,70 +211,36 @@ if (empty($carrito)) {
     // ========================================================================
     // SECCIÓN 3: TABLA DE OFERTAS DISPONIBLES (PARA AÑADIR)
     // ========================================================================
-	$ofertas = Oferta::ofertasActivas();
-	$filasTablaOfertas = "";
-	foreach ($ofertas as $fila) {
-		$idOferta = $fila->getId();
-		if (Oferta::esAplicable($idOferta, $carrito)) {
-				$nombre = $fila->getNombre();
-				$productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
-				$textosProductos = [];
-				$precioOriginalLote = 0;
-			
-				foreach ($productosDeLaOferta as $prod) {
-					$textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
-					$precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
-					$precioOriginalLote += ($precioConIva * $prod['cantidad']);
-				}
-				$productosIncluidos = implode(', <br>', $textosProductos);
-				
-				$fechaFin = new DateTime($fila->getFechaFin());
-				$descuento = $fila->getDescuento();
-				$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
-				
-				$pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
-				$pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
-				
-				$filasTablaOfertas .= <<<EOS
-					<tr>
-						<td class='carrito-tabla td-producto'>{$nombre}</td>
-						<td>{$productosIncluidos}</td>
-						<td>{$fechaFin->format('d/m/Y')}</td>
-						<td>{$descuento}%</td>
-						<td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
-						<td>
-							<form action='$rutaApp/includes/procesar_carrito.php' method='POST'>
-								<input type='hidden' name='id_oferta' value='{$fila->getId()}'>
-								<input type='hidden' name='accion' value='aplicarOferta'>
-								<button type='submit' class='carrito-boton-anadirOferta'>Aplicar</button>
-							</form>
-						</td>
-					</tr>
-				EOS;
-		}
-	}
-	
-	$htmlOfertas = "";
-	if (!empty($filasTablaOfertas)) {
-		$htmlOfertas .= <<<EOS
-			<div class="carrito-wrapper"> <table class='carrito-tabla'>
-					<thead>
-						<tr>
-							<th>Nombre</th>
-							<th class='carrito-col-productos'>Productos incluidos</th>
-							<th>Fecha fin</th>
-							<th>% de descuento</th>
-							<th>Precio final</th>
-							<th>Acciones</th>
-						</tr>
-					</thead>
-					<tbody>$filasTablaOfertas</tbody>
-				</table>
-			</div>
+    $ofertas = Oferta::ofertasActivas();
+    $filasTablaOfertas = "";
+    foreach ($ofertas as $fila) {
+        $idOferta = $fila->getId();
+        if (Oferta::esAplicable($idOferta, $carrito)) {
+            $filasTablaOfertas .= renderFilaOfertaDisponible($fila, $rutaApp);
+        }
+    }
+    
+    $htmlOfertas = "";
+    if (!empty($filasTablaOfertas)) {
+        $htmlOfertas .= <<<EOS
+            <div class="carrito-wrapper"> <table class='carrito-tabla'>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th class='carrito-col-productos'>Productos incluidos</th>
+                            <th>Fecha fin</th>
+                            <th>% de descuento</th>
+                            <th>Precio final</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>$filasTablaOfertas</tbody>
+                </table>
+            </div>
 EOS;
-	} else {
-		$htmlOfertas .= "<p>No puedes aplicar ninguna oferta</p>";
-	}
+    } else {
+        $htmlOfertas .= "<p>No puedes aplicar ninguna oferta</p>";
+    }
 
     // ========================================================================
     // SECCIÓN 4: FORMULARIO DE ENTREGA Y PAGO
@@ -275,5 +289,4 @@ EOS;
     EOS;
 }
 
-// Renderizar plantilla
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

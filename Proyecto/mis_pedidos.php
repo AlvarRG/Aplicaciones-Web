@@ -1,114 +1,138 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
-use es\ucm\fdi\aw\usuarios\Usuario;
 use es\ucm\fdi\aw\pedidos\Pedido;
 
+/**
+ * Renderiza el badge de estado con su clase CSS correspondiente.
+ */
+function renderBadgeEstado($estado) {
+    $claseEstado = 'badge-estado--generico';
+    
+    switch ($estado) {
+        case 'Recibido':
+            $claseEstado = 'badge-estado--recibido';
+            break;
+        case 'En preparacion':
+        case 'Cocinando':
+            $claseEstado = 'badge-estado--preparacion';
+            break;
+        case 'Listo cocina':
+            $claseEstado = 'badge-estado--listo-cocina';
+            break;
+        case 'Terminado':
+        case 'Entregado':
+            $claseEstado = 'badge-estado--terminado';
+            break;
+        case 'Cancelado':
+            $claseEstado = 'badge-estado--cancelado';
+            break;
+    }
 
-//Si el usuario no está logeado lo mandamos a login
+    return "<span class='badge-estado {$claseEstado}'>{$estado}</span>";
+}
+
+/**
+ * Renderiza una fila individual de la tabla de pedidos.
+ */
+function renderFilaPedido($fila, $rutaApp) {
+    $totalFmt = number_format($fila->getTotal(), 2, '.', '');
+    $badgeEstado = renderBadgeEstado($fila->getEstado());
+    
+    $accion = "<span class='mis-pedidos-no-cancelable'>No cancelable</span>";
+    
+    // El cliente solo puede cancelar si el pedido aún no ha sido procesado (estado 'Recibido')
+    if ($fila->getEstado() === 'Recibido') {
+        $accion = <<<HTML
+            <form action="{$rutaApp}/mis_pedidos.php" method="POST" class="form-inline form-cancelar-pedido-cliente" data-mensaje="¿Seguro que deseas cancelar tu pedido?">
+                <input type="hidden" name="id_pedido" value="{$fila->getId()}">
+                <input type="hidden" name="accion" value="cancelar">
+                <button type="submit" class="btn-cancelar-pedido-cliente">Cancelar</button>
+            </form>
+HTML;
+    }
+
+    return <<<HTML
+        <tr class="mis-pedidos-row">
+            <td class="mis-pedidos-cell mis-pedidos-cell--numero">#{$fila->getNumeroPedido()}</td>
+            <td class="mis-pedidos-cell">{$fila->getFecha()}</td>
+            <td class="mis-pedidos-cell">{$fila->getTipo()}</td>
+            <td class="mis-pedidos-cell mis-pedidos-total"><strong>{$totalFmt} €</strong></td>
+            <td class="mis-pedidos-cell">{$badgeEstado}</td>
+            <td class="mis-pedidos-cell">{$accion}</td>
+        </tr>
+HTML;
+}
+
+/**
+ * Renderiza el contenido principal del historial de pedidos.
+ */
+function renderHistorialPedidos($pedidosUsuario, $rutaApp) {
+    $html = "<h1>Historial de Mis Pedidos</h1>";
+    $html .= "<p>Aquí puedes consultar el estado de tus pedidos y tu historial de compras.</p>";
+
+    if (empty($pedidosUsuario)) {
+        return $html . <<<HTML
+            <div class="mis-pedidos-empty">
+                <p>Aún no has realizado ningún pedido con nosotros.</p>
+                <a href="{$rutaApp}/carta.php" class="mis-pedidos-empty-link">Ir a la Carta</a>
+            </div>
+HTML;
+    }
+
+    $filas = "";
+    foreach ($pedidosUsuario as $fila) {
+        $filas .= renderFilaPedido($fila, $rutaApp);
+    }
+
+    return $html . <<<HTML
+        <div class="mis-pedidos-wrapper">
+            <table class="mis-pedidos-tabla">
+                <thead class="mis-pedidos-thead">
+                    <tr>
+                        <th class="mis-pedidos-th-principal">Nº Pedido</th>
+                        <th class="mis-pedidos-th">Fecha</th>
+                        <th class="mis-pedidos-th">Tipo</th>
+                        <th class="mis-pedidos-th">Total</th>
+                        <th class="mis-pedidos-th">Estado</th>
+                        <th class="mis-pedidos-th">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {$filas}
+                </tbody>
+            </table>
+        </div>
+HTML;
+}
+
+// --- LÓGICA DE CONTROL ---
+
+// Si el usuario no está logueado lo mandamos a login
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
 }
 
-$estilosExtra = ['mis_pedidos.css'];
-
-//Cogemos el id del usuario
 $idUsuario = (int) $_SESSION['id'];
+$rutaApp = RUTA_APP;
 
-//Cancelar el pedido
+// Procesar la cancelación si se recibe el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'cancelar') {
     $idPed = (int) $_POST['id_pedido'];
-
     Pedido::cancelarCliente($idPed, $idUsuario);
-
-    header('Location: ' . RUTA_APP . '/mis_pedidos.php');
+    header('Location: ' . $rutaApp . '/mis_pedidos.php');
     exit();
 }
 
+// Configuración de la página
 $tituloPagina = 'Mis Pedidos';
-$rutaApp = RUTA_APP;
-$estilosExtra = $estilosExtra ?? [];
-$scriptsExtra = $scriptsExtra ?? [];
-$scriptsExtra[] = 'confirmacion_cancelar_pedido.js';
+$estilosExtra = ['mis_pedidos.css'];
+$scriptsExtra = ['confirmacion_cancelar_pedido.js'];
 
+// Obtener datos
 $pedidosUsuario = Pedido::porUsuario($idUsuario);
 
-$contenidoPrincipal = <<<EOS
-    <h1>Historial de Mis Pedidos</h1>
-    <p>Aquí puedes consultar el estado de tus pedidos y tu historial de compras.</p>
-EOS;
-
-if (!empty($pedidosUsuario)) {
-	$contenidoPrincipal .= "<div class='mis-pedidos-wrapper'>"; // Wrapper para la tabla
-    $contenidoPrincipal .= "<table class='mis-pedidos-tabla'>";
-    $contenidoPrincipal .= "<thead class='mis-pedidos-thead'>
-        <tr>
-            <th class='mis-pedidos-th-principal'>Nº Pedido</th>
-            <th class='mis-pedidos-th'>Fecha</th>
-            <th class='mis-pedidos-th'>Tipo</th>
-            <th class='mis-pedidos-th'>Total</th>
-            <th class='mis-pedidos-th'>Estado</th>
-            <th class='mis-pedidos-th'>Acciones</th>
-        </tr>
-    </thead><tbody>";
-
-    foreach ($pedidosUsuario as $fila) {
-        $totalFmt = number_format($fila->getTotal(), 2, '.', '');
-
-        $claseEstado = 'badge-estado--generico';
-        switch ($fila->getEstado()) {
-            case 'Recibido':
-                $claseEstado = 'badge-estado--recibido';
-                break;
-            case 'En preparacion':
-            case 'Cocinando':
-                $claseEstado = 'badge-estado--preparacion';
-                break;
-            case 'Listo cocina':
-                $claseEstado = 'badge-estado--listo-cocina';
-                break;
-            case 'Terminado':
-            case 'Entregado':
-                $claseEstado = 'badge-estado--terminado';
-                break;
-            case 'Cancelado':
-                $claseEstado = 'badge-estado--cancelado';
-                break;
-        }
-
-        $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$fila->getEstado()}</span>";
-
-        $contenidoPrincipal .= "<tr class='mis-pedidos-row'>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-cell--numero'>#{$fila->getNumeroPedido()}</td>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila->getFecha()}</td>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$fila->getTipo()}</td>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell mis-pedidos-total'><strong>{$totalFmt} €</strong></td>";
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>{$badgeEstado}</td>";
-
-        $contenidoPrincipal .= "<td class='mis-pedidos-cell'>";
-        //Cancelar el pedido, solo si está en estado 'Recibido'
-        if ($fila->getEstado() === 'Recibido') {
-            $contenidoPrincipal .= "
-                <form action='$rutaApp/mis_pedidos.php' method='POST' class='form-inline form-cancelar-pedido-cliente' data-mensaje='¿Seguro que deseas cancelar tu pedido?'>
-                    <input type='hidden' name='id_pedido' value='{$fila->getId()}'>
-                    <input type='hidden' name='accion' value='cancelar'>
-                    <button type='submit' class='btn-cancelar-pedido-cliente'>Cancelar</button>
-                </form>
-            ";
-        } else {
-            $contenidoPrincipal .= "<span class='mis-pedidos-no-cancelable'>No cancelable</span>";
-        }
-        $contenidoPrincipal .= "</td>";
-        $contenidoPrincipal .= "</tr>";
-    }
-
-    $contenidoPrincipal .= "</tbody></table>";
-	$contenidoPrincipal .= "</div>"; // Cerramos el div del wrapper
-} else {
-    $contenidoPrincipal .= "<div class='mis-pedidos-empty'>
-        <p>Aún no has realizado ningún pedido con nosotros.</p>
-        <a href='$rutaApp/carta.php' class='mis-pedidos-empty-link'>Ir a la Carta</a>
-    </div>";
-}
+// Generar vista
+$contenidoPrincipal = renderHistorialPedidos($pedidosUsuario, $rutaApp);
 
 require __DIR__ . '/includes/vistas/plantillas/plantilla.php';

@@ -2,203 +2,182 @@
 require_once __DIR__ . '/includes/config.php';
 use es\ucm\fdi\aw\pedidos\Pedido;
 
+/**
+ * Mapea el estado de un pedido o producto a su clase CSS y texto descriptivo.
+ */
+function getEstadoInfo($estado) {
+    $info = [
+        'clase' => 'badge-estado--generico',
+        'texto' => $estado
+    ];
 
-//Redirigimos si el usuario no ha iniciado sesión
+    switch ($estado) {
+        case 'Recibido':
+            $info['clase'] = 'badge-estado--recibido';
+            break;
+        case 'En preparacion':
+        case 'Cocinando':
+            $info['clase'] = 'badge-estado--preparacion';
+            $info['texto'] = ($estado === 'Cocinando') ? 'Cocinando' : 'Preparando';
+            break;
+        case 'Listo cocina':
+            $info['clase'] = 'badge-estado--listo-cocina';
+            $info['texto'] = 'Listo cocina';
+            break;
+        case 'Terminado':
+        case 'Entregado':
+            $info['clase'] = 'badge-estado--terminado';
+            $info['texto'] = $estado;
+            break;
+        case 'Cancelado':
+            $info['clase'] = 'badge-estado--cancelado';
+            break;
+    }
+    return $info;
+}
+
+/**
+ * Renderiza el badge de estado, incluyendo el avatar del cocinero si procede.
+ */
+function renderBadgeEstado($estado, $avatar = null, $rutaApp = "", $isMini = false) {
+    $info = getEstadoInfo($estado);
+    $style = $isMini ? "style='font-size:0.7em;'" : "";
+    
+    $html = "<span class='badge-estado {$info['clase']}' {$style}>{$info['texto']}</span>";
+    
+    if ($avatar && in_array($estado, ['En preparacion', 'Cocinando', 'Listo cocina'])) {
+        $html .= "<div class='gestion-pedidos-avatar-wrapper'>
+                    <img src='{$rutaApp}/img/avatares/{$avatar}' class='gestion-pedidos-avatar' title='Preparado por Chef'>
+                  </div>";
+    }
+    
+    return $html;
+}
+
+/**
+ * Renderiza la tabla interna de productos que aparece al desplegar el pedido.
+ */
+function renderTablaProductosInterna($productos) {
+    $html = "<table class='gestion-productos-interna'>";
+    foreach ($productos as $prod) {
+        $estadoP = $prod['estado'] ?? 'En preparacion';
+        $badge = renderBadgeEstado($estadoP, null, "", true);
+        
+        $html .= "<tr>
+            <td style='text-align:left; padding:4px;'>{$prod['cantidad']}x {$prod['nombre']}</td>
+            <td style='text-align:right; padding:4px;'>{$badge}</td>
+        </tr>";
+    }
+    $html .= "</table>";
+    return $html;
+}
+
+/**
+ * Renderiza una fila de la tabla de gestión de pedidos.
+ */
+function renderFilaPedido($fila, $rutaApp) {
+    $id = $fila->getId();
+    $numero = $fila->getNumeroPedido();
+    $totalFmt = number_format($fila->getTotal(), 2, '.', '');
+    $badgeEstado = renderBadgeEstado($fila->getEstado(), $fila->getAvatarCocinero(), $rutaApp);
+    $htmlProductos = renderTablaProductosInterna($fila->getProductos());
+
+    // Acción de cancelación
+    $accion = "<span class='gestion-pedidos-sin-acciones'>Sin acciones</span>";
+    if ($fila->getEstado() === 'Recibido') {
+        $accion = "
+            <form action='{$rutaApp}/gestion_pedidos.php' method='POST' class='form-inline'>
+                <input type='hidden' name='id_pedido' value='{$id}'>
+                <input type='hidden' name='accion' value='cancelar'>
+                <button type='submit' class='btn-cancelar-pedido-admin'>Cancelar</button>
+            </form>";
+    }
+
+    return <<<HTML
+        <tr class='gestion-pedidos-row'>
+            <td class='gestion-pedidos-cell gestion-pedidos-cell--numero'>
+                <details>
+                    <summary class="gestion-pedidos-summary">#{$numero}</summary>
+                    <div class="gestion-pedidos-details">
+                        $htmlProductos
+                    </div>
+                </details>
+            </td>
+            <td class='gestion-pedidos-cell'>{$fila->getFecha()}</td>
+            <td class='gestion-pedidos-cell'>{$fila->getNombreCliente()}</td>
+            <td class='gestion-pedidos-cell'>{$fila->getTipo()}</td>
+            <td class='gestion-pedidos-cell gestion-pedidos-total'><strong>{$totalFmt} euros</strong></td>
+            <td class='gestion-pedidos-cell'>{$badgeEstado}</td>
+            <td class='gestion-pedidos-cell'>{$accion}</td>
+        </tr>
+HTML;
+}
+
+// --- LÓGICA DE CONTROL ---
+
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
 }
 
-//Leemos los roles del usuario desde la sesión
-$esAdmin = isset($_SESSION['esAdmin']) ? $_SESSION['esAdmin'] : false;
-$esCamarero = isset($_SESSION['esCamarero']) ? $_SESSION['esCamarero'] : false;
-$esCocinero = isset($_SESSION['esCocinero']) ? $_SESSION['esCocinero'] : false;
+$esAdmin = $_SESSION['esAdmin'] ?? false;
+$esCamarero = $_SESSION['esCamarero'] ?? false;
+$esCocinero = $_SESSION['esCocinero'] ?? false;
 
-//Solo el personal del restaurante puede acceder a esta página
-$esPersonal = $esAdmin || $esCamarero || $esCocinero;
-
-if (!$esPersonal) {
+if (!($esAdmin || $esCamarero || $esCocinero)) {
     header('Location: index.php');
     exit();
 }
 
-//Determinamos el nombre del rol para mostrarlo en la vista (el más prioritario gana)
+// Prioridad de nombre de rol
 $nombreRol = "Personal";
-if ($esCamarero)
-    $nombreRol = "Camarero";
-if ($esCocinero)
-    $nombreRol = "Cocinero";
-if ($esAdmin)
-    $nombreRol = "Gerente";
+if ($esCamarero) $nombreRol = "Camarero";
+if ($esCocinero) $nombreRol = "Cocinero";
+if ($esAdmin)    $nombreRol = "Gerente";
 
-//Procesamos la acción de cancelar pedido si se ha enviado el formulario
+// Procesar cancelación
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'cancelar') {
     $idPed = (int) $_POST['id_pedido'];
-
-    //Solo se puede cancelar un pedido si está en estado 'Recibido'
     Pedido::cambiarEstado($idPed, 'Cancelado');
-
-    //Redirigimos para evitar reenvío del formulario al refrescar
     header('Location: ' . RUTA_APP . '/gestion_pedidos.php');
     exit();
 }
 
-//Parámetros para la plantilla
-$estilosExtra = ['gestion_pedidos.css'];
-
-$tituloPagina = 'Gestion Global de Pedidos';
-$rutaApp = RUTA_APP;
-
-//Obtenemos todos los pedidos junto con el nombre del cliente, ordenados por fecha
+// Obtención de datos
 $listaPedidos = Pedido::todosConCliente();
-
-$idsPedidos = [];
-if (!empty($listaPedidos)) {
-    foreach ($listaPedidos as $fila) {
-        $fila->setProductos([]);
-        $idsPedidos[] = $fila->getId();
-    }
-}
+$idsPedidos = array_map(fn($p) => $p->getId(), $listaPedidos);
 
 if (!empty($idsPedidos)) {
     $detalles = Pedido::detallesPedidos($idsPedidos);
     foreach ($listaPedidos as $fila) {
-        if (isset($detalles[$fila->getId()])) {
-            $fila->setProductos($detalles[$fila->getId()]);
-        }
+        $fila->setProductos($detalles[$fila->getId()] ?? []);
     }
 }
 
-//Cabecera de la página con el rol del usuario actual
-$contenidoPrincipal = <<<EOS
+// --- CONSTRUCCIÓN DE LA VISTA ---
+
+$tituloPagina = 'Gestión Global de Pedidos';
+$estilosExtra = ['gestion_pedidos.css'];
+$rutaApp = RUTA_APP;
+
+$contenidoPrincipal = <<<HTML
     <div class="gestion-header">
-        <h1 class="gestion-header-title">Panel de Gestion de Pedidos</h1>
+        <h1 class="gestion-header-title">Panel de Gestión de Pedidos</h1>
         <span class="gestion-header-rol">Vista: {$nombreRol}</span>
     </div>
-EOS;
+HTML;
 
-//Construimos las filas de la tabla (solo la parte variable)
 if (!empty($listaPedidos)) {
     $filasTabla = "";
     foreach ($listaPedidos as $fila) {
-        $totalFmt = number_format($fila->getTotal(), 2, '.', '');
-
-        //Clase CSS del badge según el estado del pedido
-        $claseEstado = 'badge-estado--generico';
-        $textoBadgeGlobal = $fila->getEstado();
-
-        switch ($fila->getEstado()) {
-            case 'Recibido':
-                $claseEstado = 'badge-estado--recibido';
-                break;
-            case 'En preparacion':
-            case 'Cocinando':
-                $claseEstado = 'badge-estado--preparacion';
-                $textoBadgeGlobal = 'Preparando';
-                if ($fila->getEstado() === 'Cocinando')
-                    $textoBadgeGlobal = 'Cocinando';
-                break;
-            case 'Listo cocina':
-                $claseEstado = 'badge-estado--listo-cocina';
-                $textoBadgeGlobal = 'Listo cocina';
-                break;
-            case 'Terminado':
-                $claseEstado = 'badge-estado--terminado';
-                $textoBadgeGlobal = 'Terminado';
-                break;
-            case 'Entregado':
-                $claseEstado = 'badge-estado--terminado';
-                $textoBadgeGlobal = 'Entregado';
-                break;
-            case 'Cancelado':
-                $claseEstado = 'badge-estado--cancelado';
-                break;
-        }
-
-        $badgeEstado = "<span class='badge-estado {$claseEstado}'>{$textoBadgeGlobal}</span>";
-        if ($fila->getAvatarCocinero() && in_array($fila->getEstado(), ['En preparacion', 'Cocinando', 'Listo cocina'])) {
-            $badgeEstado .= "<div class='gestion-pedidos-avatar-wrapper'><img src='{$rutaApp}/img/avatares/{$fila->getAvatarCocinero()}' class='gestion-pedidos-avatar' title='Preparado por Chef'></div>";
-        }
-
-        //Columna de acciones: solo los pedidos 'Recibido' se pueden cancelar
-        if ($fila->getEstado() === 'Recibido') {
-            $accion = "
-                <form action='$rutaApp/gestion_pedidos.php' method='POST' class='form-inline'>
-                    <input type='hidden' name='id_pedido' value='{$fila->getId()}'>
-                    <input type='hidden' name='accion' value='cancelar'>
-                    <button type='submit' class='btn-cancelar-pedido-admin'>Cancelar</button>
-                </form>";
-        } else {
-            $accion = "<span class='gestion-pedidos-sin-acciones'>Sin acciones</span>";
-        }
-
-        // Listado de productos interno (Details HTML5)
-        $htmlProductos = "<table class='gestion-productos-interna'>";
-        foreach ($fila->getProductos() as $prod) {
-            $estadoP = $prod['estado'] ?? 'En preparacion';
-            $badgeProd = 'badge-estado--generico';
-            $textoBadgeProd = $estadoP;
-
-            switch ($estadoP) {
-                case 'Recibido':
-                    $badgeProd = 'badge-estado--recibido';
-                    break;
-                case 'En preparacion':
-                case 'Cocinando':
-                    $badgeProd = 'badge-estado--preparacion';
-                    $textoBadgeProd = 'Preparando';
-                    if ($estadoP === 'Cocinando')
-                        $textoBadgeProd = 'Cocinando';
-                    break;
-                case 'Listo cocina':
-                    $badgeProd = 'badge-estado--listo-cocina';
-                    $textoBadgeProd = 'Listo cocina';
-                    break;
-                case 'Terminado':
-                    $badgeProd = 'badge-estado--terminado';
-                    $textoBadgeProd = 'Terminado';
-                    break;
-                case 'Entregado':
-                    $badgeProd = 'badge-estado--terminado';
-                    $textoBadgeProd = 'Entregado';
-                    break;
-                case 'Cancelado':
-                    $badgeProd = 'badge-estado--cancelado';
-                    break;
-            }
-            $htmlProductos .= "<tr>
-                <td style='text-align:left; padding:4px;'>{$prod['cantidad']}x {$prod['nombre']}</td>
-                <td style='text-align:right; padding:4px;'><span class='badge-estado {$badgeProd}' style='font-size:0.7em;'>{$textoBadgeProd}</span></td>
-            </tr>";
-        }
-        $htmlProductos .= "</table>";
-
-        $filasTabla .= <<<EOS
-            <tr class='gestion-pedidos-row'>
-                <td class='gestion-pedidos-cell gestion-pedidos-cell--numero'>
-                    <details>
-                        <summary class="gestion-pedidos-summary">#{$fila->getNumeroPedido()}</summary>
-                        <div class="gestion-pedidos-details">
-                            $htmlProductos
-                        </div>
-                    </details>
-                </td>
-                <td class='gestion-pedidos-cell'>{$fila->getFecha()}</td>
-                <td class='gestion-pedidos-cell'>{$fila->getNombreCliente()}</td>
-                <td class='gestion-pedidos-cell'>{$fila->getTipo()}</td>
-                <td class='gestion-pedidos-cell gestion-pedidos-total'><strong>{$totalFmt} euros</strong></td>
-                <td class='gestion-pedidos-cell'>{$badgeEstado}</td>
-                <td class='gestion-pedidos-cell'>{$accion}</td>
-            </tr>
-        EOS;
+        $filasTabla .= renderFilaPedido($fila, $rutaApp);
     }
 
-    //Tabla completa con las filas construidas
-    $contenidoPrincipal .= <<<EOS
+    $contenidoPrincipal .= <<<HTML
         <table class='gestion-pedidos-tabla'>
             <thead class='gestion-pedidos-thead'>
                 <tr>
-                    <th class='gestion-pedidos-th-principal'>N Pedido</th>
+                    <th class='gestion-pedidos-th-principal'>Nº Pedido</th>
                     <th class='gestion-pedidos-th'>Fecha y Hora</th>
                     <th class='gestion-pedidos-th'>Cliente</th>
                     <th class='gestion-pedidos-th'>Tipo</th>
@@ -209,14 +188,13 @@ if (!empty($listaPedidos)) {
             </thead>
             <tbody>$filasTabla</tbody>
         </table>
-    EOS;
+HTML;
 } else {
-    //Mensaje si no hay ningún pedido en el sistema
-    $contenidoPrincipal .= <<<EOS
+    $contenidoPrincipal .= <<<HTML
         <div class='gestion-pedidos-empty'>
-            <h3 class='gestion-pedidos-empty-title'>No hay pedidos registrados en el sistema todavia.</h3>
+            <h3 class='gestion-pedidos-empty-title'>No hay pedidos registrados en el sistema todavía.</h3>
         </div>
-    EOS;
+HTML;
 }
 
 require __DIR__ . '/includes/vistas/plantillas/plantilla.php';

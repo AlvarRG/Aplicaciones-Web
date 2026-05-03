@@ -2,6 +2,53 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\ofertas\Oferta;
 
+function renderFilaOferta($fila, $rutaApp) {
+    $nombre = $fila->getNombre();
+    $descripcion = $fila->getDescripcion();
+    
+    $productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
+    $textosProductos = [];
+    $precioOriginalLote = 0;
+    foreach ($productosDeLaOferta as $prod) {
+        $textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
+        $precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
+        $precioOriginalLote += ($precioConIva * $prod['cantidad']);
+    }
+    $productosIncluidos = implode(', <br>', $textosProductos);
+    
+    $fechaActual = new DateTime();
+    $fechaInicio = new DateTime($fila->getFechaInicio());
+    $fechaFin = new DateTime($fila->getFechaFin());
+    
+    $descuento = $fila->getDescuento();
+    $precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
+    $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
+    $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
+    
+    $estado = "Inactiva";
+    if ($fechaActual >= $fechaInicio && $fechaActual < $fechaFin) {
+        $estado = "Activa";
+    } elseif ($fechaActual >= $fechaFin) {
+        $estado = "Caducada";
+    }
+
+    return <<<HTML
+        <tr>
+            <td>{$nombre}</td>
+            <td>{$descripcion}</td>
+            <td>{$productosIncluidos}</td>
+            <td>{$fechaInicio->format('d/m/Y')}</td>
+            <td>{$fechaFin->format('d/m/Y')}</td>
+            <td>{$descuento}%</td>
+            <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
+            <td>{$estado}</td>
+            <td>
+                <a href="$rutaApp/editar_oferta.php?id={$fila->getId()}">[Editar]</a>
+                <a href="$rutaApp/includes/borrar_oferta.php?id={$fila->getId()}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
+            </td>
+        </tr>
+HTML;
+}
 
 //Comprobamos si el usuario es admin, si no lo es, bloqueamos este contenido y mostramos un mensaje de advertencia 
 if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
@@ -19,51 +66,7 @@ if (!isset($_SESSION['esAdmin']) || !$_SESSION['esAdmin']) {
     $filas = "";
     if(!empty($ofertas)) {
         foreach ($ofertas as $fila) {
-			$nombre = $fila->getNombre();
-			$descripcion = $fila->getDescripcion();
-			
-			$productosDeLaOferta = Oferta::obtenerProductosOferta($fila->getId());
-            $textosProductos = [];
-            $precioOriginalLote = 0;
-            foreach ($productosDeLaOferta as $prod) {
-                $textosProductos[] = $prod['nombre'] . ' (x' . $prod['cantidad'] . ')'; 
-                $precioConIva = $prod['precio_base'] * (1 + $prod['iva'] / 100);
-                $precioOriginalLote += ($precioConIva * $prod['cantidad']);
-            }
-			$productosIncluidos = implode(', <br>', $textosProductos);
-			
-            $fechaActual = new DateTime();
-            $fechaInicio = new DateTime($fila->getFechaInicio());
-            $fechaFin = new DateTime($fila->getFechaFin());
-			
-			$descuento = $fila->getDescuento();
-			$precioFinalCalculado = $precioOriginalLote * (1 - ($descuento / 100));
-            $pvpBaseHTML = number_format($precioOriginalLote, 2, ',', '.');
-            $pvpFinalHTML = number_format($precioFinalCalculado, 2, ',', '.');
-			
-			$estado = "Inactiva";
-            if ($fechaActual >= $fechaInicio && $fechaActual < $fechaFin) {
-                $estado = "Activa";
-            } elseif ($fechaActual >= $fechaFin) {
-                $estado = "Caducada";
-            }
-
-            $filas .= <<<EOS
-                <tr>
-                    <td>{$nombre}</td>
-                    <td>{$descripcion}</td>
-                    <td>{$productosIncluidos}</td>
-                    <td>{$fechaInicio->format('d/m/Y')}</td>
-                    <td>{$fechaFin->format('d/m/Y')}</td>
-                    <td>{$descuento}%</td>
-                    <td><del>{$pvpBaseHTML}€</del> <br/> <strong>{$pvpFinalHTML}€</strong></td>
-                    <td>{$estado}</td>
-                    <td>
-                        <a href="$rutaApp/editar_oferta.php?id={$fila->getId()}">[Editar]</a>
-                        <a href="$rutaApp/includes/borrar_oferta.php?id={$fila->getId()}" class="boton-borrar" data-mensaje="¿Estás seguro? Borrará esta oferta permanentemente.">[Eliminar]</a>
-                    </td>
-                </tr>
-            EOS;
+            $filas .= renderFilaOferta($fila, $rutaApp);
         }
     }
 

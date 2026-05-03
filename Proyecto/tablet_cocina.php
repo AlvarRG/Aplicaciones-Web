@@ -2,70 +2,160 @@
 require_once __DIR__.'/includes/config.php';
 use es\ucm\fdi\aw\pedidos\Pedido;
 
-use es\ucm\fdi\aw\usuarios\Usuario;
+/**
+ * Renderiza la cabecera del panel con la información del cocinero.
+ */
+function renderHeaderCocina($nombre, $avatar, $rutaImgs) {
+    return <<<HTML
+        <div class="tablet-cocinero-header">
+            <h2>Panel Cocina</h2>
+            <div class="tablet-camarero-user">
+                <span>Chef: <strong>{$nombre}</strong></span>
+                <img src="{$rutaImgs}/avatares/{$avatar}" alt="Avatar" class="tablet-camarero-avatar">
+            </div>
+        </div>
+HTML;
+}
 
+/**
+ * Renderiza la fila de un producto individual dentro de la tarjeta de pedido.
+ */
+function renderProductoCocina($idPedido, $prod, $esCocinando, $rutaApp) {
+    $estadoP = $prod['estado'] ?? 'En preparacion';
+    $isDone = ($estadoP === 'Listo cocina' || $estadoP === 'Terminado');
+    $tachado = $isDone ? 'text-decoration: line-through; color: #aaa;' : '';
+    
+    $formProducto = "";
+    
+    if ($esCocinando && !$isDone) {
+        $formProducto = <<<HTML
+            <form action="{$rutaApp}/tablet_cocina.php" method="POST" style="display:inline; margin:0;">
+                <input type="hidden" name="id_pedido" value="{$idPedido}">
+                <input type="hidden" name="id_producto" value="{$prod['id_producto']}">
+                <input type="hidden" name="nuevo_estado_producto" value="Listo cocina">
+                <button type="submit" class="tablet-cocinero-btn--mini">Listo</button>
+            </form>
+HTML;
+    } elseif ($isDone) {
+        $formProducto = "<span style='color:#28a745; font-weight:bold;'>✔</span>";
+    }
 
-//Si no hay sesión iniciada te lleva al login
+    return <<<HTML
+        <div class="tablet-cocinero-producto-row" style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="flex:1; margin-right:10px; {$tachado}"><strong>{$prod['cantidad']}x</strong> {$prod['nombre']}</span>
+            <div>{$formProducto}</div>
+        </div>
+HTML;
+}
+
+/**
+ * Renderiza una tarjeta individual de pedido para la cocina.
+ */
+function renderTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstado, $rutaApp) {
+    $esCocinando = ($pedido->getEstado() === 'Cocinando');
+    $htmlProductos = "";
+
+    foreach ($pedido->getProductos() as $prod) {
+        $htmlProductos .= renderProductoCocina($pedido->getId(), $prod, $esCocinando, $rutaApp);
+    }
+
+    $textoFooterBoton = $esCocinando ? "{$botonTexto} TODO" : $botonTexto;
+
+    return <<<HTML
+        <div class="tablet-cocinero-card">
+            <div class="tablet-cocinero-card-header">
+                <span>#{$pedido->getNumeroPedido()}</span>
+                <span class="tablet-camarero-card-type">{$pedido->getTipo()}</span>
+            </div>
+            <div class="tablet-cocinero-productos">
+                {$htmlProductos}
+            </div>
+            <form action="{$rutaApp}/tablet_cocina.php" method="POST">
+                <input type="hidden" name="id_pedido" value="{$pedido->getId()}">
+                <input type="hidden" name="nuevo_estado" value="{$siguienteEstado}">
+                <button type="submit" class="tablet-cocinero-btn {$claseBoton}">
+                    {$textoFooterBoton}
+                </button>
+            </form>
+        </div>
+HTML;
+}
+
+/**
+ * Renderiza el layout principal de dos columnas.
+ */
+function renderLayoutCocina($colNuevas, $colProceso) {
+    return <<<HTML
+        <div class="tablet-cocinero-layout">
+            <div class="tablet-cocinero-column tablet-cocinero-column--nuevas">
+                <h3>Nuevas Comandas</h3>
+                {$colNuevas}
+            </div>
+            <div class="tablet-cocinero-column tablet-cocinero-column--proceso">
+                <h3>En los Fuegos</h3>
+                {$colProceso}
+            </div>
+        </div>
+HTML;
+}
+
+// --- LÓGICA DE CONTROL ---
+
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header('Location: login.php');
     exit();
 }
 
-//Variables para distinguir las sesiones
 $esCocinero = $_SESSION['esCocinero'] ?? false;
 $esAdmin = $_SESSION['esAdmin'] ?? false;
 
-//Si no eres cocinero ni admin te manda al inicio
 if (!$esCocinero && !$esAdmin) {
     header('Location: index.php');
     exit();
 }
 
-//Gestionar cambio de estado en los pedidos
+$rutaApp = RUTA_APP;
+$rutaImgs = RUTA_IMGS;
+
+// Gestión de cambio de estado en los pedidos y productos
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id_pedido'], $_POST['nuevo_estado']) && !isset($_POST['id_producto'])) {
         $idPed = (int)$_POST['id_pedido'];
         $nuevoEst = (string)$_POST['nuevo_estado'];
+        
         if ($nuevoEst === 'Cocinando') {
             Pedido::asignarCocineroYEstado($idPed, $_SESSION['id'], $nuevoEst);
         } else {
             Pedido::cambiarEstado($idPed, $nuevoEst);
         }
-        header('Location: ' . RUTA_APP . '/tablet_cocina.php');
+        header('Location: ' . $rutaApp . '/tablet_cocina.php');
         exit();
+        
     } elseif (isset($_POST['id_pedido'], $_POST['id_producto'], $_POST['nuevo_estado_producto'])) {
         $idPed = (int)$_POST['id_pedido'];
         $idProd = (int)$_POST['id_producto'];
         $nuevoEstProd = (string)$_POST['nuevo_estado_producto'];
+        
         Pedido::cambiarEstadoProducto($idPed, $idProd, $nuevoEstProd);
-        header('Location: ' . RUTA_APP . '/tablet_cocina.php');
+        header('Location: ' . $rutaApp . '/tablet_cocina.php');
         exit();
     }
 }
 
-//Título y estilos
-$tituloPagina = 'Tablet Cocina';
-$estilosExtra = ['tablet_cocina.css'];
-
-//Consulta para coger los pedidos con estados preparacion y cocinando desde la base de datos
+// Obtención y estructuración de datos
 $listaPedidos = Pedido::porEstados(['En preparacion', 'Cocinando']);
-
-//Si la consulta anterior ha devuelto algo, recorremos los pedidos devueltos para estructurar los arrays que se usarán posteriormente
 $pedidos = [];
 $idsPedidos = [];
+
 if (!empty($listaPedidos)) {
     foreach ($listaPedidos as $fila) {
-		//Guardamos los pedidos con su id como clave
+        $fila->setProductos([]);
         $pedidos[$fila->getId()] = $fila;
-		//Creamos un array vacío en cada pedido para posteriormente almacenar ahí los productos
-        $pedidos[$fila->getId()]->setProductos([]);
-		//Guardamos los ids de los pedidos
         $idsPedidos[] = $fila->getId();
     }
 }
-//Si hay algún pedido
+
 if (!empty($idsPedidos)) {
-    //Consulta que devuelve la información de todos los productos de todos los pedidos
     $detalles = Pedido::detallesPedidos($idsPedidos);
     foreach ($detalles as $idPedido => $lineas) {
         foreach ($lineas as $prod) {
@@ -74,105 +164,27 @@ if (!empty($idsPedidos)) {
     }
 }
 
-/**
- * Genera la vista de las tarjetas en la tablet con la información necesaria
- *
- * @param array $pedido
- * @param string $botonTexto
- * @param string $claseBoton
- * @param string $siguienteEstado
- * @return string
- */
-function generarTarjetaCocina($pedido, $botonTexto, $claseBoton, $siguienteEstado) {
-    $htmlProductos = "";
-    $esCocinando = ($pedido->getEstado() === 'Cocinando');
+// Configuración de la vista
+$tituloPagina = 'Tablet Cocina';
+$estilosExtra = ['tablet_cocina.css'];
 
-    foreach ($pedido->getProductos() as $prod) {
-        $estadoP = $prod['estado'] ?? 'En preparacion';
-        $tachado = ($estadoP === 'Listo cocina' || $estadoP === 'Terminado') ? 'text-decoration: line-through; color: #aaa;' : '';
-        
-        $formProducto = "";
-        $rutaApp = RUTA_APP;
-        if ($esCocinando && $estadoP !== 'Listo cocina' && $estadoP !== 'Terminado') {
-            $formProducto = "
-                <form action='{$rutaApp}/tablet_cocina.php' method='POST' style='display:inline; margin:0;'>
-                    <input type='hidden' name='id_pedido' value='{$pedido->getId()}'>
-                    <input type='hidden' name='id_producto' value='{$prod['id_producto']}'>
-                    <input type='hidden' name='nuevo_estado_producto' value='Listo cocina'>
-                    <button type='submit' class='tablet-cocinero-btn--mini'>Listo</button>
-                </form>
-            ";
-        } else if ($estadoP === 'Listo cocina' || $estadoP === 'Terminado') {
-            $formProducto = " <span style='color:#28a745; font-weight:bold;'>✔</span>";
-        }
+$nombreCocinero = $_SESSION['nombreUsuario'] ?? 'Chef';
+$avatarCocinero = $_SESSION['avatar'] ?? 'default.png';
 
-        $htmlProductos .= "<div class='tablet-cocinero-producto-row' style='display:flex; justify-content:space-between; align-items:center;'>
-                                <span style='flex:1; margin-right:10px; {$tachado}'><strong>{$prod['cantidad']}x</strong> {$prod['nombre']}</span>
-                                <div>{$formProducto}</div>
-                           </div>";
-    }
-
-    $rutaApp = RUTA_APP;
-    $textoFooterBoton = $esCocinando ? "$botonTexto TODO" : $botonTexto;
-
-    return <<<HTML
-    <div class="tablet-cocinero-card">
-        <div class="tablet-cocinero-card-header">
-            <span>#{$pedido->getNumeroPedido()}</span>
-            <span class="tablet-camarero-card-type">{$pedido->getTipo()}</span>
-        </div>
-        <div class="tablet-cocinero-productos">
-            $htmlProductos
-        </div>
-        <form action="$rutaApp/tablet_cocina.php" method="POST">
-            <input type="hidden" name="id_pedido" value="{$pedido->getId()}">
-            <input type="hidden" name="nuevo_estado" value="{$siguienteEstado}">
-            <button type="submit" class="tablet-cocinero-btn {$claseBoton}">
-                $textoFooterBoton
-            </button>
-        </form>
-    </div>
-HTML;
-}
-
+// Clasificación de pedidos en columnas
 $colNuevas = "";
 $colProceso = "";
 
-//Recorre los pedidos con el array creado anteriormente y creamos las tarjetas de cocina dependiendo del estado del pedido
 foreach ($pedidos as $p) {
     if ($p->getEstado() === 'En preparacion') {
-        $colNuevas .= generarTarjetaCocina($p, 'COCINAR', 'tablet-cocinero-btn--cocinar', 'Cocinando');
+        $colNuevas .= renderTarjetaCocina($p, 'COCINAR', 'tablet-cocinero-btn--cocinar', 'Cocinando', $rutaApp);
     } elseif ($p->getEstado() === 'Cocinando') {
-        $colProceso .= generarTarjetaCocina($p, 'LISTO', 'tablet-cocinero-btn--listo', 'Listo cocina');
+        $colProceso .= renderTarjetaCocina($p, 'LISTO', 'tablet-cocinero-btn--listo', 'Listo cocina', $rutaApp);
     }
 }
 
-//Coger nombre de usuario y avatar
-$nombreCocinero = $_SESSION['nombreUsuario'] ?? 'Chef';
-$avatar = $_SESSION['avatar'] ?? 'default.png';
-
-$rutaImgs = RUTA_IMGS;
-
-//Contenido principal de la página
-$contenidoPrincipal = <<<EOS
-<div class="tablet-cocinero-header">
-    <h2>Panel Cocina</h2>
-    <div class="tablet-camarero-user">
-        <span>Chef: <strong>{$nombreCocinero}</strong></span>
-        <img src="{$rutaImgs}/avatares/{$avatar}" alt="Avatar" class="tablet-camarero-avatar">
-    </div>
-</div>
-
-<div class="tablet-cocinero-layout">
-    <div class="tablet-cocinero-column tablet-cocinero-column--nuevas">
-        <h3>Nuevas Comandas</h3>
-        $colNuevas
-    </div>
-    <div class="tablet-cocinero-column tablet-cocinero-column--proceso">
-        <h3>En los Fuegos</h3>
-        $colProceso
-    </div>
-</div>
-EOS;
+// Generación del contenido principal
+$contenidoPrincipal = renderHeaderCocina($nombreCocinero, $avatarCocinero, $rutaImgs);
+$contenidoPrincipal .= renderLayoutCocina($colNuevas, $colProceso);
 
 require __DIR__.'/includes/vistas/plantillas/plantilla.php';

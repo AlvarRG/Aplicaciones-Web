@@ -17,6 +17,21 @@ $(document).ready(function () {
             }
         }
     }
+	
+	function correoExiste(data, status) {
+        const campo = $("#email");
+        const marca = $("#validEmail");
+
+        if (status === "success") {
+            if (data.trim() === "existe") { // Usamos trim() por si hay espacios
+                marca.html('&#x274C; El correo ya está reservado');
+                campo[0].setCustomValidity("El correo ya está en uso.");
+            } else {
+                marca.html('&#x2714;');
+                campo[0].setCustomValidity("");
+            }
+        }
+    }
 
     // Validación del correo
     $("#email").change(function () {
@@ -25,13 +40,13 @@ $(document).ready(function () {
 
         campo[0].setCustomValidity("");
         const esCorreoValido = campo[0].checkValidity();
-
-        if (esCorreoValido) {
-            marca.html('&#x2714;');
-            campo[0].setCustomValidity("");
-        } else {
+		
+		if (!esCorreoValido) {
             marca.html('&#x274C; El correo debe tener un formato válido'); 
 			campo[0].setCustomValidity("El correo debe tener un formato válido");
+        } else {
+            const url = RUTA_APP + "/includes/comprobarEmail.php?email=" + encodeURIComponent(campo.val());
+            $.get(url, correoExiste);
         }
     });
 

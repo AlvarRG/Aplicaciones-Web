@@ -186,6 +186,30 @@ class Usuario
         }
         return $result;
     }
+	
+	/**
+     * Busca un email
+     *
+     * @param int $idUsuario
+     * @return bool
+     */
+	public static function existeEmail($email)
+	{
+		// Solo seleccionamos el ID para ahorrar recursos
+		$query = "SELECT id FROM usuarios WHERE email = ? LIMIT 1";
+		$rs = Aplicacion::getInstance()->ejecutarConsultaBd($query, "s", $email)->get_result();
+		
+		$existe = false;
+		if ($rs) {
+			// Si fetch_assoc devuelve algo, es que el email existe
+			if ($rs->fetch_assoc()) {
+				$existe = true;
+			}
+			$rs->free();
+		}
+		
+		return $existe;
+	}
     
     /**
      * Devuelve el hash de la contraseña dada

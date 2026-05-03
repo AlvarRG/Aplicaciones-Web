@@ -35,19 +35,19 @@ $pedidosActivos = Pedido::activosPorUsuario((int) $usuario['id']);
 $htmlActivos = "";
 if (!empty($pedidosActivos)) {
     foreach ($pedidosActivos as $pedido) {
-        $htmlActivos .= "
-        <div class='perfil-pedido-activo'>
-            <div class='perfil-pedido-activo-header'>
-                <strong class='perfil-pedido-activo-titulo'>Pedido #{$pedido->getNumeroPedido()}</strong>
-                <span class='perfil-pedido-activo-estado'>{$pedido->getEstado()}</span>
-            </div>
-            <div class='perfil-pedido-activo-detalle'>
-                <p><strong>Fecha:</strong> {$pedido->getFecha()}</p>
-                <p><strong>Tipo:</strong> {$pedido->getTipo()}</p>
-                <p class='perfil-pedido-activo-total'><strong>Total: " . number_format($pedido->getTotal(), 2) . "€</strong></p>
-            </div>
-        </div>";
-    }
+    $htmlActivos .= "
+		<article class='perfil-pedido-activo'>
+			<header class='perfil-pedido-activo-header'>
+				<h3 class='perfil-pedido-activo-titulo'>Pedido #{$pedido->getNumeroPedido()}</h3>
+				<span class='perfil-pedido-activo-estado'>{$pedido->getEstado()}</span>
+			</header>
+			<dl class='perfil-pedido-activo-detalle'>
+				<div><dt>Fecha:</dt> <dd>{$pedido->getFecha()}</dd></div>
+				<div><dt>Tipo:</dt> <dd>{$pedido->getTipo()}</dd></div>
+				<div class='perfil-pedido-activo-total'><dt>Total:</dt> <dd>" . number_format($pedido->getTotal(), 2) . "€</dd></div>
+			</dl>
+		</article>";
+	}
 } else {
     $htmlActivos = "<div class='perfil-pedido-activo-vacio'>No tienes pedidos en curso actualmente.</div>";
 }
@@ -99,26 +99,29 @@ $tituloPagina = 'Mi Perfil';
 $rutaImgs = RUTA_IMGS;
 
 $contenidoPrincipal = <<<EOS
-    <div class="perfil-header">
+    <header class="perfil-header">
         <h1 class="perfil-header-title">Perfil de {$usuario['nombreUsuario']}</h1>
-        <img src="{$rutaImgs}/avatares/{$usuario['avatar']}" class="perfil-header-avatar">
-    </div>
+        <img src="{$rutaImgs}/avatares/{$usuario['avatar']}" 
+             class="perfil-header-avatar" 
+             alt="Avatar de {$usuario['nombreUsuario']}">
+    </header>
 
     <div class="perfil-layout">
-        <div class="perfil-form-wrapper">
+        <section class="perfil-form-wrapper">
+            <h2 class="perfil-panel-title">Datos Personales</h2>
             $htmlFormPerfil
-        </div>
+        </section>
 
         <div class="perfil-panels">
-            <div class="perfil-panel">
+            <section class="perfil-panel">
                 <h2 class="perfil-panel-title">Estado de mis pedidos</h2>
-                <div>$htmlActivos</div>
-            </div>
+                $htmlActivos
+            </section>
 
-            <div class="perfil-panel">
+            <section class="perfil-panel">
                 <h2 class="perfil-panel-title">Historial de pedidos</h2>
                 <div class="perfil-historial-wrapper">$htmlHistorial</div>
-            </div>
+            </section>
         </div>
     </div>
 EOS;

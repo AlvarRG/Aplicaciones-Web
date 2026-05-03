@@ -158,16 +158,19 @@
 }
 
 .perfil-pedido-activo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+    display: flex;            /* Coloca los elementos en la misma línea */
+    align-items: center;      /* Los centra verticalmente */
+    gap: 15px;                /* Deja un espacio entre el Título y el Estado */
+    margin-bottom: 10px;      
 }
 
 .perfil-pedido-activo-titulo {
-    font-size: 1.1em;
+    font-size: 1.2em;
+    color: #333;
+    margin: 0;
 }
 
 /* Distintivo azul que indica el estado del pedido activo */
@@ -180,20 +183,38 @@
     font-weight: bold;
 }
 
+/* Reseteamos el margen de la lista */
 .perfil-pedido-activo-detalle {
-    font-size: 0.95em;
-    color: #555;
+    margin: 0;
 }
 
-.perfil-pedido-activo-detalle p {
+/* Aplicamos el estilo de los antiguos párrafos a los divs contenedores */
+.perfil-pedido-activo-detalle div {
     margin: 5px 0;
+    color: #333;
 }
 
-.perfil-pedido-activo-total {
-    margin: 10px 0 0 0;
-    text-align: right;
-    font-size: 1.2em;
-    color: #333;
+/* Hacemos que la clave (Fecha:) y el valor (01/01) se pongan en la misma línea */
+.perfil-pedido-activo-detalle dt,
+.perfil-pedido-activo-detalle dd {
+    display: inline;
+}
+
+/* Ponemos en negrita las claves, igual que hacía el <strong> */
+.perfil-pedido-activo-detalle dt {
+    font-weight: bold;
+}
+
+/* Quitamos la sangría gigante que los navegadores le ponen al dd por defecto */
+.perfil-pedido-activo-detalle dd {
+    margin-left: 5px;
+}
+
+.perfil-pedido-activo-detalle .perfil-pedido-activo-total {
+    font-size: 1.1em;
+    color: #28a745;
+    margin-top: 10px;
+    font-weight: bold;
 }
 
 .perfil-pedido-activo-total strong {

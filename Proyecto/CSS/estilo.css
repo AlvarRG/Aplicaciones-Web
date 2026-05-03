@@ -118,6 +118,15 @@ nav {
     box-sizing: border-box;
     flex-shrink: 0;
     /* No se encoge */
+	
+	position: -webkit-sticky; /* Soporte para Safari */
+    position: sticky;
+    top: 20px;  /* Distancia desde la parte superior de la pantalla donde se quedará pegado */
+    
+    /* Altura máxima para que si el carrito es muy largo, 
+       no se corte y aparezca su propio scroll */
+    
+    overflow-y: auto;
 }
 
 /* Área de contenido principal de cada página */
@@ -137,6 +146,15 @@ aside {
     background-color: #f9f3e6;
     box-sizing: border-box;
     flex-shrink: 0;
+	
+	position: -webkit-sticky; /* Soporte para Safari */
+    position: sticky;
+    top: 20px;  /* Distancia desde la parte superior de la pantalla donde se quedará pegado */
+    
+    /* Altura máxima para que si el carrito es muy largo, 
+       no se corte y aparezca su propio scroll */
+    
+    overflow-y: auto;
 }
 
 /* Escondemos el checkbox siempre */
